@@ -685,95 +685,64 @@ textarea{min-height:88px;line-height:1.65;}
 </footer>
 
 <script>
-// ── THREE.JS WOVEN HERO ───────────────────────────────
+// ── GPU SHADER HERO (corre en GPU, no bloquea el hilo) ─
 (function initHero(){
   var THREE=window.THREE;
   if(!THREE)return;
-
   var mount=document.getElementById('heroCanvas');
+  var cam=new THREE.Camera();
+  cam.position.z=1;
   var scene=new THREE.Scene();
-  var cam=new THREE.PerspectiveCamera(75,innerWidth/innerHeight,0.1,1000);
-  cam.position.z=5;
-
+  var geo=new THREE.PlaneBufferGeometry(2,2);
+  var uniforms={
+    time:{type:'f',value:1.0},
+    resolution:{type:'v2',value:new THREE.Vector2()}
+  };
+  var mat=new THREE.ShaderMaterial({
+    uniforms:uniforms,
+    vertexShader:'void main(){gl_Position=vec4(position,1.0);}',
+    fragmentShader:`
+      precision highp float;
+      uniform vec2 resolution;
+      uniform float time;
+      float rnd(in float x){return fract(sin(x)*1e4);}
+      void main(void){
+        vec2 uv=(gl_FragCoord.xy*2.0-resolution.xy)/min(resolution.x,resolution.y);
+        vec2 ms=vec2(4.0,2.0);vec2 ss=vec2(256.0,256.0);
+        uv.x=floor(uv.x*ss.x/ms.x)/(ss.x/ms.x);
+        uv.y=floor(uv.y*ss.y/ms.y)/(ss.y/ms.y);
+        float t=time*0.05+rnd(uv.x)*0.35;
+        float lw=0.0006;
+        vec3 col=vec3(0.0);
+        for(int j=0;j<3;j++){
+          for(int i=0;i<5;i++){
+            col[j]+=lw*float(i*i)/abs(fract(t-0.01*float(j)+float(i)*0.01)*1.0-length(uv));
+          }
+        }
+        /* tint to palette: purple + gold */
+        vec3 purple=vec3(0.255,0.129,0.263);
+        vec3 gold=vec3(0.859,0.773,0.514);
+        vec3 tinted=mix(purple,gold,col.r*2.0);
+        gl_FragColor=vec4(tinted*col*3.5,1.0);
+      }`
+  });
+  var mesh=new THREE.Mesh(geo,mat);
+  scene.add(mesh);
   var renderer=new THREE.WebGLRenderer({antialias:true,alpha:true});
-  renderer.setSize(innerWidth,innerHeight);
   renderer.setPixelRatio(Math.min(devicePixelRatio,1.5));
   mount.appendChild(renderer.domElement);
-
-  var N=40000;
-  var pos=new Float32Array(N*3);
-  var origPos=new Float32Array(N*3);
-  var col=new Float32Array(N*3);
-  var vel=new Float32Array(N*3);
-
-  var geo=new THREE.TorusKnotGeometry(2,0.6,200,32);
-  var posAttr=geo.attributes.position;
-
-  for(var i=0;i<N;i++){
-    var vi=i%posAttr.count;
-    var x=posAttr.getX(vi),y=posAttr.getY(vi),z=posAttr.getZ(vi);
-    pos[i*3]=x;pos[i*3+1]=y;pos[i*3+2]=z;
-    origPos[i*3]=x;origPos[i*3+1]=y;origPos[i*3+2]=z;
-    // palette: gold + purple
-    var t=Math.random();
-    var c=new THREE.Color();
-    if(t<0.6) c.setHex(0x412143);      // 60% negro/morado
-    else if(t<0.9) c.setHex(0x815488); // 30% morado claro
-    else c.setHex(0xDBC583);            // 10% dorado
-    col[i*3]=c.r;col[i*3+1]=c.g;col[i*3+2]=c.b;
+  function resize(){
+    renderer.setSize(innerWidth,innerHeight);
+    uniforms.resolution.value.x=renderer.domElement.width;
+    uniforms.resolution.value.y=renderer.domElement.height;
   }
-
-  var ptGeo=new THREE.BufferGeometry();
-  ptGeo.setAttribute('position',new THREE.BufferAttribute(pos,3));
-  ptGeo.setAttribute('color',new THREE.BufferAttribute(col,3));
-
-  var mat=new THREE.PointsMaterial({
-    size:0.022,vertexColors:true,
-    blending:THREE.AdditiveBlending,
-    transparent:true,opacity:.9
-  });
-
-  var points=new THREE.Points(ptGeo,mat);
-  scene.add(points);
-
-  var mouse={x:0,y:0};
-  window.addEventListener('mousemove',function(e){
-    mouse.x=(e.clientX/innerWidth)*2-1;
-    mouse.y=-(e.clientY/innerHeight)*2+1;
-  });
-
-  var clock=new THREE.Clock();
-  var animId;
+  resize();
+  window.addEventListener('resize',resize);
   (function animate(){
-    animId=requestAnimationFrame(animate);
-    var t=clock.getElapsedTime();
-    var mx=mouse.x*3,my=mouse.y*3;
-
-    for(var i=0;i<N;i++){
-      var ix=i*3,iy=i*3+1,iz=i*3+2;
-      var dx=pos[ix]-mx,dy=pos[iy]-my,dz=pos[iz];
-      var dist=Math.sqrt(dx*dx+dy*dy+dz*dz);
-      if(dist<1.8&&dist>0){
-        var f=(1.8-dist)*0.008/dist;
-        vel[ix]+=dx*f;vel[iy]+=dy*f;vel[iz]+=dz*f;
-      }
-      vel[ix]+=(origPos[ix]-pos[ix])*0.0008;
-      vel[iy]+=(origPos[iy]-pos[iy])*0.0008;
-      vel[iz]+=(origPos[iz]-pos[iz])*0.0008;
-      vel[ix]*=0.96;vel[iy]*=0.96;vel[iz]*=0.96;
-      pos[ix]+=vel[ix];pos[iy]+=vel[iy];pos[iz]+=vel[iz];
-    }
-    ptGeo.attributes.position.needsUpdate=true;
-    points.rotation.y=t*0.06;
-    points.rotation.x=Math.sin(t*0.03)*0.2;
+    requestAnimationFrame(animate);
+    uniforms.time.value+=0.04;
     renderer.render(scene,cam);
   })();
-
-  window.addEventListener('resize',function(){
-    cam.aspect=innerWidth/innerHeight;
-    cam.updateProjectionMatrix();
-    renderer.setSize(innerWidth,innerHeight);
-  });
 })();
 
 // ── ANIMATED TEXT CYCLE (hero) ────────────────────────
