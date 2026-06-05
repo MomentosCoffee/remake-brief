@@ -4,1093 +4,830 @@
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
 <title>Brief Web — RMK</title>
-<meta name="description" content="Cuéntanos sobre tu negocio para construir tu web perfecta."/>
+<meta name="description" content="Cuéntanos sobre tu negocio. Construimos tu web desde cero."/>
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/89/three.min.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@24,300,1,0&display=swap" rel="stylesheet">
 <style>
-/* ── TOKENS 60/30/10 ──────────────────────────────
-   60% → Negro puro #000 / #080808
-   30% → Morado profundo #1E0328 / #6B21A8
-   10% → Amarillo saturado #EAB308 / #FACC15
-─────────────────────────────────────────────────── */
+/* ── TOKENS ─────────────────────────────────────── */
 :root{
-  --black:#000000;
-  --black-2:#080808;
-  --black-3:#0f0f0f;
-  --black-4:#141414;
-  --purple-deep:#1E0328;
-  --purple:#2D0A3A;
-  --purple-mid:#6B21A8;
-  --purple-light:#9333EA;
-  --yellow:#EAB308;
-  --yellow-bright:#FACC15;
-  --yellow-dim:rgba(234,179,8,.4);
-  --yellow-glow:rgba(234,179,8,.25);
-  --white:#ffffff;
-  --white-dim:rgba(255,255,255,.5);
-  --white-faint:rgba(255,255,255,.1);
-  --border-y:rgba(234,179,8,.15);
-  --border-p:rgba(107,33,168,.3);
+  --bg:       #0C0A07;
+  --bg2:      #181410;
+  --bg3:      #211C15;
+  --gold:     #EAB308;
+  --gold-l:   #FACC15;
+  --gold-g:   rgba(234,179,8,.2);
+  --orange:   #F97316;
+  --purple:   #7C3AED;
+  --purple-l: #A78BFA;
+  --cream:    #FFF8F0;
+  --cream-4:  rgba(255,248,240,.04);
+  --cream-1:  rgba(255,248,240,.1);
+  --cream-3:  rgba(255,248,240,.3);
+  --cream-6:  rgba(255,248,240,.6);
+  --white:    #ffffff;
+  --r:        16px;
 }
 
-/* ── GRADIENT ANIMATION (bg questions, Wolverine style) ── */
-:root{
-  --ga-start:rgb(20,3,30);
-  --ga-end:rgb(0,0,0);
-  --c1:45,10,58;
-  --c2:107,33,168;
-  --c3:234,179,8;
-  --c4:30,3,40;
-  --c5:0,0,0;
-  --gsz:75%;
-  --blend:hard-light;
-}
-@keyframes gaFirst{0%{transform:translateY(-50%)}50%{transform:translateY(50%)}100%{transform:translateY(-50%)}}
-@keyframes gaSecond{0%{transform:rotate(0deg)}50%{transform:rotate(180deg)}100%{transform:rotate(360deg)}}
-@keyframes gaThird{0%{transform:rotate(0deg)}50%{transform:rotate(-180deg)}100%{transform:rotate(0deg)}}
-@keyframes gaFourth{0%{transform:translateX(-50%) translateY(-10%)}50%{transform:translateX(50%) translateY(10%)}100%{transform:translateX(-50%) translateY(-10%)}}
-@keyframes gaFifth{0%{transform:rotate(0deg)}50%{transform:rotate(180deg)}100%{transform:rotate(360deg)}}
-
-.qa-bg{
-  position:absolute;inset:0;z-index:0;overflow:hidden;
-  background:linear-gradient(40deg,var(--ga-start),var(--ga-end));
-}
-.qa-blobs{
-  position:absolute;inset:0;
-  filter:url(#blurBlobs) blur(30px);
-  will-change:transform;
-}
-.qa-blob{
-  position:absolute;border-radius:50%;
-  mix-blend-mode:var(--blend);
-  width:var(--gsz);height:var(--gsz);
-  top:calc(50% - var(--gsz)/2);
-  left:calc(50% - var(--gsz)/2);
-}
-.qa-blob-1{
-  background:radial-gradient(circle at center,rgba(var(--c1),1) 0%,rgba(var(--c1),0) 50%) no-repeat;
-  transform-origin:center center;
-  animation:gaFirst 30s ease infinite;
-  opacity:.9;
-}
-.qa-blob-2{
-  background:radial-gradient(circle at center,rgba(var(--c2),.8) 0%,rgba(var(--c2),0) 50%) no-repeat;
-  transform-origin:calc(50% - 320px);
-  animation:gaSecond 18s reverse infinite;
-  opacity:.8;
-}
-.qa-blob-3{
-  background:radial-gradient(circle at center,rgba(var(--c3),.6) 0%,rgba(var(--c3),0) 50%) no-repeat;
-  transform-origin:calc(50% + 320px);
-  animation:gaThird 36s linear infinite;
-  opacity:.5;
-}
-.qa-blob-4{
-  background:radial-gradient(circle at center,rgba(var(--c4),.8) 0%,rgba(var(--c4),0) 50%) no-repeat;
-  transform-origin:calc(50% - 160px);
-  animation:gaFourth 36s ease infinite;
-  opacity:.7;
-}
-.qa-blob-5{
-  background:radial-gradient(circle at center,rgba(var(--c5),.8) 0%,rgba(var(--c5),0) 50%) no-repeat;
-  transform-origin:calc(50% - 600px) calc(50% + 600px);
-  animation:gaFifth 18s ease infinite;
-  opacity:.9;
-}
-.qa-pointer,.qa-ptr{
-  position:absolute;
-  background:radial-gradient(circle at center,rgba(var(--c2),.55) 0%,rgba(var(--c2),0) 50%) no-repeat;
-  mix-blend-mode:var(--blend);
-  width:100%;height:100%;
-  top:-50%;left:-50%;opacity:.5;
-  transition:transform .08s linear;
-  pointer-events:none;
-}
-/* dark vignette over blobs */
-.qa-vignette{
-  position:absolute;inset:0;z-index:1;pointer-events:none;
-  background:
-    radial-gradient(ellipse 100% 60% at 50% 110%,rgba(0,0,0,.92) 0%,transparent 55%),
-    radial-gradient(ellipse 80% 50% at 50% -10%,rgba(0,0,0,.8) 0%,transparent 50%),
-    radial-gradient(ellipse 60% 60% at 50% 50%,transparent 30%,rgba(0,0,0,.55) 100%);
-}
-/* ── GRAIN TEXTURE ─────────────────────────────── */
-@keyframes grain{
-  0%,100%{transform:translate(0,0)}
-  10%{transform:translate(-2%,-3%)}
-  20%{transform:translate(3%,2%)}
-  30%{transform:translate(-1%,4%)}
-  40%{transform:translate(4%,-1%)}
-  50%{transform:translate(-3%,3%)}
-  60%{transform:translate(2%,-4%)}
-  70%{transform:translate(-4%,1%)}
-  80%{transform:translate(3%,-2%)}
-  90%{transform:translate(-2%,4%)}
-}
-body::after{
-  content:'';position:fixed;inset:-50%;z-index:1000;
-  width:200%;height:200%;
-  background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='1'/%3E%3C/svg%3E");
-  opacity:.028;pointer-events:none;
-  animation:grain 8s steps(10) infinite;
-}
-
+/* ── BASE ───────────────────────────────────────── */
 *,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
 html{font-size:16px;}
 body{
-  font-family:'Space Grotesk',sans-serif;
-  background:var(--black);
-  color:var(--white);
+  font-family:'Space Grotesk',system-ui,sans-serif;
+  background:var(--bg);color:var(--cream);
   -webkit-font-smoothing:antialiased;
-  overflow:hidden;
-  height:100dvh;width:100vw;
+  overflow:hidden;height:100dvh;width:100vw;
+}
+.material-symbols-rounded{
+  font-family:'Material Symbols Rounded';
+  font-variation-settings:'FILL' 1,'wght' 300,'GRAD' 0,'opsz' 24;
+  font-style:normal;line-height:1;
+  display:inline-block;white-space:nowrap;
+  vertical-align:middle;user-select:none;
 }
 
-/* ── SCROLL PROGRESS BAR ──────────────────────── */
-#progress-bar{
-  position:fixed;top:0;left:0;right:0;z-index:9999;
-  height:2px;background:rgba(255,255,255,.04);
-}
-#progress-fill{
-  height:100%;width:0%;
-  background:var(--yellow);
-  transition:width .35s cubic-bezier(.4,0,.2,1);
-  box-shadow:0 0 12px var(--yellow-glow),0 0 4px var(--yellow);
-}
+/* ── PROGRESS ───────────────────────────────────── */
+#pb{position:fixed;top:0;left:0;right:0;z-index:999;height:2px;background:rgba(255,248,240,.06);}
+#pf{height:100%;width:0%;background:var(--gold);
+    transition:width .4s cubic-bezier(.4,0,.2,1);
+    box-shadow:0 0 10px var(--gold-g);}
 
-/* ── HEADER ────────────────────────────────────── */
+/* ── HEADER ─────────────────────────────────────── */
 .hdr{
   position:fixed;top:0;left:0;right:0;z-index:500;
   display:flex;align-items:center;justify-content:space-between;
-  padding:20px 36px;
-  background:linear-gradient(to bottom,rgba(0,0,0,.95) 0%,transparent 100%);
-  pointer-events:none;
+  padding:22px 36px;pointer-events:none;
+  background:linear-gradient(to bottom,var(--bg) 0%,transparent 100%);
 }
 .logo{
   pointer-events:all;
-  font-family:'Space Grotesk',sans-serif;
-  font-size:14px;font-weight:900;letter-spacing:.32em;
-  color:var(--white);text-transform:uppercase;
+  font-size:13px;font-weight:700;letter-spacing:.3em;
+  color:var(--cream-6);text-transform:uppercase;
   display:flex;flex-direction:column;gap:4px;
 }
-.logo-line{
-  height:1px;width:100%;
-  background:linear-gradient(90deg,var(--yellow),rgba(234,179,8,0));
-  box-shadow:0 0 6px var(--yellow-dim);
-}
-.step-lbl{
-  pointer-events:all;
-  font-size:10px;font-weight:600;letter-spacing:.18em;
-  color:var(--yellow-dim);text-transform:uppercase;
-}
+.logo-line{height:1px;width:100%;
+  background:linear-gradient(90deg,var(--gold),transparent);}
+.step-lbl{pointer-events:all;font-size:11px;font-weight:300;
+  letter-spacing:.15em;color:rgba(255,248,240,.3);}
 
-/* ── SLIDES ────────────────────────────────────── */
+/* ── SLIDES ─────────────────────────────────────── */
 .slide{
-  position:fixed;inset:0;
-  z-index:10;
+  position:fixed;inset:0;z-index:10;
   display:flex;align-items:center;justify-content:center;
-  padding:88px 20px 72px;
-  overflow-y:auto;
+  padding:90px 20px 80px;overflow-y:auto;
   opacity:0;pointer-events:none;
   transition:opacity .42s cubic-bezier(.4,0,.2,1),
              transform .42s cubic-bezier(.4,0,.2,1);
-  transform:translateY(24px);
+  transform:translateY(20px);
   -webkit-overflow-scrolling:touch;
 }
-.slide.active{
-  opacity:1;pointer-events:all;
-  transform:translateY(0);
-}
-.slide.exit{
-  opacity:0;transform:translateY(-24px);
-  pointer-events:none;
-  transition-duration:.28s;
-}
+.slide.active{opacity:1;pointer-events:all;transform:translateY(0);}
+.slide.exit{opacity:0;transform:translateY(-20px);pointer-events:none;transition-duration:.28s;}
 
-/* ── HERO (slide-0) ────────────────────────────── */
-#s0{
-  padding:0;align-items:center;justify-content:center;
-  overflow:hidden;
-}
-/* BUG FIX: canvas pointer-events none */
-.hero-canvas-wrap{
+/* ── HERO ───────────────────────────────────────── */
+#s0{padding:0;overflow:hidden;}
+.hero-bg{
   position:absolute;inset:0;z-index:0;
-  pointer-events:none;
-}
-.hero-canvas-wrap canvas{pointer-events:none;}
-
-.hero-content{
-  position:relative;z-index:5;
-  text-align:center;
-  display:flex;flex-direction:column;
-  align-items:center;gap:24px;
-  padding:0 24px;
-}
-
-/* deep purple radial behind shader */
-#s0::before{
-  content:'';position:absolute;inset:0;z-index:1;
-  background:radial-gradient(ellipse 70% 60% at 50% 50%,var(--purple-deep) 0%,transparent 70%);
-  pointer-events:none;
-}
-/* dark vignette overlay */
-#s0::after{
-  content:'';position:absolute;inset:0;z-index:2;
   background:
-    radial-gradient(ellipse 90% 55% at 50% 105%,rgba(0,0,0,.9) 0%,transparent 55%),
-    radial-gradient(ellipse 70% 45% at 50% -5%,rgba(0,0,0,.75) 0%,transparent 50%);
-  pointer-events:none;
+    url('https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=1920&q=80')
+    center/cover no-repeat;
 }
-
-.hero-eyebrow{
+.hero-bg::after{
+  content:'';position:absolute;inset:0;
+  background:
+    linear-gradient(to bottom,rgba(12,10,7,.7) 0%,rgba(12,10,7,.55) 50%,rgba(12,10,7,.92) 100%),
+    linear-gradient(to right,rgba(12,10,7,.6) 0%,transparent 60%);
+}
+.hero-content{
+  position:relative;z-index:2;
+  text-align:center;display:flex;flex-direction:column;
+  align-items:center;gap:20px;padding:0 24px;max-width:720px;
+}
+.hero-badge{
   display:inline-flex;align-items:center;gap:8px;
-  font-size:9px;font-weight:700;letter-spacing:.24em;
-  color:var(--yellow-dim);text-transform:uppercase;
-  padding:6px 16px;
-  border:1px solid rgba(234,179,8,.12);
-  background:rgba(234,179,8,.03);
+  font-size:10px;font-weight:500;letter-spacing:.22em;
+  color:rgba(255,248,240,.4);text-transform:uppercase;
+  padding:6px 16px;border-radius:100px;
+  border:1px solid rgba(255,248,240,.1);
+  background:rgba(255,248,240,.03);
 }
-.hero-dot{
-  width:5px;height:5px;border-radius:50%;
-  background:var(--yellow);
-  box-shadow:0 0 6px var(--yellow);
-  animation:pulse 2s ease-in-out infinite;
-}
-@keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.4;transform:scale(.8)}}
+.hero-dot{width:5px;height:5px;border-radius:50%;
+  background:var(--gold);box-shadow:0 0 6px var(--gold);
+  animation:pulse 2s ease-in-out infinite;}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.3}}
 
-.hero-title{
-  /* Playfair Display 900 — headline serif editorial */
-  font-family:'Space Grotesk',sans-serif;
-  font-size:clamp(44px,8.5vw,92px);
-  font-weight:900;letter-spacing:-.01em;
-  line-height:.9;color:var(--white);
-  /* NO uppercase — Playfair se ve mejor en sentence/title case */
+.hero-h1{
+  font-size:clamp(42px,8vw,88px);font-weight:700;
+  letter-spacing:-.04em;line-height:.92;color:var(--white);
 }
-.hero-title .line-sans{
-  /* Helvetica para contraste en la segunda línea */
-  font-family:'Space Grotesk',sans-serif;
-  font-size:.72em;font-weight:900;
-  letter-spacing:.06em;text-transform:uppercase;
-  color:rgba(255,255,255,.45);
-  display:block;margin-bottom:8px;
-}
-.cycle-wrap{
-  display:inline-block;
-  font-family:'Playfair Display',serif;
-  font-style:italic;font-weight:900;
-  color:var(--yellow);
-  text-shadow:0 0 40px rgba(234,179,8,.5),0 0 80px rgba(234,179,8,.2);
+.hero-h1 em{
+  font-style:normal;color:var(--gold);
+  text-shadow:0 0 40px rgba(234,179,8,.4);
   transition:opacity .3s,transform .3s;
 }
-.typewriter-cursor{
-  display:inline-block;width:3px;height:.82em;
-  background:var(--yellow);
-  margin-left:3px;vertical-align:middle;
-  box-shadow:0 0 8px var(--yellow);
+.hero-sub{
+  font-size:15px;font-weight:300;letter-spacing:.01em;
+  color:rgba(255,248,240,.5);line-height:1.7;max-width:380px;
+}
+.hero-cursor{
+  display:inline-block;width:2px;height:.85em;
+  background:var(--gold);margin-left:2px;vertical-align:middle;
   animation:blink .8s infinite;
 }
 @keyframes blink{0%,100%{opacity:1}50%{opacity:0}}
 
-.hero-sub{
-  font-size:13px;font-weight:400;letter-spacing:.1em;
-  color:rgba(255,255,255,.4);line-height:1.8;
-  max-width:360px;text-transform:uppercase;
-}
 .hero-cta{
   display:inline-flex;align-items:center;gap:10px;
-  background:var(--yellow);color:var(--black);
-  padding:15px 34px;border:none;cursor:pointer;
+  background:var(--gold);color:var(--bg);
+  padding:16px 36px;border-radius:100px;border:none;cursor:pointer;
   font-family:'Space Grotesk',sans-serif;
-  font-size:11px;font-weight:800;letter-spacing:.22em;
-  text-transform:uppercase;touch-action:manipulation;
-  transition:all .22s cubic-bezier(.4,0,.2,1);
-  clip-path:polygon(0 0,calc(100% - 10px) 0,100% 10px,100% 100%,10px 100%,0 calc(100% - 10px));
-  box-shadow:0 0 20px var(--yellow-glow),0 4px 16px rgba(0,0,0,.4);
+  font-size:13px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;
+  transition:all .22s cubic-bezier(.4,0,.2,1);touch-action:manipulation;
+  box-shadow:0 0 24px rgba(234,179,8,.35);
   position:relative;z-index:10;
 }
-.hero-cta:hover{
-  background:var(--yellow-bright);
-  box-shadow:0 0 32px rgba(234,179,8,.5),0 8px 24px rgba(0,0,0,.5);
-  transform:translateY(-1px);
-}
+.hero-cta:hover{background:var(--gold-l);transform:translateY(-2px);
+  box-shadow:0 0 36px rgba(234,179,8,.5);}
 .hero-cta:active{transform:scale(.97);}
-.hero-cta svg{width:14px;height:14px;}
 
-/* ── QUESTION SLIDES — Wolverine style ──────────
-   Sin bordes. Sin cards. Gradient bg. Texto enorme.
-────────────────────────────────────────────────── */
-.card{
-  max-width:660px;width:100%;
-  display:flex;flex-direction:column;gap:0;
+/* ── QUESTION SLIDES — Claura style ─────────────── */
+.q-slide-bg{
+  position:absolute;inset:0;z-index:0;overflow:hidden;
+  border-radius:0;
+}
+/* mesh gradient base por pregunta (asignado via clase) */
+.q-slide-bg::before{
+  content:'';position:absolute;inset:0;
+  background:var(--mesh);
+  opacity:.85;
+}
+/* dots pattern encima del mesh */
+.q-slide-bg::after{
+  content:'';position:absolute;inset:0;
+  background-image:radial-gradient(circle,rgba(255,248,240,.18) 1px,transparent 1px);
+  background-size:28px 28px;
+  mask-image:radial-gradient(ellipse 80% 70% at 50% 50%,black 40%,transparent 100%);
+}
+/* dark overlay para legibilidad */
+.q-overlay{
+  position:absolute;inset:0;z-index:1;pointer-events:none;
+  background:
+    linear-gradient(to bottom,rgba(12,10,7,.88) 0%,rgba(12,10,7,.7) 40%,rgba(12,10,7,.88) 100%);
+}
+
+/* colores de mesh por categoría */
+.mesh-biz    {--mesh:linear-gradient(135deg,#1a0a2e,#2d1b69,#1a1410);}
+.mesh-service{--mesh:linear-gradient(135deg,#0a1a2e,#1e3a5f,#2d1b69);}
+.mesh-client {--mesh:linear-gradient(135deg,#1a1020,#4a1942,#2d0a1a);}
+.mesh-brand  {--mesh:linear-gradient(135deg,#1a0a0a,#5c2a00,#2d1500);}
+.mesh-ref    {--mesh:linear-gradient(135deg,#0a1a10,#1a4a2a,#2d2d00);}
+.mesh-photo  {--mesh:linear-gradient(135deg,#1a1020,#2d0a3a,#0a0a1a);}
+.mesh-goals  {--mesh:linear-gradient(135deg,#1a0808,#4a1000,#2d1b00);}
+.mesh-contact{--mesh:linear-gradient(135deg,#0a1820,#002d40,#001a30);}
+.mesh-timing {--mesh:linear-gradient(135deg,#1a0a20,#3d1060,#1a0a10);}
+
+/* question content wrapper */
+.q-body{
   position:relative;z-index:2;
+  max-width:620px;width:100%;
+  display:flex;flex-direction:column;gap:0;
 }
-/* panel = solo contenedor sin decoración */
-.panel{
-  background:transparent;border:none;
-  padding:0;position:relative;
-}
-.panel::before,.panel::after{display:none;}
 
-/* step — discreto, arriba */
-.q-n{
-  font-family:'Space Grotesk',sans-serif;
-  font-size:11px;font-weight:300;letter-spacing:.18em;
-  color:rgba(255,255,255,.25);
-  display:flex;align-items:center;gap:10px;
-  margin-bottom:28px;text-transform:uppercase;
+/* icon */
+.q-icon{
+  font-size:32px;color:var(--gold);
+  margin-bottom:20px;
+  animation:iconIn .5s cubic-bezier(.34,1.56,.64,1) both;
 }
-.q-n span{color:var(--yellow);font-weight:500;}
-.q-n::after{content:'';width:32px;height:1px;background:rgba(255,255,255,.12);}
+@keyframes iconIn{from{opacity:0;transform:translateY(8px) scale(.8)}to{opacity:1;transform:none}}
 
-/* PREGUNTA ENORME */
+/* counter */
+.q-step{
+  font-size:11px;font-weight:400;letter-spacing:.2em;
+  color:rgba(255,248,240,.28);text-transform:uppercase;
+  margin-bottom:16px;display:flex;align-items:center;gap:8px;
+}
+.q-step em{color:var(--gold);font-style:normal;font-weight:500;}
+.q-step::after{content:'';height:1px;width:28px;background:rgba(255,248,240,.12);}
+
+/* title */
 .q-t{
-  font-family:'Space Grotesk',sans-serif;
-  font-size:clamp(34px,5.8vw,60px);
-  font-weight:700;letter-spacing:-.04em;
-  line-height:.98;color:var(--white);
-  margin-bottom:14px;
+  font-size:clamp(28px,5vw,50px);font-weight:700;
+  letter-spacing:-.035em;line-height:.98;
+  color:var(--white);margin-bottom:10px;
+  animation:titleIn .5s .08s cubic-bezier(.4,0,.2,1) both;
 }
-.q-t em{
-  font-style:normal;font-weight:700;
-  color:var(--yellow);
-}
-/* hint */
-.q-h{
-  font-family:'Space Grotesk',sans-serif;
+@keyframes titleIn{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+.q-t em{font-style:normal;color:var(--gold);}
+
+/* subtitle */
+.q-sub{
   font-size:14px;font-weight:300;letter-spacing:.01em;
-  color:rgba(255,255,255,.32);line-height:1.6;
+  color:rgba(255,248,240,.38);line-height:1.65;
+  animation:titleIn .5s .14s cubic-bezier(.4,0,.2,1) both;
 }
 
-/* ── INPUTS ────────────────────────────────────── */
+/* ── INPUTS ─────────────────────────────────────── */
 input[type=text],input[type=email],input[type=tel],textarea{
   width:100%;background:transparent;
-  border:none;border-bottom:1px solid rgba(255,255,255,.15);
-  color:var(--white);
+  border:none;border-bottom:1.5px solid rgba(255,248,240,.15);
+  color:var(--cream);
   font-family:'Space Grotesk',sans-serif;
-  font-size:clamp(20px,3vw,28px);font-weight:300;letter-spacing:-.01em;
+  font-size:clamp(18px,2.8vw,26px);font-weight:300;
   padding:16px 0;outline:none;
-  caret-color:var(--yellow);
+  caret-color:var(--gold);
   transition:border-color .3s;
   resize:none;-webkit-appearance:none;
-  margin-top:24px;text-transform:none;
+  margin-top:28px;
+  animation:titleIn .5s .2s cubic-bezier(.4,0,.2,1) both;
 }
 input::placeholder,textarea::placeholder{
-  font-family:'Space Grotesk',sans-serif;
-  color:rgba(255,255,255,.15);font-size:13px;letter-spacing:.06em;
-  font-style:normal;
+  color:rgba(255,248,240,.18);font-size:16px;font-weight:300;
 }
-input:focus,textarea:focus{
-  border-bottom-color:var(--yellow);
-  box-shadow:0 1px 0 var(--yellow-dim);
-}
-textarea{min-height:80px;line-height:1.65;}
+input:focus,textarea:focus{border-bottom-color:var(--gold);}
+textarea{min-height:90px;line-height:1.65;}
 
-/* ── CHOICES ───────────────────────────────────── */
-.choices{display:flex;flex-direction:column;gap:7px;margin-top:18px;}
+/* ── CHOICES ─────────────────────────────────────── */
+.choices{display:flex;flex-direction:column;gap:8px;margin-top:24px;
+  animation:titleIn .5s .2s cubic-bezier(.4,0,.2,1) both;}
 .choice{
   display:flex;align-items:center;gap:14px;
-  padding:13px 16px;
-  border:1px solid var(--border-p);
-  background:rgba(0,0,0,.6);
+  padding:14px 18px;border-radius:12px;
+  border:1px solid rgba(255,248,240,.08);
+  background:rgba(255,248,240,.04);
   cursor:pointer;touch-action:manipulation;
   transition:all .18s cubic-bezier(.4,0,.2,1);
-  clip-path:polygon(0 0,calc(100% - 7px) 0,100% 7px,100% 100%,7px 100%,0 calc(100% - 7px));
 }
-.choice:hover{
-  border-color:var(--yellow);
-  background:rgba(234,179,8,.04);
-  box-shadow:inset 0 0 20px rgba(234,179,8,.03),0 0 8px rgba(234,179,8,.08);
-}
-.choice.selected{
-  border-color:var(--yellow);
-  background:rgba(234,179,8,.06);
-  box-shadow:inset 0 0 24px rgba(234,179,8,.05),0 0 12px rgba(234,179,8,.1);
-}
+.choice:hover{border-color:rgba(234,179,8,.3);background:rgba(234,179,8,.06);}
+.choice.selected{border-color:var(--gold);background:rgba(234,179,8,.1);}
 .choice input{display:none;}
 .choice-key{
-  min-width:22px;height:22px;
-  border:1px solid rgba(255,255,255,.12);
+  min-width:22px;height:22px;border-radius:6px;
+  border:1px solid rgba(255,248,240,.14);
   display:flex;align-items:center;justify-content:center;
-  font-size:9px;font-weight:700;letter-spacing:.08em;
-  color:rgba(255,255,255,.25);flex-shrink:0;
-  font-family:'Space Grotesk',sans-serif;
+  font-size:9px;font-weight:600;letter-spacing:.06em;
+  color:rgba(255,248,240,.28);flex-shrink:0;
   transition:all .18s;
 }
-.choice.selected .choice-key{
-  background:var(--yellow);border-color:var(--yellow);color:var(--black);
-  box-shadow:0 0 8px var(--yellow-dim);
-}
-.choice-text{
-  font-family:'Space Grotesk',sans-serif;
-  font-size:11px;font-weight:600;letter-spacing:.12em;
-  color:rgba(255,255,255,.75);text-transform:uppercase;
-}
+.choice.selected .choice-key{background:var(--gold);border-color:var(--gold);color:var(--bg);}
+.choice-text{font-size:13px;font-weight:400;color:rgba(255,248,240,.78);}
 
-/* ── BUTTONS ───────────────────────────────────── */
-.btn-row{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-top:22px;}
+/* ── BUTTONS ─────────────────────────────────────── */
+.btn-row{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-top:28px;
+  animation:titleIn .5s .26s cubic-bezier(.4,0,.2,1) both;}
 .btn-next{
   display:inline-flex;align-items:center;gap:8px;
-  background:var(--yellow);color:var(--black);
-  padding:12px 22px;border:none;cursor:pointer;
+  background:var(--gold);color:var(--bg);
+  padding:13px 24px;border-radius:100px;border:none;cursor:pointer;
   font-family:'Space Grotesk',sans-serif;
-  font-size:10px;font-weight:800;letter-spacing:.2em;
-  text-transform:uppercase;touch-action:manipulation;
-  transition:all .2s cubic-bezier(.4,0,.2,1);
-  clip-path:polygon(0 0,calc(100% - 8px) 0,100% 8px,100% 100%,8px 100%,0 calc(100% - 8px));
-  box-shadow:0 0 14px var(--yellow-glow);
+  font-size:12px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;
+  transition:all .2s cubic-bezier(.4,0,.2,1);touch-action:manipulation;
+  box-shadow:0 0 16px rgba(234,179,8,.25);
 }
-.btn-next:hover{
-  background:var(--yellow-bright);
-  box-shadow:0 0 22px rgba(234,179,8,.45);
-  transform:translateY(-1px);
-}
+.btn-next:hover{background:var(--gold-l);box-shadow:0 0 24px rgba(234,179,8,.4);transform:translateY(-1px);}
 .btn-next:active{transform:scale(.97);}
-.btn-next svg{width:13px;height:13px;}
-.btn-next.purple{
-  background:transparent;color:var(--purple-light);
-  border:1px solid var(--purple-mid);
-  box-shadow:0 0 14px rgba(107,33,168,.2);
-}
-.btn-next.purple:hover{
-  background:rgba(107,33,168,.1);
-  border-color:var(--purple-light);
-  box-shadow:0 0 22px rgba(107,33,168,.35);
-  color:var(--white);
-}
+.btn-next.alt{background:transparent;color:var(--purple-l);
+  border:1px solid rgba(167,139,250,.3);box-shadow:none;}
+.btn-next.alt:hover{background:rgba(124,58,237,.1);border-color:var(--purple-l);}
 
 .btn-back{
   display:inline-flex;align-items:center;gap:6px;
-  background:transparent;color:rgba(255,255,255,.25);
-  padding:12px 14px;
-  border:1px solid rgba(255,255,255,.08);cursor:pointer;
+  background:transparent;color:rgba(255,248,240,.22);
+  padding:13px 14px;border-radius:100px;
+  border:1px solid rgba(255,248,240,.08);cursor:pointer;
   font-family:'Space Grotesk',sans-serif;
-  font-size:9px;font-weight:600;letter-spacing:.16em;
-  text-transform:uppercase;touch-action:manipulation;
-  transition:all .2s;
-  clip-path:polygon(0 0,calc(100% - 6px) 0,100% 6px,100% 100%,6px 100%,0 calc(100% - 6px));
+  font-size:10px;font-weight:500;letter-spacing:.14em;text-transform:uppercase;
+  transition:all .2s;touch-action:manipulation;
 }
-.btn-back:hover{color:rgba(255,255,255,.6);border-color:rgba(255,255,255,.18);}
-
-.key-tip{
-  font-size:9px;letter-spacing:.12em;
-  color:rgba(255,255,255,.12);text-transform:uppercase;
-  margin-left:auto;
-}
+.btn-back:hover{color:rgba(255,248,240,.55);border-color:rgba(255,248,240,.2);}
+.key-tip{font-size:9px;letter-spacing:.12em;color:rgba(255,248,240,.12);margin-left:auto;}
 
 /* ── THANKS ─────────────────────────────────────── */
-.thanks-links{display:flex;gap:10px;flex-wrap:wrap;margin-top:20px;}
+.thanks-links{display:flex;gap:10px;flex-wrap:wrap;margin-top:22px;}
 .thanks-link{
   display:inline-flex;align-items:center;gap:8px;
-  padding:10px 18px;
-  border:1px solid var(--border-p);
-  background:rgba(0,0,0,.7);
-  color:var(--yellow);
-  font-family:'Space Grotesk',sans-serif;
-  font-size:9px;font-weight:700;letter-spacing:.16em;
-  text-transform:uppercase;
-  text-decoration:none;transition:all .2s;cursor:pointer;
-  clip-path:polygon(0 0,calc(100% - 7px) 0,100% 7px,100% 100%,7px 100%,0 calc(100% - 7px));
+  padding:11px 20px;border-radius:100px;
+  border:1px solid rgba(255,248,240,.1);background:rgba(255,248,240,.04);
+  color:var(--gold);font-size:10px;font-weight:600;letter-spacing:.14em;
+  text-transform:uppercase;text-decoration:none;transition:all .2s;cursor:pointer;
 }
-.thanks-link:hover{
-  border-color:var(--yellow);
-  box-shadow:0 0 14px var(--yellow-glow);
-  background:rgba(234,179,8,.06);
-}
+.thanks-link:hover{border-color:var(--gold);background:rgba(234,179,8,.07);}
 
 /* ── FOOTER ─────────────────────────────────────── */
 .ftr{
   position:fixed;bottom:0;left:0;right:0;z-index:20;
-  padding:14px 36px;
-  background:linear-gradient(to top,rgba(0,0,0,.92) 40%,transparent);
+  padding:14px 36px;pointer-events:none;
+  background:linear-gradient(to top,var(--bg) 40%,transparent);
   display:flex;justify-content:space-between;align-items:center;
-  pointer-events:none;
 }
-.ftr-brand{
-  font-size:9px;letter-spacing:.22em;
-  color:rgba(255,255,255,.12);text-transform:uppercase;
+.ftr-brand{font-size:9px;letter-spacing:.2em;color:rgba(255,248,240,.12);text-transform:uppercase;}
+
+/* ── GRAIN ───────────────────────────────────────── */
+@keyframes grain{
+  0%,100%{transform:translate(0,0)} 10%{transform:translate(-2%,-3%)}
+  20%{transform:translate(3%,2%)} 30%{transform:translate(-1%,4%)}
+  40%{transform:translate(4%,-1%)} 50%{transform:translate(-3%,3%)}
+  60%{transform:translate(2%,-4%)} 70%{transform:translate(-4%,1%)}
+}
+body::after{
+  content:'';position:fixed;inset:-50%;z-index:1000;width:200%;height:200%;
+  background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  opacity:.022;pointer-events:none;animation:grain 8s steps(10) infinite;
 }
 
 /* ── RESPONSIVE ─────────────────────────────────── */
 @media(max-width:540px){
   .hdr{padding:16px 18px;}
-  .panel{padding:24px 20px;clip-path:polygon(0 0,calc(100% - 12px) 0,100% 12px,100% 100%,12px 100%,0 calc(100% - 12px));}
-  .hero-title{font-size:clamp(38px,11vw,68px);}
+  .q-t{font-size:clamp(26px,8vw,40px);}
+  .slide{padding:80px 18px 72px;}
   .key-tip{display:none;}
-  .ftr{padding:12px 18px;}
-  .slide{padding:80px 16px 68px;}
 }
 @media(prefers-reduced-motion:reduce){
-  .slide,#progress-fill,.hero-cta,canvas,body::after{animation:none;transition:none;}
+  .slide,#pf,.hero-cta,canvas,body::after,.q-icon,.q-t,.q-sub,.btn-row,.choices,input,textarea{animation:none;transition:none;}
 }
 </style>
 </head>
 <body>
 
-<!-- SVG FILTER BLOBS -->
-<svg style="position:fixed;width:0;height:0;overflow:hidden">
-  <defs>
-    <filter id="blurBlobs">
-      <feGaussianBlur in="SourceGraphic" stdDeviation="14" result="blur"/>
-      <feColorMatrix in="blur" mode="matrix"
-        values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 20 -9"
-        result="goo"/>
-      <feBlend in="SourceGraphic" in2="goo"/>
-    </filter>
-  </defs>
-</svg>
+<div id="pb"><div id="pf"></div></div>
 
-<!-- SCROLL PROGRESS BAR -->
-<div id="progress-bar"><div id="progress-fill"></div></div>
-
-<!-- HEADER -->
 <header class="hdr">
-  <div class="logo">
-    <span>RMK</span>
-    <div class="logo-line"></div>
-  </div>
+  <div class="logo"><span>RMK</span><div class="logo-line"></div></div>
   <span class="step-lbl" id="stepLbl"></span>
 </header>
 
-<!-- ══════════════════════════════════
-     SLIDE 0 — HERO
-══════════════════════════════════ -->
+<!-- ══════ HERO ══════ -->
 <div class="slide active" id="s0">
-  <div class="hero-canvas-wrap" id="heroCanvas"></div>
-
+  <div class="hero-bg"></div>
   <div class="hero-content">
-    <div class="hero-eyebrow">
-      <span class="hero-dot"></span>
-      Brief Web &middot; RMK
-    </div>
-
-    <h1 class="hero-title">
-      <span class="line-sans">Tu web</span>
-      <span class="cycle-wrap" id="cycleText">perfecta</span><span class="typewriter-cursor"></span>
+    <div class="hero-badge"><span class="hero-dot"></span>Brief Web · RMK</div>
+    <h1 class="hero-h1">
+      Tu web,<br/>hecha <em id="cycleText">perfecta</em><span class="hero-cursor"></span>
     </h1>
-
-    <p class="hero-sub">
-      15 minutos &middot; Tu web construida sin molestarte después
-    </p>
-
+    <p class="hero-sub">15 minutos. Sin tecnicismos. Te preguntamos lo que necesitamos para construir algo que realmente funcione.</p>
     <button class="hero-cta" onclick="goTo(1)">
-      EMPEZAR
-      <svg viewBox="0 0 14 14" fill="none"><path d="M2 7h10M7 3l4 4-4 4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      Empezar ahora
+      <span class="material-symbols-rounded" style="font-size:18px">arrow_forward</span>
     </button>
   </div>
 </div>
 
-<!-- ══════════════════════════════════
-     PREGUNTAS 1–21
-══════════════════════════════════ -->
+<!-- ══════ PREGUNTAS ══════ -->
 
 <div class="slide" id="s1">
-  <!-- gradient bg blobs -->
-  <div class="qa-bg">
-    <div class="qa-blobs">
-      <div class="qa-blob qa-blob-1"></div>
-      <div class="qa-blob qa-blob-2"></div>
-      <div class="qa-blob qa-blob-3"></div>
-      <div class="qa-blob qa-blob-4"></div>
-      <div class="qa-blob qa-blob-5"></div>
-      <div class="qa-pointer" id="qaPointer"></div>
+  <div class="q-slide-bg mesh-biz"><div class="q-overlay"></div></div>
+  <div class="q-body">
+    <span class="material-symbols-rounded q-icon">storefront</span>
+    <div class="q-step"><em>01</em> — 21</div>
+    <h2 class="q-t">Primero lo primero.<br/>¿Cómo se llama <em>tu negocio?</em></h2>
+    <p class="q-sub">El nombre dice mucho. Empieza por ahí.</p>
+    <input type="text" id="q1" placeholder="Ej: Studio Bella · The Coffee Spot" autocomplete="organization"/>
+    <div class="btn-row">
+      <button class="btn-back" onclick="goTo(0)">← Atrás</button>
+      <button class="btn-next" onclick="goTo(2)">Continuar <span class="material-symbols-rounded" style="font-size:16px">arrow_forward</span></button>
+      <span class="key-tip">Enter ↵</span>
     </div>
-    <div class="qa-vignette"></div>
   </div>
-  <div class="card"><div class="panel">
-  <div class="q-n"><span>01</span> — 21</div>
-  <h2 class="q-t">¿Cómo se llama<br/><em>tu negocio?</em></h2>
-  <input type="text" id="q1" placeholder="Ej: Studio Bella / The Coffee Spot" autocomplete="organization"/>
-  <div class="btn-row">
-    <button class="btn-back" onclick="goTo(0)">← ATRÁS</button>
-    <button class="btn-next" onclick="goTo(2)">SIGUIENTE <svg viewBox="0 0 14 14" fill="none"><path d="M2 7h10M7 3l4 4-4 4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
-    <span class="key-tip">ENTER ↵</span>
-  </div>
-</div></div></div>
+</div>
 
-<div class="slide" id="s2"><div class="card"><div class="panel">
-  <div class="q-n"><span>02</span> — 21</div>
-  <h2 class="q-t">¿A qué se <em>dedica?</em></h2>
-  <p class="q-h">Cuéntanos en 2-3 líneas.</p>
-  <textarea id="q2" placeholder="Ej: Galletas artesanales para eventos y venta online en Calgary…" rows="4"></textarea>
-  <div class="btn-row">
-    <button class="btn-back" onclick="goTo(1)">← ATRÁS</button>
-    <button class="btn-next" onclick="goTo(3)">SIGUIENTE <svg viewBox="0 0 14 14" fill="none"><path d="M2 7h10M7 3l4 4-4 4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+<div class="slide" id="s2">
+  <div class="q-slide-bg mesh-biz"><div class="q-overlay"></div></div>
+  <div class="q-body">
+    <span class="material-symbols-rounded q-icon">business_center</span>
+    <div class="q-step"><em>02</em> — 21</div>
+    <h2 class="q-t">Cuéntanos qué haces.<br/><em>Sin rodeos.</em></h2>
+    <p class="q-sub">En tus propias palabras. 2-3 líneas está perfecto.</p>
+    <textarea id="q2" placeholder="Ej: Somos un salón especializado en coloración. Atendemos a mujeres profesionales en Calgary." rows="4"></textarea>
+    <div class="btn-row">
+      <button class="btn-back" onclick="goTo(1)">← Atrás</button>
+      <button class="btn-next" onclick="goTo(3)">Continuar <span class="material-symbols-rounded" style="font-size:16px">arrow_forward</span></button>
+    </div>
   </div>
-</div></div></div>
+</div>
 
-<div class="slide" id="s3"><div class="card"><div class="panel">
-  <div class="q-n">03 <span>—</span> 21</div>
-  <h2 class="q-t">¿Ciudad y <em>país?</em></h2>
-  <input type="text" id="q3" placeholder="Ej: Calgary, Canadá"/>
-  <div class="btn-row">
-    <button class="btn-back" onclick="goTo(2)">← ATRÁS</button>
-    <button class="btn-next" onclick="goTo(4)">SIGUIENTE <svg viewBox="0 0 14 14" fill="none"><path d="M2 7h10M7 3l4 4-4 4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
-    <span class="key-tip">ENTER ↵</span>
+<div class="slide" id="s3">
+  <div class="q-slide-bg mesh-biz"><div class="q-overlay"></div></div>
+  <div class="q-body">
+    <span class="material-symbols-rounded q-icon">location_on</span>
+    <div class="q-step"><em>03</em> — 21</div>
+    <h2 class="q-t">Ponemos tu negocio<br/><em>en el mapa.</em></h2>
+    <p class="q-sub">¿Desde dónde operas?</p>
+    <input type="text" id="q3" placeholder="Ej: Calgary, Canadá · Bogotá, Colombia"/>
+    <div class="btn-row">
+      <button class="btn-back" onclick="goTo(2)">← Atrás</button>
+      <button class="btn-next" onclick="goTo(4)">Continuar <span class="material-symbols-rounded" style="font-size:16px">arrow_forward</span></button>
+      <span class="key-tip">Enter ↵</span>
+    </div>
   </div>
-</div></div></div>
+</div>
 
-<div class="slide" id="s4"><div class="card"><div class="panel">
-  <div class="q-n">04 <span>—</span> 21</div>
-  <h2 class="q-t">¿Cómo <em>funciona</em><br/>tu negocio?</h2>
-  <div class="choices">
-    <label class="choice" onclick="pick(this,'q4')"><span class="choice-key">A</span><input type="radio" name="q4" value="Tengo local físico donde atiendo"/><span class="choice-text">Tengo local físico donde atiendo</span></label>
-    <label class="choice" onclick="pick(this,'q4')"><span class="choice-key">B</span><input type="radio" name="q4" value="Solo trabajo online"/><span class="choice-text">Solo trabajo online</span></label>
-    <label class="choice" onclick="pick(this,'q4')"><span class="choice-key">C</span><input type="radio" name="q4" value="Los dos: local y online"/><span class="choice-text">Los dos: local y online</span></label>
+<div class="slide" id="s4">
+  <div class="q-slide-bg mesh-biz"><div class="q-overlay"></div></div>
+  <div class="q-body">
+    <span class="material-symbols-rounded q-icon">hub</span>
+    <div class="q-step"><em>04</em> — 21</div>
+    <h2 class="q-t">¿Cómo le llegas<br/><em>a tus clientes?</em></h2>
+    <div class="choices">
+      <label class="choice" onclick="pick(this,'q4')"><span class="choice-key">A</span><input type="radio" name="q4" value="Local físico"/><span class="choice-text">Tengo un local donde los atiendo</span></label>
+      <label class="choice" onclick="pick(this,'q4')"><span class="choice-key">B</span><input type="radio" name="q4" value="Online"/><span class="choice-text">Todo online — pedidos, envíos, videollamadas</span></label>
+      <label class="choice" onclick="pick(this,'q4')"><span class="choice-key">C</span><input type="radio" name="q4" value="Local y online"/><span class="choice-text">Los dos — local y también online</span></label>
+    </div>
+    <div class="btn-row">
+      <button class="btn-back" onclick="goTo(3)">← Atrás</button>
+      <button class="btn-next" onclick="goTo(5)">Continuar <span class="material-symbols-rounded" style="font-size:16px">arrow_forward</span></button>
+    </div>
   </div>
-  <div class="btn-row">
-    <button class="btn-back" onclick="goTo(3)">← ATRÁS</button>
-    <button class="btn-next" onclick="goTo(5)">SIGUIENTE <svg viewBox="0 0 14 14" fill="none"><path d="M2 7h10M7 3l4 4-4 4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
-  </div>
-</div></div></div>
+</div>
 
-<div class="slide" id="s5"><div class="card"><div class="panel">
-  <div class="q-n">05 <span>—</span> 21</div>
-  <h2 class="q-t">¿Qué vendes o<br/><em>qué servicios ofreces?</em></h2>
-  <p class="q-h">Puedes hacer una lista.</p>
-  <textarea id="q5" placeholder="Ej: Corte, coloración, keratina, manicure…" rows="5"></textarea>
-  <div class="btn-row">
-    <button class="btn-back" onclick="goTo(4)">← ATRÁS</button>
-    <button class="btn-next" onclick="goTo(6)">SIGUIENTE <svg viewBox="0 0 14 14" fill="none"><path d="M2 7h10M7 3l4 4-4 4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+<div class="slide" id="s5">
+  <div class="q-slide-bg mesh-service"><div class="q-overlay"></div></div>
+  <div class="q-body">
+    <span class="material-symbols-rounded q-icon">inventory_2</span>
+    <div class="q-step"><em>05</em> — 21</div>
+    <h2 class="q-t">Ahora la parte buena.<br/><em>¿Qué vendes?</em></h2>
+    <p class="q-sub">Cuéntanos qué ofreces. Puedes hacer una lista.</p>
+    <textarea id="q5" placeholder="Ej: Coloración, corte, tratamientos, manicure…" rows="4"></textarea>
+    <div class="btn-row">
+      <button class="btn-back" onclick="goTo(4)">← Atrás</button>
+      <button class="btn-next" onclick="goTo(6)">Continuar <span class="material-symbols-rounded" style="font-size:16px">arrow_forward</span></button>
+    </div>
   </div>
-</div></div></div>
+</div>
 
-<div class="slide" id="s6"><div class="card"><div class="panel">
-  <div class="q-n">06 <span>—</span> 21</div>
-  <h2 class="q-t">¿Cuál es tu<br/><em>servicio estrella?</em></h2>
-  <p class="q-h">El que más vendes o del que más te enorgulleces.</p>
-  <input type="text" id="q6" placeholder="Ej: Coloración balayage personalizada"/>
-  <div class="btn-row">
-    <button class="btn-back" onclick="goTo(5)">← ATRÁS</button>
-    <button class="btn-next" onclick="goTo(7)">SIGUIENTE <svg viewBox="0 0 14 14" fill="none"><path d="M2 7h10M7 3l4 4-4 4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
-    <span class="key-tip">ENTER ↵</span>
+<div class="slide" id="s6">
+  <div class="q-slide-bg mesh-service"><div class="q-overlay"></div></div>
+  <div class="q-body">
+    <span class="material-symbols-rounded q-icon">star</span>
+    <div class="q-step"><em>06</em> — 21</div>
+    <h2 class="q-t">Si pudieras elegir uno.<br/><em>¿Cuál sería tu estrella?</em></h2>
+    <p class="q-sub">El servicio o producto del que más te enorgulleces.</p>
+    <input type="text" id="q6" placeholder="Ej: La coloración balayage personalizada"/>
+    <div class="btn-row">
+      <button class="btn-back" onclick="goTo(5)">← Atrás</button>
+      <button class="btn-next" onclick="goTo(7)">Continuar <span class="material-symbols-rounded" style="font-size:16px">arrow_forward</span></button>
+      <span class="key-tip">Enter ↵</span>
+    </div>
   </div>
-</div></div></div>
+</div>
 
-<div class="slide" id="s7"><div class="card"><div class="panel">
-  <div class="q-n">07 <span>—</span> 21</div>
-  <h2 class="q-t">¿Cómo llegan<br/><em>tus clientes hoy?</em></h2>
-  <p class="q-h">Puedes marcar varios.</p>
-  <div class="choices">
-    <label class="choice" onclick="chk(this)"><span class="choice-key">☐</span><input type="checkbox" name="q7" value="Instagram / Facebook"/><span class="choice-text">Instagram / Facebook</span></label>
-    <label class="choice" onclick="chk(this)"><span class="choice-key">☐</span><input type="checkbox" name="q7" value="Recomendación (voz a voz)"/><span class="choice-text">Recomendación (voz a voz)</span></label>
-    <label class="choice" onclick="chk(this)"><span class="choice-key">☐</span><input type="checkbox" name="q7" value="Google"/><span class="choice-text">Google</span></label>
-    <label class="choice" onclick="chk(this)"><span class="choice-key">☐</span><input type="checkbox" name="q7" value="TikTok"/><span class="choice-text">TikTok</span></label>
-    <label class="choice" onclick="chk(this)"><span class="choice-key">☐</span><input type="checkbox" name="q7" value="WhatsApp directo"/><span class="choice-text">WhatsApp directo</span></label>
-    <label class="choice" onclick="chk(this)"><span class="choice-key">☐</span><input type="checkbox" name="q7" value="Ferias o eventos"/><span class="choice-text">Ferias o eventos</span></label>
+<div class="slide" id="s7">
+  <div class="q-slide-bg mesh-client"><div class="q-overlay"></div></div>
+  <div class="q-body">
+    <span class="material-symbols-rounded q-icon">diversity_3</span>
+    <div class="q-step"><em>07</em> — 21</div>
+    <h2 class="q-t">¿Por dónde te encuentra<br/><em>la gente hoy?</em></h2>
+    <p class="q-sub">Marca todos los que apliquen.</p>
+    <div class="choices">
+      <label class="choice" onclick="chk(this)"><span class="choice-key">☐</span><input type="checkbox" name="q7" value="Instagram / Facebook"/><span class="choice-text">Instagram / Facebook</span></label>
+      <label class="choice" onclick="chk(this)"><span class="choice-key">☐</span><input type="checkbox" name="q7" value="Recomendación (voz a voz)"/><span class="choice-text">Recomendación entre conocidos</span></label>
+      <label class="choice" onclick="chk(this)"><span class="choice-key">☐</span><input type="checkbox" name="q7" value="Google"/><span class="choice-text">Google</span></label>
+      <label class="choice" onclick="chk(this)"><span class="choice-key">☐</span><input type="checkbox" name="q7" value="TikTok"/><span class="choice-text">TikTok</span></label>
+      <label class="choice" onclick="chk(this)"><span class="choice-key">☐</span><input type="checkbox" name="q7" value="WhatsApp directo"/><span class="choice-text">WhatsApp directo</span></label>
+      <label class="choice" onclick="chk(this)"><span class="choice-key">☐</span><input type="checkbox" name="q7" value="Ferias o eventos"/><span class="choice-text">Ferias o eventos</span></label>
+    </div>
+    <div class="btn-row">
+      <button class="btn-back" onclick="goTo(6)">← Atrás</button>
+      <button class="btn-next" onclick="goTo(8)">Continuar <span class="material-symbols-rounded" style="font-size:16px">arrow_forward</span></button>
+    </div>
   </div>
-  <div class="btn-row">
-    <button class="btn-back" onclick="goTo(6)">← ATRÁS</button>
-    <button class="btn-next" onclick="goTo(8)">SIGUIENTE <svg viewBox="0 0 14 14" fill="none"><path d="M2 7h10M7 3l4 4-4 4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
-  </div>
-</div></div></div>
+</div>
 
-<div class="slide" id="s8"><div class="card"><div class="panel">
-  <div class="q-n">08 <span>—</span> 21</div>
-  <h2 class="q-t">¿Ya tienes <em>logo?</em></h2>
-  <div class="choices">
-    <label class="choice" onclick="pick(this,'q8')"><span class="choice-key">A</span><input type="radio" name="q8" value="Sí, tengo logo"/><span class="choice-text">Sí, tengo logo</span></label>
-    <label class="choice" onclick="pick(this,'q8')"><span class="choice-key">B</span><input type="radio" name="q8" value="No tengo todavía"/><span class="choice-text">No tengo todavía</span></label>
-    <label class="choice" onclick="pick(this,'q8')"><span class="choice-key">C</span><input type="radio" name="q8" value="Tengo algo pero no me convence"/><span class="choice-text">Tengo algo pero no me convence</span></label>
+<div class="slide" id="s8">
+  <div class="q-slide-bg mesh-brand"><div class="q-overlay"></div></div>
+  <div class="q-body">
+    <span class="material-symbols-rounded q-icon">draw</span>
+    <div class="q-step"><em>08</em> — 21</div>
+    <h2 class="q-t">Hablemos de<br/><em>tu imagen.</em> ¿Tienes logo?</h2>
+    <div class="choices">
+      <label class="choice" onclick="pick(this,'q8')"><span class="choice-key">A</span><input type="radio" name="q8" value="Sí, tengo logo"/><span class="choice-text">Sí, y me encanta</span></label>
+      <label class="choice" onclick="pick(this,'q8')"><span class="choice-key">B</span><input type="radio" name="q8" value="Tengo algo pero no me convence"/><span class="choice-text">Tengo algo pero podría mejorar</span></label>
+      <label class="choice" onclick="pick(this,'q8')"><span class="choice-key">C</span><input type="radio" name="q8" value="No tengo todavía"/><span class="choice-text">Nada todavía</span></label>
+    </div>
+    <p class="q-sub" style="margin-top:14px;">Si tienes → envíalo al WhatsApp +1 587 585 4143 después.</p>
+    <div class="btn-row">
+      <button class="btn-back" onclick="goTo(7)">← Atrás</button>
+      <button class="btn-next" onclick="goTo(9)">Continuar <span class="material-symbols-rounded" style="font-size:16px">arrow_forward</span></button>
+    </div>
   </div>
-  <p class="q-h" style="margin-top:14px;">Si tienes logo → envíalo al +1 587 585 4143 después de completar el brief.</p>
-  <div class="btn-row">
-    <button class="btn-back" onclick="goTo(7)">← ATRÁS</button>
-    <button class="btn-next" onclick="goTo(9)">SIGUIENTE <svg viewBox="0 0 14 14" fill="none"><path d="M2 7h10M7 3l4 4-4 4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
-  </div>
-</div></div></div>
+</div>
 
-<div class="slide" id="s9"><div class="card"><div class="panel">
-  <div class="q-n">09 <span>—</span> 21</div>
-  <h2 class="q-t">¿Colores de <em>marca?</em></h2>
-  <p class="q-h">Nombres o códigos hex. Si no tienes, deja en blanco.</p>
-  <input type="text" id="q9" placeholder="Ej: negro y dorado / rosa nude y blanco"/>
-  <div class="btn-row">
-    <button class="btn-back" onclick="goTo(8)">← ATRÁS</button>
-    <button class="btn-next" onclick="goTo(10)">SIGUIENTE <svg viewBox="0 0 14 14" fill="none"><path d="M2 7h10M7 3l4 4-4 4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
-    <span class="key-tip">ENTER ↵</span>
+<div class="slide" id="s9">
+  <div class="q-slide-bg mesh-brand"><div class="q-overlay"></div></div>
+  <div class="q-body">
+    <span class="material-symbols-rounded q-icon">palette</span>
+    <div class="q-step"><em>09</em> — 21</div>
+    <h2 class="q-t">Los colores dicen mucho.<br/><em>¿Ya tienes los tuyos?</em></h2>
+    <p class="q-sub">Nombres o códigos hex. Si no tienes, deja en blanco.</p>
+    <input type="text" id="q9" placeholder="Ej: negro y dorado · rosa nude y blanco"/>
+    <div class="btn-row">
+      <button class="btn-back" onclick="goTo(8)">← Atrás</button>
+      <button class="btn-next" onclick="goTo(10)">Continuar <span class="material-symbols-rounded" style="font-size:16px">arrow_forward</span></button>
+      <span class="key-tip">Enter ↵</span>
+    </div>
   </div>
-</div></div></div>
+</div>
 
-<div class="slide" id="s10"><div class="card"><div class="panel">
-  <div class="q-n">10 <span>—</span> 21</div>
-  <h2 class="q-t">¿Estilo de<br/><em>tu marca?</em></h2>
-  <p class="q-h">Elige todos los que te representen.</p>
-  <div class="choices">
-    <label class="choice" onclick="chk(this)"><span class="choice-key">☐</span><input type="checkbox" name="q10" value="Moderno y limpio"/><span class="choice-text">Moderno y limpio</span></label>
-    <label class="choice" onclick="chk(this)"><span class="choice-key">☐</span><input type="checkbox" name="q10" value="Elegante y sofisticado"/><span class="choice-text">Elegante y sofisticado</span></label>
-    <label class="choice" onclick="chk(this)"><span class="choice-key">☐</span><input type="checkbox" name="q10" value="Divertido y con personalidad"/><span class="choice-text">Divertido y con personalidad</span></label>
-    <label class="choice" onclick="chk(this)"><span class="choice-key">☐</span><input type="checkbox" name="q10" value="Natural y orgánico"/><span class="choice-text">Natural y orgánico</span></label>
-    <label class="choice" onclick="chk(this)"><span class="choice-key">☐</span><input type="checkbox" name="q10" value="Minimalista"/><span class="choice-text">Minimalista</span></label>
-    <label class="choice" onclick="chk(this)"><span class="choice-key">☐</span><input type="checkbox" name="q10" value="Cálido y acogedor"/><span class="choice-text">Cálido y acogedor</span></label>
-    <label class="choice" onclick="chk(this)"><span class="choice-key">☐</span><input type="checkbox" name="q10" value="Profesional y serio"/><span class="choice-text">Profesional y serio</span></label>
-    <label class="choice" onclick="chk(this)"><span class="choice-key">☐</span><input type="checkbox" name="q10" value="Juvenil y fresco"/><span class="choice-text">Juvenil y fresco</span></label>
+<div class="slide" id="s10">
+  <div class="q-slide-bg mesh-brand"><div class="q-overlay"></div></div>
+  <div class="q-body">
+    <span class="material-symbols-rounded q-icon">auto_awesome</span>
+    <div class="q-step"><em>10</em> — 21</div>
+    <h2 class="q-t">¿Cómo quieres<br/><em>que te perciban?</em></h2>
+    <p class="q-sub">Elige los que más te representen.</p>
+    <div class="choices">
+      <label class="choice" onclick="chk(this)"><span class="choice-key">☐</span><input type="checkbox" name="q10" value="Moderno y limpio"/><span class="choice-text">Moderno y limpio</span></label>
+      <label class="choice" onclick="chk(this)"><span class="choice-key">☐</span><input type="checkbox" name="q10" value="Elegante y sofisticado"/><span class="choice-text">Elegante y sofisticado</span></label>
+      <label class="choice" onclick="chk(this)"><span class="choice-key">☐</span><input type="checkbox" name="q10" value="Divertido y con personalidad"/><span class="choice-text">Divertido y con personalidad</span></label>
+      <label class="choice" onclick="chk(this)"><span class="choice-key">☐</span><input type="checkbox" name="q10" value="Natural y orgánico"/><span class="choice-text">Natural y orgánico</span></label>
+      <label class="choice" onclick="chk(this)"><span class="choice-key">☐</span><input type="checkbox" name="q10" value="Minimalista"/><span class="choice-text">Minimalista — menos es más</span></label>
+      <label class="choice" onclick="chk(this)"><span class="choice-key">☐</span><input type="checkbox" name="q10" value="Cálido y acogedor"/><span class="choice-text">Cálido y acogedor</span></label>
+      <label class="choice" onclick="chk(this)"><span class="choice-key">☐</span><input type="checkbox" name="q10" value="Profesional"/><span class="choice-text">Profesional y confiable</span></label>
+      <label class="choice" onclick="chk(this)"><span class="choice-key">☐</span><input type="checkbox" name="q10" value="Juvenil y fresco"/><span class="choice-text">Juvenil y fresco</span></label>
+    </div>
+    <div class="btn-row">
+      <button class="btn-back" onclick="goTo(9)">← Atrás</button>
+      <button class="btn-next" onclick="goTo(11)">Continuar <span class="material-symbols-rounded" style="font-size:16px">arrow_forward</span></button>
+    </div>
   </div>
-  <div class="btn-row">
-    <button class="btn-back" onclick="goTo(9)">← ATRÁS</button>
-    <button class="btn-next" onclick="goTo(11)">SIGUIENTE <svg viewBox="0 0 14 14" fill="none"><path d="M2 7h10M7 3l4 4-4 4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
-  </div>
-</div></div></div>
+</div>
 
-<div class="slide" id="s11"><div class="card"><div class="panel">
-  <div class="q-n">11 <span>—</span> 21</div>
-  <h2 class="q-t">¿Webs o marcas que<br/><em>te gusten?</em></h2>
-  <p class="q-h">1-3 ejemplos. Links o nombres. No tiene que ser del mismo rubro.</p>
-  <textarea id="q11" placeholder="Ej: glossier.com / @zara / la web de Apple…" rows="4"></textarea>
-  <div class="btn-row">
-    <button class="btn-back" onclick="goTo(10)">← ATRÁS</button>
-    <button class="btn-next" onclick="goTo(12)">SIGUIENTE <svg viewBox="0 0 14 14" fill="none"><path d="M2 7h10M7 3l4 4-4 4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+<div class="slide" id="s11">
+  <div class="q-slide-bg mesh-ref"><div class="q-overlay"></div></div>
+  <div class="q-body">
+    <span class="material-symbols-rounded q-icon">favorite</span>
+    <div class="q-step"><em>11</em> — 21</div>
+    <h2 class="q-t">La inspiración importa.<br/><em>¿Qué web te enamora?</em></h2>
+    <p class="q-sub">Links o nombres de marcas. No tiene que ser del mismo rubro.</p>
+    <textarea id="q11" placeholder="Ej: glossier.com · @zara · la web de Apple…" rows="4"></textarea>
+    <div class="btn-row">
+      <button class="btn-back" onclick="goTo(10)">← Atrás</button>
+      <button class="btn-next" onclick="goTo(12)">Continuar <span class="material-symbols-rounded" style="font-size:16px">arrow_forward</span></button>
+    </div>
   </div>
-</div></div></div>
+</div>
 
-<div class="slide" id="s12"><div class="card"><div class="panel">
-  <div class="q-n">12 <span>—</span> 21</div>
-  <h2 class="q-t">¿Qué te gusta y<br/><em>qué quieres evitar?</em></h2>
-  <textarea id="q12" placeholder="Ej: Me gustan las webs limpias. No quiero nada recargado." rows="4"></textarea>
-  <div class="btn-row">
-    <button class="btn-back" onclick="goTo(11)">← ATRÁS</button>
-    <button class="btn-next" onclick="goTo(13)">SIGUIENTE <svg viewBox="0 0 14 14" fill="none"><path d="M2 7h10M7 3l4 4-4 4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+<div class="slide" id="s12">
+  <div class="q-slide-bg mesh-ref"><div class="q-overlay"></div></div>
+  <div class="q-body">
+    <span class="material-symbols-rounded q-icon">do_not_disturb_on</span>
+    <div class="q-step"><em>12</em> — 21</div>
+    <h2 class="q-t">¿Qué te atrae de eso?<br/><em>¿Y qué jamás quieres?</em></h2>
+    <p class="q-sub">Ser honesto aquí nos ahorra mucho tiempo a los dos.</p>
+    <textarea id="q12" placeholder="Ej: Me gustan las webs limpias, con fotos grandes. Nada recargado, nada de pop-ups." rows="4"></textarea>
+    <div class="btn-row">
+      <button class="btn-back" onclick="goTo(11)">← Atrás</button>
+      <button class="btn-next" onclick="goTo(13)">Continuar <span class="material-symbols-rounded" style="font-size:16px">arrow_forward</span></button>
+    </div>
   </div>
-</div></div></div>
+</div>
 
-<div class="slide" id="s13"><div class="card"><div class="panel">
-  <div class="q-n">13 <span>—</span> 21</div>
-  <h2 class="q-t">¿Tienes <em>fotos</em><br/>del negocio?</h2>
-  <div class="choices">
-    <label class="choice" onclick="pick(this,'q13')"><span class="choice-key">A</span><input type="radio" name="q13" value="Sí, varias buenas"/><span class="choice-text">Sí, varias buenas</span></label>
-    <label class="choice" onclick="pick(this,'q13')"><span class="choice-key">B</span><input type="radio" name="q13" value="Pocas"/><span class="choice-text">Pocas</span></label>
-    <label class="choice" onclick="pick(this,'q13')"><span class="choice-key">C</span><input type="radio" name="q13" value="No tengo aún"/><span class="choice-text">No tengo aún</span></label>
+<div class="slide" id="s13">
+  <div class="q-slide-bg mesh-photo"><div class="q-overlay"></div></div>
+  <div class="q-body">
+    <span class="material-symbols-rounded q-icon">photo_camera</span>
+    <div class="q-step"><em>13</em> — 21</div>
+    <h2 class="q-t">Las fotos hacen<br/><em>la diferencia.</em> ¿Tienes?</h2>
+    <div class="choices">
+      <label class="choice" onclick="pick(this,'q13')"><span class="choice-key">A</span><input type="radio" name="q13" value="Sí, varias buenas"/><span class="choice-text">Sí, tengo varias buenas</span></label>
+      <label class="choice" onclick="pick(this,'q13')"><span class="choice-key">B</span><input type="radio" name="q13" value="Pocas"/><span class="choice-text">Pocas, pero algo hay</span></label>
+      <label class="choice" onclick="pick(this,'q13')"><span class="choice-key">C</span><input type="radio" name="q13" value="No tengo aún"/><span class="choice-text">Nada por ahora</span></label>
+    </div>
+    <p class="q-sub" style="margin-top:14px;">Envía tus fotos al WhatsApp +1 587 585 4143 cuando termines.</p>
+    <div class="btn-row">
+      <button class="btn-back" onclick="goTo(12)">← Atrás</button>
+      <button class="btn-next" onclick="goTo(14)">Continuar <span class="material-symbols-rounded" style="font-size:16px">arrow_forward</span></button>
+    </div>
   </div>
-  <p class="q-h" style="margin-top:12px;">Envía tus fotos al WhatsApp +1 587 585 4143 después.</p>
-  <div class="btn-row">
-    <button class="btn-back" onclick="goTo(12)">← ATRÁS</button>
-    <button class="btn-next" onclick="goTo(14)">SIGUIENTE <svg viewBox="0 0 14 14" fill="none"><path d="M2 7h10M7 3l4 4-4 4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
-  </div>
-</div></div></div>
+</div>
 
-<div class="slide" id="s14"><div class="card"><div class="panel">
-  <div class="q-n">14 <span>—</span> 21</div>
-  <h2 class="q-t">¿Idioma de<br/><em>la web?</em></h2>
-  <div class="choices">
-    <label class="choice" onclick="pick(this,'q14')"><span class="choice-key">A</span><input type="radio" name="q14" value="Solo español"/><span class="choice-text">Solo español</span></label>
-    <label class="choice" onclick="pick(this,'q14')"><span class="choice-key">B</span><input type="radio" name="q14" value="Solo inglés"/><span class="choice-text">Solo inglés</span></label>
-    <label class="choice" onclick="pick(this,'q14')"><span class="choice-key">C</span><input type="radio" name="q14" value="Español e inglés (bilingüe)"/><span class="choice-text">Español e inglés (bilingüe)</span></label>
+<div class="slide" id="s14">
+  <div class="q-slide-bg mesh-photo"><div class="q-overlay"></div></div>
+  <div class="q-body">
+    <span class="material-symbols-rounded q-icon">translate</span>
+    <div class="q-step"><em>14</em> — 21</div>
+    <h2 class="q-t">¿En qué idioma<br/><em>habla tu negocio?</em></h2>
+    <div class="choices">
+      <label class="choice" onclick="pick(this,'q14')"><span class="choice-key">A</span><input type="radio" name="q14" value="Solo español"/><span class="choice-text">Solo español</span></label>
+      <label class="choice" onclick="pick(this,'q14')"><span class="choice-key">B</span><input type="radio" name="q14" value="Solo inglés"/><span class="choice-text">Solo inglés</span></label>
+      <label class="choice" onclick="pick(this,'q14')"><span class="choice-key">C</span><input type="radio" name="q14" value="Español e inglés (bilingüe)"/><span class="choice-text">Los dos — bilingüe</span></label>
+    </div>
+    <div class="btn-row">
+      <button class="btn-back" onclick="goTo(13)">← Atrás</button>
+      <button class="btn-next" onclick="goTo(15)">Continuar <span class="material-symbols-rounded" style="font-size:16px">arrow_forward</span></button>
+    </div>
   </div>
-  <div class="btn-row">
-    <button class="btn-back" onclick="goTo(13)">← ATRÁS</button>
-    <button class="btn-next" onclick="goTo(15)">SIGUIENTE <svg viewBox="0 0 14 14" fill="none"><path d="M2 7h10M7 3l4 4-4 4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
-  </div>
-</div></div></div>
+</div>
 
-<div class="slide" id="s15"><div class="card"><div class="panel">
-  <div class="q-n">15 <span>—</span> 21</div>
-  <h2 class="q-t">¿Para qué quieres<br/><em>la web?</em></h2>
-  <p class="q-h">Puedes marcar varios.</p>
-  <div class="choices">
-    <label class="choice" onclick="chk(this)"><span class="choice-key">☐</span><input type="checkbox" name="q15" value="Que me encuentren en Google"/><span class="choice-text">Que me encuentren en Google</span></label>
-    <label class="choice" onclick="chk(this)"><span class="choice-key">☐</span><input type="checkbox" name="q15" value="Mostrar mis servicios o productos"/><span class="choice-text">Mostrar mis servicios</span></label>
-    <label class="choice" onclick="chk(this)"><span class="choice-key">☐</span><input type="checkbox" name="q15" value="Recibir pedidos o solicitudes"/><span class="choice-text">Recibir pedidos</span></label>
-    <label class="choice" onclick="chk(this)"><span class="choice-key">☐</span><input type="checkbox" name="q15" value="Vender en línea (tienda)"/><span class="choice-text">Vender en línea</span></label>
-    <label class="choice" onclick="chk(this)"><span class="choice-key">☐</span><input type="checkbox" name="q15" value="Tener algo profesional para compartir"/><span class="choice-text">Algo profesional para compartir</span></label>
-    <label class="choice" onclick="chk(this)"><span class="choice-key">☐</span><input type="checkbox" name="q15" value="Mostrar mi portafolio"/><span class="choice-text">Mostrar mi portafolio</span></label>
+<div class="slide" id="s15">
+  <div class="q-slide-bg mesh-goals"><div class="q-overlay"></div></div>
+  <div class="q-body">
+    <span class="material-symbols-rounded q-icon">flag</span>
+    <div class="q-step"><em>15</em> — 21</div>
+    <h2 class="q-t">¿Qué quieres lograr<br/><em>con tu web?</em></h2>
+    <p class="q-sub">Sé honesto. Eso nos ayuda a construir lo correcto.</p>
+    <div class="choices">
+      <label class="choice" onclick="chk(this)"><span class="choice-key">☐</span><input type="checkbox" name="q15" value="Que me encuentren en Google"/><span class="choice-text">Que me encuentren en Google</span></label>
+      <label class="choice" onclick="chk(this)"><span class="choice-key">☐</span><input type="checkbox" name="q15" value="Mostrar mis servicios"/><span class="choice-text">Mostrar mis servicios o productos</span></label>
+      <label class="choice" onclick="chk(this)"><span class="choice-key">☐</span><input type="checkbox" name="q15" value="Recibir pedidos"/><span class="choice-text">Recibir pedidos o solicitudes</span></label>
+      <label class="choice" onclick="chk(this)"><span class="choice-key">☐</span><input type="checkbox" name="q15" value="Vender en línea"/><span class="choice-text">Vender en línea — tienda</span></label>
+      <label class="choice" onclick="chk(this)"><span class="choice-key">☐</span><input type="checkbox" name="q15" value="Tener algo profesional"/><span class="choice-text">Tener algo profesional que compartir</span></label>
+      <label class="choice" onclick="chk(this)"><span class="choice-key">☐</span><input type="checkbox" name="q15" value="Portafolio"/><span class="choice-text">Mostrar mi portafolio</span></label>
+    </div>
+    <div class="btn-row">
+      <button class="btn-back" onclick="goTo(14)">← Atrás</button>
+      <button class="btn-next" onclick="goTo(16)">Continuar <span class="material-symbols-rounded" style="font-size:16px">arrow_forward</span></button>
+    </div>
   </div>
-  <div class="btn-row">
-    <button class="btn-back" onclick="goTo(14)">← ATRÁS</button>
-    <button class="btn-next" onclick="goTo(16)">SIGUIENTE <svg viewBox="0 0 14 14" fill="none"><path d="M2 7h10M7 3l4 4-4 4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
-  </div>
-</div></div></div>
+</div>
 
-<div class="slide" id="s16"><div class="card"><div class="panel">
-  <div class="q-n">16 <span>—</span> 21</div>
-  <h2 class="q-t">¿Qué acción quieres<br/><em>del visitante?</em></h2>
-  <textarea id="q16" placeholder="Ej: Que nos llame / Que haga un pedido / Que llene el formulario" rows="3"></textarea>
-  <div class="btn-row">
-    <button class="btn-back" onclick="goTo(15)">← ATRÁS</button>
-    <button class="btn-next" onclick="goTo(17)">SIGUIENTE <svg viewBox="0 0 14 14" fill="none"><path d="M2 7h10M7 3l4 4-4 4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+<div class="slide" id="s16">
+  <div class="q-slide-bg mesh-goals"><div class="q-overlay"></div></div>
+  <div class="q-body">
+    <span class="material-symbols-rounded q-icon">ads_click</span>
+    <div class="q-step"><em>16</em> — 21</div>
+    <h2 class="q-t">Cuando alguien llegue,<br/><em>¿qué quieres que haga?</em></h2>
+    <p class="q-sub">El primer paso ideal. Que llame, que compre, que escriba…</p>
+    <textarea id="q16" placeholder="Ej: Que nos escriba por WhatsApp para reservar cita." rows="3"></textarea>
+    <div class="btn-row">
+      <button class="btn-back" onclick="goTo(15)">← Atrás</button>
+      <button class="btn-next" onclick="goTo(17)">Continuar <span class="material-symbols-rounded" style="font-size:16px">arrow_forward</span></button>
+    </div>
   </div>
-</div></div></div>
+</div>
 
-<div class="slide" id="s17"><div class="card"><div class="panel">
-  <div class="q-n">17 <span>—</span> 21</div>
-  <h2 class="q-t">WhatsApp del<br/><em>negocio</em></h2>
-  <input type="tel" id="q17" placeholder="+1 587… / +57 310…" autocomplete="tel"/>
-  <div class="btn-row">
-    <button class="btn-back" onclick="goTo(16)">← ATRÁS</button>
-    <button class="btn-next" onclick="goTo(18)">SIGUIENTE <svg viewBox="0 0 14 14" fill="none"><path d="M2 7h10M7 3l4 4-4 4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
-    <span class="key-tip">ENTER ↵</span>
+<div class="slide" id="s17">
+  <div class="q-slide-bg mesh-contact"><div class="q-overlay"></div></div>
+  <div class="q-body">
+    <span class="material-symbols-rounded q-icon">chat</span>
+    <div class="q-step"><em>17</em> — 21</div>
+    <h2 class="q-t">¿A qué número<br/><em>te escriben?</em></h2>
+    <p class="q-sub">El WhatsApp que va en tu web.</p>
+    <input type="tel" id="q17" placeholder="+1 587… · +57 310…" autocomplete="tel"/>
+    <div class="btn-row">
+      <button class="btn-back" onclick="goTo(16)">← Atrás</button>
+      <button class="btn-next" onclick="goTo(18)">Continuar <span class="material-symbols-rounded" style="font-size:16px">arrow_forward</span></button>
+      <span class="key-tip">Enter ↵</span>
+    </div>
   </div>
-</div></div></div>
+</div>
 
-<div class="slide" id="s18"><div class="card"><div class="panel">
-  <div class="q-n">18 <span>—</span> 21</div>
-  <h2 class="q-t"><em>Email</em> del negocio</h2>
-  <p class="q-h">Si no tienes, deja en blanco.</p>
-  <input type="email" id="q18" placeholder="hola@minegocio.com" autocomplete="email"/>
-  <div class="btn-row">
-    <button class="btn-back" onclick="goTo(17)">← ATRÁS</button>
-    <button class="btn-next" onclick="goTo(19)">SIGUIENTE <svg viewBox="0 0 14 14" fill="none"><path d="M2 7h10M7 3l4 4-4 4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
-    <span class="key-tip">ENTER ↵</span>
+<div class="slide" id="s18">
+  <div class="q-slide-bg mesh-contact"><div class="q-overlay"></div></div>
+  <div class="q-body">
+    <span class="material-symbols-rounded q-icon">mail</span>
+    <div class="q-step"><em>18</em> — 21</div>
+    <h2 class="q-t">¿Tienes <em>email</em><br/>de negocio?</h2>
+    <p class="q-sub">Si no tienes, no pasa nada — déjalo en blanco.</p>
+    <input type="email" id="q18" placeholder="hola@minegocio.com" autocomplete="email"/>
+    <div class="btn-row">
+      <button class="btn-back" onclick="goTo(17)">← Atrás</button>
+      <button class="btn-next" onclick="goTo(19)">Continuar <span class="material-symbols-rounded" style="font-size:16px">arrow_forward</span></button>
+      <span class="key-tip">Enter ↵</span>
+    </div>
   </div>
-</div></div></div>
+</div>
 
-<div class="slide" id="s19"><div class="card"><div class="panel">
-  <div class="q-n">19 <span>—</span> 21</div>
-  <h2 class="q-t"><em>Instagram</em><br/>del negocio</h2>
-  <p class="q-h">Si no tienes, deja en blanco.</p>
-  <input type="text" id="q19" placeholder="@minegocio"/>
-  <div class="btn-row">
-    <button class="btn-back" onclick="goTo(18)">← ATRÁS</button>
-    <button class="btn-next" onclick="goTo(20)">SIGUIENTE <svg viewBox="0 0 14 14" fill="none"><path d="M2 7h10M7 3l4 4-4 4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
-    <span class="key-tip">ENTER ↵</span>
+<div class="slide" id="s19">
+  <div class="q-slide-bg mesh-contact"><div class="q-overlay"></div></div>
+  <div class="q-body">
+    <span class="material-symbols-rounded q-icon">tag</span>
+    <div class="q-step"><em>19</em> — 21</div>
+    <h2 class="q-t">¿Tu <em>Instagram?</em></h2>
+    <p class="q-sub">Ayuda a que todo quede conectado. Opcional.</p>
+    <input type="text" id="q19" placeholder="@minegocio"/>
+    <div class="btn-row">
+      <button class="btn-back" onclick="goTo(18)">← Atrás</button>
+      <button class="btn-next" onclick="goTo(20)">Continuar <span class="material-symbols-rounded" style="font-size:16px">arrow_forward</span></button>
+      <span class="key-tip">Enter ↵</span>
+    </div>
   </div>
-</div></div></div>
+</div>
 
-<div class="slide" id="s20"><div class="card"><div class="panel">
-  <div class="q-n">20 <span>—</span> 21</div>
-  <h2 class="q-t">¿Cuándo necesitas<br/><em>la web lista?</em></h2>
-  <div class="choices">
-    <label class="choice" onclick="pick(this,'q20')"><span class="choice-key">A</span><input type="radio" name="q20" value="Urgente — menos de 2 semanas"/><span class="choice-text">Urgente — menos de 2 semanas</span></label>
-    <label class="choice" onclick="pick(this,'q20')"><span class="choice-key">B</span><input type="radio" name="q20" value="Normal — 3 a 4 semanas"/><span class="choice-text">Normal — 3 a 4 semanas</span></label>
-    <label class="choice" onclick="pick(this,'q20')"><span class="choice-key">C</span><input type="radio" name="q20" value="Sin apuro"/><span class="choice-text">Sin apuro</span></label>
+<div class="slide" id="s20">
+  <div class="q-slide-bg mesh-timing"><div class="q-overlay"></div></div>
+  <div class="q-body">
+    <span class="material-symbols-rounded q-icon">schedule</span>
+    <div class="q-step"><em>20</em> — 21</div>
+    <h2 class="q-t">¿Cuándo la necesitas?<br/><em>Prometemos cumplir.</em></h2>
+    <div class="choices">
+      <label class="choice" onclick="pick(this,'q20')"><span class="choice-key">A</span><input type="radio" name="q20" value="Urgente — menos de 2 semanas"/><span class="choice-text">Urgente — menos de 2 semanas</span></label>
+      <label class="choice" onclick="pick(this,'q20')"><span class="choice-key">B</span><input type="radio" name="q20" value="Normal — 3 a 4 semanas"/><span class="choice-text">Normal — 3 a 4 semanas</span></label>
+      <label class="choice" onclick="pick(this,'q20')"><span class="choice-key">C</span><input type="radio" name="q20" value="Sin apuro"/><span class="choice-text">Sin apuro — cuando puedan</span></label>
+    </div>
+    <div class="btn-row">
+      <button class="btn-back" onclick="goTo(19)">← Atrás</button>
+      <button class="btn-next" onclick="goTo(21)">Continuar <span class="material-symbols-rounded" style="font-size:16px">arrow_forward</span></button>
+    </div>
   </div>
-  <div class="btn-row">
-    <button class="btn-back" onclick="goTo(19)">← ATRÁS</button>
-    <button class="btn-next" onclick="goTo(21)">SIGUIENTE <svg viewBox="0 0 14 14" fill="none"><path d="M2 7h10M7 3l4 4-4 4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
-  </div>
-</div></div></div>
+</div>
 
-<div class="slide" id="s21"><div class="card"><div class="panel">
-  <div class="q-n">21 <span>—</span> 21 · ÚLTIMO PASO</div>
-  <h2 class="q-t">¿Tu <em>nombre?</em></h2>
-  <p class="q-h">Quien llena este formulario.</p>
-  <input type="text" id="q21" placeholder="Tu nombre completo" autocomplete="name"/>
-  <div class="btn-row">
-    <button class="btn-back" onclick="goTo(20)">← ATRÁS</button>
-    <button class="btn-next purple" onclick="send()">ENVIAR BRIEF <svg viewBox="0 0 14 14" fill="none"><path d="M2 7h10M7 3l4 4-4 4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+<div class="slide" id="s21">
+  <div class="q-slide-bg mesh-timing"><div class="q-overlay"></div></div>
+  <div class="q-body">
+    <span class="material-symbols-rounded q-icon">waving_hand</span>
+    <div class="q-step"><em>21</em> — 21 · Último paso</div>
+    <h2 class="q-t">Y para cerrar,<br/><em>¿con quién hablamos?</em></h2>
+    <p class="q-sub">El nombre de quien llena este formulario.</p>
+    <input type="text" id="q21" placeholder="Tu nombre" autocomplete="name"/>
+    <div class="btn-row">
+      <button class="btn-back" onclick="goTo(20)">← Atrás</button>
+      <button class="btn-next alt" onclick="send()">Enviar brief <span class="material-symbols-rounded" style="font-size:16px">send</span></button>
+    </div>
   </div>
-</div></div></div>
+</div>
 
 <!-- GRACIAS -->
-<div class="slide" id="s22"><div class="card"><div class="panel">
-  <div class="q-n">LISTO</div>
-  <h2 class="q-t" style="font-size:clamp(28px,5vw,44px);">Ya recibimos todo<br/><em>lo que necesitamos.</em></h2>
-  <p class="q-h" style="margin-top:12px;font-size:13px;color:rgba(255,255,255,.45);letter-spacing:.06em;">
-    TE CONTACTAMOS EN MÁXIMO 48 HORAS.<br/>
-    SI TIENES LOGO O FOTOS, ENVÍALOS POR:
-  </p>
-  <div class="thanks-links">
-    <a class="thanks-link" href="https://wa.me/15875854143" target="_blank">
-      <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M17.5 14.4c-.3-.1-1.7-.8-2-.9-.3-.1-.5-.1-.7.1-.2.3-.7.9-.9 1.1-.2.2-.3.2-.6.1-.3-.1-1.2-.5-2.4-1.5-.9-.8-1.5-1.8-1.6-2.1-.2-.3 0-.5.1-.6.1-.1.3-.3.4-.5.1-.2.2-.3.3-.5.1-.2 0-.4 0-.5 0-.1-.7-1.6-.9-2.2-.2-.6-.5-.5-.7-.5h-.6c-.2 0-.5.1-.8.4-.3.3-1 1-1 2.4 0 1.4 1 2.8 1.2 3 .1.2 2 3.1 4.9 4.3 1.7.7 2.4.8 3.3.7.5-.1 1.7-.7 1.9-1.4.2-.7.2-1.3.2-1.4-.1-.1-.3-.2-.6-.3zM12 2C6.5 2 2 6.5 2 12c0 1.8.5 3.5 1.3 4.9L2 22l5.3-1.4c1.4.7 3 1.1 4.7 1.1 5.5 0 10-4.5 10-10S17.5 2 12 2z"/></svg>
-      WHATSAPP +1 587 585 4143
-    </a>
-    <a class="thanks-link" href="mailto:mateo.corredor@helloremake.com">
-      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="M2 7l10 7 10-7"/></svg>
-      EMAIL
-    </a>
+<div class="slide" id="s22">
+  <div class="q-slide-bg mesh-ref"><div class="q-overlay"></div></div>
+  <div class="q-body">
+    <span class="material-symbols-rounded q-icon" style="font-size:40px;color:var(--gold);">check_circle</span>
+    <div class="q-step"><em>Listo</em> ·· Recibido</div>
+    <h2 class="q-t">Recibimos todo.<br/><em>Gracias por confiar.</em></h2>
+    <p class="q-sub">Te contactamos en máximo 48 horas con los próximos pasos.<br/>Si tienes logo, fotos o materiales, envíalos por:</p>
+    <div class="thanks-links">
+      <a class="thanks-link" href="https://wa.me/15875854143" target="_blank">
+        <span class="material-symbols-rounded" style="font-size:16px">chat</span>
+        WhatsApp +1 587 585 4143
+      </a>
+      <a class="thanks-link" href="mailto:mateo.corredor@helloremake.com">
+        <span class="material-symbols-rounded" style="font-size:16px">mail</span>
+        Enviar por email
+      </a>
+    </div>
+    <p style="margin-top:22px;font-size:10px;letter-spacing:.18em;color:rgba(255,248,240,.18);text-transform:uppercase;">— RMK · Tus ideas en digital</p>
   </div>
-  <p style="margin-top:24px;font-size:9px;letter-spacing:.2em;color:rgba(255,255,255,.2);text-transform:uppercase;">— RMK · REMAKE · HELLOREMAKE.COM</p>
-</div></div></div>
+</div>
 
-<!-- FOOTER -->
 <footer class="ftr">
-  <span class="ftr-brand">RMK · Tus ideas en digital</span>
+  <span class="ftr-brand">RMK · Brief Web</span>
 </footer>
 
 <script>
-// ── GPU SHADER HERO (corre en GPU, no bloquea el hilo) ─
-(function initHero(){
-  var THREE=window.THREE;
-  if(!THREE)return;
-  var mount=document.getElementById('heroCanvas');
-  var cam=new THREE.Camera();
-  cam.position.z=1;
-  var scene=new THREE.Scene();
-  var geo=new THREE.PlaneBufferGeometry(2,2);
-  var uniforms={
-    time:{type:'f',value:1.0},
-    resolution:{type:'v2',value:new THREE.Vector2()}
-  };
-  var mat=new THREE.ShaderMaterial({
-    uniforms:uniforms,
-    vertexShader:'void main(){gl_Position=vec4(position,1.0);}',
-    fragmentShader:`
-      precision highp float;
-      uniform vec2 resolution;
-      uniform float time;
-      float rnd(in float x){return fract(sin(x)*1e4);}
-      void main(void){
-        vec2 uv=(gl_FragCoord.xy*2.0-resolution.xy)/min(resolution.x,resolution.y);
-        vec2 ms=vec2(4.0,2.0);vec2 ss=vec2(256.0,256.0);
-        uv.x=floor(uv.x*ss.x/ms.x)/(ss.x/ms.x);
-        uv.y=floor(uv.y*ss.y/ms.y)/(ss.y/ms.y);
-        float t=time*0.05+rnd(uv.x)*0.35;
-        float lw=0.0006;
-        vec3 col=vec3(0.0);
-        for(int j=0;j<3;j++){
-          for(int i=0;i<5;i++){
-            col[j]+=lw*float(i*i)/abs(fract(t-0.01*float(j)+float(i)*0.01)*1.0-length(uv));
-          }
-        }
-        /* tint: deep purple + saturated yellow */
-        vec3 purpleDeep=vec3(0.067,0.016,0.125);
-        vec3 purpleMid=vec3(0.169,0.082,0.267);
-        vec3 yellow=vec3(0.918,0.702,0.031);
-        vec3 tinted=mix(purpleDeep,mix(purpleMid,yellow,col.r*3.0),col.r*2.2);
-        gl_FragColor=vec4(tinted*2.8,1.0);
-      }`
-  });
-  var mesh=new THREE.Mesh(geo,mat);
-  scene.add(mesh);
-  var renderer=new THREE.WebGLRenderer({antialias:true,alpha:true});
-  renderer.setPixelRatio(Math.min(devicePixelRatio,1.5));
-  mount.appendChild(renderer.domElement);
-  function resize(){
-    renderer.setSize(innerWidth,innerHeight);
-    uniforms.resolution.value.x=renderer.domElement.width;
-    uniforms.resolution.value.y=renderer.domElement.height;
-  }
-  resize();
-  window.addEventListener('resize',resize);
-  (function animate(){
-    requestAnimationFrame(animate);
-    uniforms.time.value+=0.04;
-    renderer.render(scene,cam);
-  })();
-})();
-
-// ── ANIMATED TEXT CYCLE (hero) ────────────────────────
-var cycleWords=['perfecta','increíble','única','extraordinaria'];
-var cycleIdx=0;
-var cycleEl=document.getElementById('cycleText');
-
-function animateCycle(){
-  if(!cycleEl)return;
-  cycleEl.style.opacity='0';
-  cycleEl.style.transform='translateY(-12px)';
+// ── HERO CYCLE ────────────────────────────────────
+var words=['perfecta','increíble','única','extraordinaria'];
+var wi=0,el=document.getElementById('cycleText');
+function cycle(){
+  if(!el)return;
+  el.style.opacity='0';el.style.transform='translateY(-10px)';
   setTimeout(function(){
-    cycleIdx=(cycleIdx+1)%cycleWords.length;
-    cycleEl.textContent=cycleWords[cycleIdx];
-    cycleEl.style.transition='opacity .4s ease,transform .4s ease';
-    cycleEl.style.opacity='1';
-    cycleEl.style.transform='translateY(0)';
-  },300);
+    wi=(wi+1)%words.length;el.textContent=words[wi];
+    el.style.transition='opacity .35s ease,transform .35s ease';
+    el.style.opacity='1';el.style.transform='translateY(0)';
+  },280);
 }
-if(cycleEl){
-  cycleEl.style.transition='opacity .4s ease,transform .4s ease';
-  setInterval(animateCycle,2800);
-}
+if(el){el.style.transition='opacity .35s ease,transform .35s ease';setInterval(cycle,2800);}
 
-// ── FORM STATE ────────────────────────────────────────
+// ── FORM STATE ────────────────────────────────────
 var cur=0,TOTAL=21;
-
 function goTo(idx){
-  var prev=document.getElementById('s'+cur);
-  var next=document.getElementById('s'+idx);
-  if(!next)return;
-  prev.classList.remove('active');
-  prev.classList.add('exit');
-  setTimeout(function(){prev.classList.remove('exit');},400);
-  next.classList.add('active');
-  cur=idx;
-  updateUI();
+  var p=document.getElementById('s'+cur);
+  var n=document.getElementById('s'+idx);
+  if(!n)return;
+  p.classList.remove('active');p.classList.add('exit');
+  setTimeout(function(){p.classList.remove('exit');},350);
+  n.classList.add('active');cur=idx;updateUI();
   setTimeout(function(){
-    var inp=next.querySelector('input:not([type=radio]):not([type=checkbox]),textarea');
+    var inp=n.querySelector('input:not([type=radio]):not([type=checkbox]),textarea');
     if(inp)inp.focus();
-  },350);
+  },380);
 }
-
 function updateUI(){
   var pct=cur===0?0:Math.round((cur/TOTAL)*100);
-  document.getElementById('progress-fill').style.width=pct+'%';
+  document.getElementById('pf').style.width=pct+'%';
   var lbl=document.getElementById('stepLbl');
   lbl.textContent=(cur>0&&cur<=TOTAL)?cur+' / '+TOTAL:'';
 }
-
-function pick(el,name){
-  document.querySelectorAll('[name='+name+']').forEach(function(r){r.parentElement.classList.remove('selected');});
-  el.classList.add('selected');
-  el.querySelector('input').checked=true;
-  setTimeout(function(){
-    var next=cur+1;if(next<=TOTAL+1)goTo(next);
-  },260);
+function pick(el,n){
+  document.querySelectorAll('[name='+n+']').forEach(function(r){r.parentElement.classList.remove('selected');});
+  el.classList.add('selected');el.querySelector('input').checked=true;
+  setTimeout(function(){var nx=cur+1;if(nx<=TOTAL+1)goTo(nx);},280);
 }
-
 function chk(el){
   var inp=el.querySelector('input');
   inp.checked=!inp.checked;
   el.classList.toggle('selected',inp.checked);
   el.querySelector('.choice-key').textContent=inp.checked?'✓':'☐';
 }
-
 document.addEventListener('keydown',function(e){
-  var tag=document.activeElement.tagName;
-  if(e.key==='Enter'&&tag!=='TEXTAREA'){
+  var t=document.activeElement.tagName;
+  if(e.key==='Enter'&&t!=='TEXTAREA'){
     e.preventDefault();
-    if(cur===21)send();
-    else if(cur<22&&cur>0)goTo(cur+1);
-    else if(cur===0)goTo(1);
+    if(cur===21)send();else if(cur>0&&cur<22)goTo(cur+1);else if(cur===0)goTo(1);
   }
   if(e.key==='Escape'&&cur>0)goTo(cur-1);
 });
-
 function collect(){
   var g=function(id){var e=document.getElementById(id);return e?e.value.trim():'';};
   var r=function(n){var e=document.querySelector('[name='+n+']:checked');return e?e.value:'';};
   var c=function(n){return[...document.querySelectorAll('[name='+n+']:checked')].map(function(x){return x.value;}).join(', ');};
-  return{negocio:g('q1'),descripcion:g('q2'),ciudad:g('q3'),modalidad:r('q4'),servicios:g('q5'),estrella:g('q6'),canales:c('q7'),logo:r('q8'),colores:g('q9'),estilo_marca:c('q10'),referencias_web:g('q11'),referencias_opinion:g('q12'),fotos:r('q13'),idioma:r('q14'),objetivo_web:c('q15'),accion_visitante:g('q16'),whatsapp:g('q17'),email:g('q18'),instagram:g('q19'),timing:r('q20'),nombre:g('q21'),fecha:new Date().toLocaleString('es-CO',{timeZone:'America/Bogota'}),fuente:'Brief Web RMK'};
+  return{negocio:g('q1'),descripcion:g('q2'),ciudad:g('q3'),modalidad:r('q4'),servicios:g('q5'),estrella:g('q6'),canales:c('q7'),logo:r('q8'),colores:g('q9'),estilo:c('q10'),referencias:g('q11'),opinion:g('q12'),fotos:r('q13'),idioma:r('q14'),objetivo:c('q15'),accion:g('q16'),whatsapp:g('q17'),email:g('q18'),instagram:g('q19'),timing:r('q20'),nombre:g('q21'),fecha:new Date().toLocaleString('es-CO',{timeZone:'America/Bogota'}),fuente:'Brief RMK'};
 }
-
 async function send(){
   var data=collect();
   try{await fetch('https://hook.us2.make.com/TU_WEBHOOK_AQUI',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(data)});}
   catch(e){console.log(e);}
   goTo(22);
 }
-
 updateUI();
-
-// ── GRADIENT BG para todas las slides de pregunta ─
-(function initQaBg(){
-  var slides=document.querySelectorAll('.slide:not(#s0):not(#s22)');
-  var blobHTML='<div class="qa-bg"><div class="qa-blobs">'
-    +'<div class="qa-blob qa-blob-1"></div>'
-    +'<div class="qa-blob qa-blob-2"></div>'
-    +'<div class="qa-blob qa-blob-3"></div>'
-    +'<div class="qa-blob qa-blob-4"></div>'
-    +'<div class="qa-blob qa-blob-5"></div>'
-    +'<div class="qa-ptr"></div>'
-    +'</div><div class="qa-vignette"></div></div>';
-
-  slides.forEach(function(s){
-    // solo insertar si no tiene qa-bg ya
-    if(!s.querySelector('.qa-bg')){
-      s.insertAdjacentHTML('afterbegin',blobHTML);
-    }
-    // mouse interactivo
-    var ptr=s.querySelector('.qa-ptr');
-    if(ptr){
-      s.addEventListener('mousemove',function(e){
-        var r=s.getBoundingClientRect();
-        ptr.style.transform='translate('+(e.clientX-r.left-r.width/2)+'px,'+(e.clientY-r.top-r.height/2)+'px)';
-      });
-    }
-  });
-
-  // también el s22 (gracias) con bg más suave
-  var s22=document.getElementById('s22');
-  if(s22&&!s22.querySelector('.qa-bg')){
-    s22.insertAdjacentHTML('afterbegin',blobHTML.replace('qa-blob-3"></div>','qa-blob-3" style="opacity:.25"></div>'));
-  }
-})();
-
-// ── actualizar q-n con formato correcto ─
-document.querySelectorAll('.q-n').forEach(function(el){
-  var txt=el.textContent.trim();
-  var m=txt.match(/^(\d+)/);
-  if(m){
-    el.innerHTML='<span>'+m[1].padStart(2,'0')+'</span> — 21';
-  }
-});
 </script>
 </body>
 </html>
