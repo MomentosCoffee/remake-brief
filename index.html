@@ -237,7 +237,7 @@ body::after{content:'';position:fixed;inset:-50%;z-index:1000;width:200%;height:
 
 <header class="hdr">
   <div class="logo">
-    <img src="logo_RMK.png" alt="RMK" style="height:40px;width:auto;display:block;mix-blend-mode:screen;filter:saturate(0) brightness(0.6) contrast(3);"/>
+    <img src="logo-rmk.png" alt="RMK" style="height:36px;width:auto;display:block;filter:invert(1);mix-blend-mode:screen;"/>
   </div>
   <span class="step-lbl" id="stepLbl"></span>
 </header>
@@ -702,81 +702,96 @@ body::after{content:'';position:fixed;inset:-50%;z-index:1000;width:200%;height:
   <span class="ftr-brand">RMK · Brief Web</span>
 </footer>
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r134/three.min.js"></script>
 <script>
-// ── WOVEN LIGHT HERO (Three.js r134, colores RMK) ─────────────────
-(function initWoven(){
-  var THREE=window.THREE;
-  if(!THREE){console.warn('Three.js no cargó');return;}
+// ── BEAMS BACKGROUND — Canvas puro, colores RMK ──────────────────
+(function initBeams(){
   var mount=document.getElementById('wovenMount');
   if(!mount)return;
 
-  var scene=new THREE.Scene();
-  var cam=new THREE.PerspectiveCamera(72,innerWidth/innerHeight,0.1,1000);
-  cam.position.z=5;
+  var canvas=document.createElement('canvas');
+  canvas.style.cssText='position:absolute;inset:0;pointer-events:none;filter:blur(15px);';
+  mount.appendChild(canvas);
 
-  var renderer=new THREE.WebGLRenderer({antialias:true,alpha:true});
-  renderer.setSize(innerWidth,innerHeight);
-  renderer.setPixelRatio(Math.min(devicePixelRatio,1.5));
-  renderer.domElement.style.position='absolute';
-  renderer.domElement.style.inset='0';
-  renderer.domElement.style.pointerEvents='none';
-  mount.appendChild(renderer.domElement);
+  var ctx=canvas.getContext('2d');
+  var beams=[];
+  var TOTAL=32;
+  // Hues RMK: dorado 45°, naranja 27°, morado 263°, gold-light 48°, purple-light 275°
+  var HUES=[45,27,263,48,275,38,255];
 
-  // TorusKnot geometry (r134: TorusKnotGeometry ES BufferGeometry ✅)
-  var N=12000;
-  var torus=new THREE.TorusKnotGeometry(1.6,0.5,220,32);
-  var posAttr=torus.attributes.position;
-
-  var pos=new Float32Array(N*3);
-  var col=new Float32Array(N*3);
-
-  // Paleta RMK: amarillo/dorado, morado, naranja
-  var palette=[
-    [0.918,0.702,0.031],  // gold #EAB308
-    [0.984,0.631,0.016],  // orange #F97316
-    [0.486,0.227,0.929],  // purple #7C3AED
-    [0.651,0.545,0.980],  // purple-light #A78BFA
-    [0.980,0.800,0.082],  // gold-light #FACC15
-  ];
-
-  for(var i=0;i<N;i++){
-    var vi=i%posAttr.count;
-    pos[i*3]=posAttr.getX(vi);
-    pos[i*3+1]=posAttr.getY(vi);
-    pos[i*3+2]=posAttr.getZ(vi);
-    var c=palette[Math.floor(Math.random()*palette.length)];
-    col[i*3]=c[0];col[i*3+1]=c[1];col[i*3+2]=c[2];
+  function mkBeam(w,h){
+    return{
+      x:Math.random()*w*1.5-w*0.25,
+      y:Math.random()*h*1.5-h*0.25,
+      width:70+Math.random()*90,
+      length:h*2.5,
+      angle:-35+Math.random()*10,
+      speed:0.5+Math.random()*0.9,
+      opacity:0.14+Math.random()*0.16,
+      hue:HUES[Math.floor(Math.random()*HUES.length)],
+      pulse:Math.random()*Math.PI*2,
+      pulseSpeed:0.02+Math.random()*0.03
+    };
   }
 
-  var geo=new THREE.BufferGeometry();
-  geo.setAttribute('position',new THREE.BufferAttribute(pos,3));
-  geo.setAttribute('color',new THREE.BufferAttribute(col,3));
+  function resetBeam(beam,i){
+    var col=i%3;
+    var w=window.innerWidth;
+    var spacing=w/3;
+    beam.y=window.innerHeight+100;
+    beam.x=col*spacing+spacing/2+(Math.random()-0.5)*spacing*0.5;
+    beam.width=90+Math.random()*110;
+    beam.speed=0.5+Math.random()*0.5;
+    beam.hue=HUES[Math.floor(Math.random()*HUES.length)];
+    beam.opacity=0.16+Math.random()*0.14;
+  }
 
-  var mat=new THREE.PointsMaterial({
-    size:0.025,vertexColors:true,
-    blending:THREE.AdditiveBlending,
-    transparent:true,opacity:.85
-  });
+  function drawBeam(beam){
+    ctx.save();
+    ctx.translate(beam.x,beam.y);
+    ctx.rotate(beam.angle*Math.PI/180);
+    var op=beam.opacity*(0.8+Math.sin(beam.pulse)*0.2);
+    var g=ctx.createLinearGradient(0,0,0,beam.length);
+    g.addColorStop(0,'hsla('+beam.hue+',90%,65%,0)');
+    g.addColorStop(0.1,'hsla('+beam.hue+',90%,65%,'+(op*0.5)+')');
+    g.addColorStop(0.4,'hsla('+beam.hue+',90%,65%,'+op+')');
+    g.addColorStop(0.6,'hsla('+beam.hue+',90%,65%,'+op+')');
+    g.addColorStop(0.9,'hsla('+beam.hue+',90%,65%,'+(op*0.5)+')');
+    g.addColorStop(1,'hsla('+beam.hue+',90%,65%,0)');
+    ctx.fillStyle=g;
+    ctx.fillRect(-beam.width/2,0,beam.width,beam.length);
+    ctx.restore();
+  }
 
-  var points=new THREE.Points(geo,mat);
-  scene.add(points);
+  function resize(){
+    var dpr=Math.min(window.devicePixelRatio||1,2);
+    var w=window.innerWidth;
+    var h=window.innerHeight;
+    canvas.width=w*dpr;
+    canvas.height=h*dpr;
+    canvas.style.width=w+'px';
+    canvas.style.height=h+'px';
+    ctx.scale(dpr,dpr);
+    beams=Array.from({length:TOTAL},function(){return mkBeam(w,h);});
+  }
 
-  var t=0;
-  (function animate(){
+  resize();
+  window.addEventListener('resize',resize);
+
+  function animate(){
+    var w=window.innerWidth;
+    var h=window.innerHeight;
+    ctx.clearRect(0,0,w,h);
+    ctx.filter='blur(35px)';
+    beams.forEach(function(beam,i){
+      beam.y-=beam.speed;
+      beam.pulse+=beam.pulseSpeed;
+      if(beam.y+beam.length<-100)resetBeam(beam,i);
+      drawBeam(beam);
+    });
     requestAnimationFrame(animate);
-    t+=0.008;
-    points.rotation.y=t*0.18;
-    points.rotation.x=Math.sin(t*0.12)*0.25;
-    points.rotation.z=Math.cos(t*0.08)*0.1;
-    renderer.render(scene,cam);
-  })();
+  }
 
-  window.addEventListener('resize',function(){
-    cam.aspect=innerWidth/innerHeight;
-    cam.updateProjectionMatrix();
-    renderer.setSize(innerWidth,innerHeight);
-  });
+  animate();
 })();
 
 var words=['perfecta','increíble','única','extraordinaria'];
@@ -848,8 +863,43 @@ function collect(){
 }
 async function send(){
   var data=collect();
-  try{await fetch('https://hook.us2.make.com/TU_WEBHOOK_AQUI',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(data)});}
-  catch(e){console.log(e);}
+  var biz=data.negocio||data.nombre||'Cliente nuevo';
+  try{
+    await fetch('https://formsubmit.co/ajax/mateo.corredor@helloremake.com',{
+      method:'POST',
+      headers:{'Content-Type':'application/json','Accept':'application/json'},
+      body:JSON.stringify({
+        _subject:'🔔 Nuevo Brief — '+biz+' | REMAKE',
+        _template:'table',
+        _captcha:'false',
+        'Nombre':data.nombre,
+        'Negocio':data.negocio,
+        'Descripcion':data.descripcion,
+        'Ciudad':data.ciudad,
+        'Modalidad':data.modalidad,
+        'Servicios':data.servicios,
+        'Servicio Estrella':data.estrella,
+        'Desafios':data.desafios,
+        'Meta de Marca':data.meta_marca,
+        'Canales':data.canales,
+        'Logo':data.logo,
+        'Colores':data.colores,
+        'Estilo':data.estilo,
+        'Referencias Web':data.referencias_web,
+        'Opinion':data.opinion,
+        'Fotos':data.fotos,
+        'Idioma':data.idioma,
+        'Objetivo':data.objetivo,
+        'Accion Visitante':data.accion_visitante,
+        'Telefono':data.telefono,
+        'Email':data.email,
+        'Instagram':data.instagram,
+        'Timing':data.timing,
+        'Fecha':data.fecha,
+        'Fuente':'Brief Web RMK'
+      })
+    });
+  }catch(e){console.log('FormSubmit error:',e);}
   goTo(23);
 }
 updateUI();
