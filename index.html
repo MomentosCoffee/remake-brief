@@ -8,173 +8,128 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@24,300,1,0&display=swap" rel="stylesheet">
 <style>
-/* ── TOKENS ─────────────────────────────────────── */
 :root{
-  --bg:       #0C0A07;
-  --bg2:      #181410;
-  --bg3:      #211C15;
-  --gold:     #EAB308;
-  --gold-l:   #FACC15;
-  --gold-g:   rgba(234,179,8,.2);
-  --orange:   #F97316;
-  --purple:   #7C3AED;
-  --purple-l: #A78BFA;
-  --cream:    #FFF8F0;
-  --cream-4:  rgba(255,248,240,.04);
-  --cream-1:  rgba(255,248,240,.1);
-  --cream-3:  rgba(255,248,240,.3);
-  --cream-6:  rgba(255,248,240,.6);
-  --white:    #ffffff;
-  --r:        16px;
+  --bg:#0C0A07;--gold:#EAB308;--gold-l:#FACC15;--gold-g:rgba(234,179,8,.2);
+  --orange:#F97316;--purple:#7C3AED;--purple-l:#A78BFA;
+  --cream:#FFF8F0;--cream-1:rgba(255,248,240,.1);--cream-3:rgba(255,248,240,.3);
+  --cream-6:rgba(255,248,240,.6);--white:#ffffff;
 }
-
-/* ── BASE ───────────────────────────────────────── */
 *,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
 html{font-size:16px;}
-body{
-  font-family:'Space Grotesk',system-ui,sans-serif;
-  background:var(--bg);color:var(--cream);
-  -webkit-font-smoothing:antialiased;
-  overflow:hidden;height:100dvh;width:100vw;
-}
-.material-symbols-rounded{
-  font-family:'Material Symbols Rounded';
+body{font-family:'Space Grotesk',system-ui,sans-serif;background:var(--bg);
+  color:var(--cream);-webkit-font-smoothing:antialiased;
+  overflow:hidden;height:100dvh;width:100vw;}
+.material-symbols-rounded{font-family:'Material Symbols Rounded';
   font-variation-settings:'FILL' 1,'wght' 300,'GRAD' 0,'opsz' 24;
-  font-style:normal;line-height:1;
-  display:inline-block;white-space:nowrap;
-  vertical-align:middle;user-select:none;
-}
+  font-style:normal;line-height:1;display:inline-block;
+  white-space:nowrap;vertical-align:middle;user-select:none;}
 
-/* ── PROGRESS ───────────────────────────────────── */
+/* PROGRESS */
 #pb{position:fixed;top:0;left:0;right:0;z-index:999;height:2px;background:rgba(255,248,240,.06);}
-#pf{height:100%;width:0%;background:var(--gold);
-    transition:width .4s cubic-bezier(.4,0,.2,1);
-    box-shadow:0 0 10px var(--gold-g);}
+#pf{height:100%;width:0%;background:var(--gold);transition:width .4s cubic-bezier(.4,0,.2,1);
+  box-shadow:0 0 10px var(--gold-g);}
 
-/* ── HEADER ─────────────────────────────────────── */
-.hdr{
-  position:fixed;top:0;left:0;right:0;z-index:500;
+/* HEADER */
+.hdr{position:fixed;top:0;left:0;right:0;z-index:500;
   display:flex;align-items:center;justify-content:space-between;
-  padding:22px 36px;pointer-events:none;
-  background:linear-gradient(to bottom,var(--bg) 0%,transparent 100%);
-}
-.logo{
-  pointer-events:all;
-  font-size:13px;font-weight:700;letter-spacing:.3em;
-  color:var(--cream-6);text-transform:uppercase;
-  display:flex;flex-direction:column;gap:4px;
-}
-.logo-line{height:1px;width:100%;
-  background:linear-gradient(90deg,var(--gold),transparent);}
+  padding:20px 36px;pointer-events:none;
+  background:linear-gradient(to bottom,rgba(12,10,7,.9) 0%,transparent 100%);}
+.logo{pointer-events:all;display:flex;flex-direction:column;gap:4px;}
+.logo-text{font-size:13px;font-weight:700;letter-spacing:.3em;
+  color:var(--cream-6);text-transform:uppercase;}
+.logo-line{height:1px;background:linear-gradient(90deg,var(--gold),transparent);}
 .step-lbl{pointer-events:all;font-size:11px;font-weight:300;
   letter-spacing:.15em;color:rgba(255,248,240,.3);}
 
-/* ── SLIDES ─────────────────────────────────────── */
-.slide{
-  position:fixed;inset:0;z-index:10;
+/* SLIDES */
+.slide{position:fixed;inset:0;z-index:10;
   display:flex;align-items:center;justify-content:center;
   padding:90px 20px 80px;overflow-y:auto;
   opacity:0;pointer-events:none;
-  transition:opacity .42s cubic-bezier(.4,0,.2,1),
-             transform .42s cubic-bezier(.4,0,.2,1);
-  transform:translateY(20px);
-  -webkit-overflow-scrolling:touch;
-}
+  transition:opacity .42s cubic-bezier(.4,0,.2,1),transform .42s cubic-bezier(.4,0,.2,1);
+  transform:translateY(20px);-webkit-overflow-scrolling:touch;}
 .slide.active{opacity:1;pointer-events:all;transform:translateY(0);}
 .slide.exit{opacity:0;transform:translateY(-20px);pointer-events:none;transition-duration:.28s;}
 
-/* ── HERO ───────────────────────────────────────── */
+/* HERO */
 #s0{padding:0;overflow:hidden;}
-.hero-bg{
-  position:absolute;inset:0;z-index:0;
+.hero-bg{position:absolute;inset:0;z-index:0;overflow:hidden;}
+.hero-bg img{
+  width:100%;height:100%;object-fit:cover;
+  animation:kenBurns 18s ease-in-out infinite alternate;
+  transform-origin:center center;
+}
+@keyframes kenBurns{
+  0%{transform:scale(1) translate(0,0);}
+  33%{transform:scale(1.08) translate(-1%,-.5%);}
+  66%{transform:scale(1.05) translate(1%,.8%);}
+  100%{transform:scale(1.1) translate(-.5%,-.3%);}
+}
+.hero-bg::after{content:'';position:absolute;inset:0;
   background:
-    url('https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=1920&q=80')
-    center/cover no-repeat;
-}
-.hero-bg::after{
-  content:'';position:absolute;inset:0;
-  background:
-    linear-gradient(to bottom,rgba(12,10,7,.7) 0%,rgba(12,10,7,.55) 50%,rgba(12,10,7,.92) 100%),
-    linear-gradient(to right,rgba(12,10,7,.6) 0%,transparent 60%);
-}
-.hero-content{
-  position:relative;z-index:2;
-  text-align:center;display:flex;flex-direction:column;
-  align-items:center;gap:20px;padding:0 24px;max-width:720px;
-}
-.hero-badge{
-  display:inline-flex;align-items:center;gap:8px;
+    linear-gradient(to bottom,rgba(12,10,7,.6) 0%,rgba(12,10,7,.4) 40%,rgba(12,10,7,.88) 100%),
+    linear-gradient(to right,rgba(12,10,7,.5) 0%,transparent 70%);}
+.hero-content{position:relative;z-index:2;text-align:center;
+  display:flex;flex-direction:column;align-items:center;
+  gap:18px;padding:0 24px;max-width:680px;}
+.hero-badge{display:inline-flex;align-items:center;gap:8px;
   font-size:10px;font-weight:500;letter-spacing:.22em;
   color:rgba(255,248,240,.4);text-transform:uppercase;
   padding:6px 16px;border-radius:100px;
-  border:1px solid rgba(255,248,240,.1);
-  background:rgba(255,248,240,.03);
-}
+  border:1px solid rgba(255,248,240,.1);background:rgba(255,248,240,.03);}
 .hero-dot{width:5px;height:5px;border-radius:50%;
   background:var(--gold);box-shadow:0 0 6px var(--gold);
   animation:pulse 2s ease-in-out infinite;}
 @keyframes pulse{0%,100%{opacity:1}50%{opacity:.3}}
-
-.hero-h1{
-  font-size:clamp(42px,8vw,88px);font-weight:700;
-  letter-spacing:-.04em;line-height:.92;color:var(--white);
-}
-.hero-h1 em{
-  font-style:normal;color:var(--gold);
+.hero-h1{font-size:clamp(40px,7.5vw,84px);font-weight:700;
+  letter-spacing:-.04em;line-height:.92;color:var(--white);}
+.hero-h1 em{font-style:normal;color:var(--gold);
   text-shadow:0 0 40px rgba(234,179,8,.4);
-  transition:opacity .3s,transform .3s;
-}
-.hero-sub{
-  font-size:15px;font-weight:300;letter-spacing:.01em;
-  color:rgba(255,248,240,.5);line-height:1.7;max-width:380px;
-}
-.hero-cursor{
-  display:inline-block;width:2px;height:.85em;
+  transition:opacity .3s,transform .3s;}
+.hero-cursor{display:inline-block;width:2px;height:.82em;
   background:var(--gold);margin-left:2px;vertical-align:middle;
-  animation:blink .8s infinite;
-}
+  animation:blink .8s infinite;}
 @keyframes blink{0%,100%{opacity:1}50%{opacity:0}}
 
-.hero-cta{
-  display:inline-flex;align-items:center;gap:10px;
+/* explicativo hero */
+.hero-explain{
+  display:flex;flex-direction:column;gap:6px;
+  text-align:center;max-width:420px;
+}
+.hero-explain-title{font-size:13px;font-weight:500;letter-spacing:.04em;
+  color:rgba(255,248,240,.55);}
+.hero-explain-sub{font-size:12px;font-weight:300;letter-spacing:.01em;
+  color:rgba(255,248,240,.3);line-height:1.6;}
+.hero-explain-tags{display:flex;align-items:center;justify-content:center;
+  gap:12px;flex-wrap:wrap;margin-top:4px;}
+.hero-tag{display:inline-flex;align-items:center;gap:5px;
+  font-size:10px;font-weight:500;letter-spacing:.1em;
+  color:rgba(255,248,240,.35);text-transform:uppercase;}
+.hero-tag .material-symbols-rounded{font-size:13px;color:var(--gold);}
+
+.hero-cta{display:inline-flex;align-items:center;gap:10px;
   background:var(--gold);color:var(--bg);
   padding:16px 36px;border-radius:100px;border:none;cursor:pointer;
   font-family:'Space Grotesk',sans-serif;
   font-size:13px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;
   transition:all .22s cubic-bezier(.4,0,.2,1);touch-action:manipulation;
-  box-shadow:0 0 24px rgba(234,179,8,.35);
-  position:relative;z-index:10;
-}
+  box-shadow:0 0 24px rgba(234,179,8,.35);position:relative;z-index:10;}
 .hero-cta:hover{background:var(--gold-l);transform:translateY(-2px);
   box-shadow:0 0 36px rgba(234,179,8,.5);}
 .hero-cta:active{transform:scale(.97);}
 
-/* ── QUESTION SLIDES — Claura style ─────────────── */
-.q-slide-bg{
-  position:absolute;inset:0;z-index:0;overflow:hidden;
-  border-radius:0;
-}
-/* mesh gradient base por pregunta (asignado via clase) */
-.q-slide-bg::before{
-  content:'';position:absolute;inset:0;
-  background:var(--mesh);
-  opacity:.85;
-}
-/* dots pattern encima del mesh */
-.q-slide-bg::after{
-  content:'';position:absolute;inset:0;
+/* QUESTION SLIDES */
+.q-slide-bg{position:absolute;inset:0;z-index:0;overflow:hidden;}
+.q-slide-bg::before{content:'';position:absolute;inset:0;
+  background:var(--mesh);opacity:.85;}
+.q-slide-bg::after{content:'';position:absolute;inset:0;
   background-image:radial-gradient(circle,rgba(255,248,240,.18) 1px,transparent 1px);
   background-size:28px 28px;
-  mask-image:radial-gradient(ellipse 80% 70% at 50% 50%,black 40%,transparent 100%);
-}
-/* dark overlay para legibilidad */
-.q-overlay{
-  position:absolute;inset:0;z-index:1;pointer-events:none;
+  mask-image:radial-gradient(ellipse 80% 70% at 50% 50%,black 40%,transparent 100%);}
+.q-overlay{position:absolute;inset:0;z-index:1;pointer-events:none;
   background:
-    linear-gradient(to bottom,rgba(12,10,7,.88) 0%,rgba(12,10,7,.7) 40%,rgba(12,10,7,.88) 100%);
-}
+    linear-gradient(to bottom,rgba(12,10,7,.88) 0%,rgba(12,10,7,.7) 40%,rgba(12,10,7,.88) 100%);}
 
-/* colores de mesh por categoría */
 .mesh-biz    {--mesh:linear-gradient(135deg,#1a0a2e,#2d1b69,#1a1410);}
 .mesh-service{--mesh:linear-gradient(135deg,#0a1a2e,#1e3a5f,#2d1b69);}
 .mesh-client {--mesh:linear-gradient(135deg,#1a1020,#4a1942,#2d0a1a);}
@@ -185,185 +140,134 @@ body{
 .mesh-contact{--mesh:linear-gradient(135deg,#0a1820,#002d40,#001a30);}
 .mesh-timing {--mesh:linear-gradient(135deg,#1a0a20,#3d1060,#1a0a10);}
 
-/* question content wrapper */
-.q-body{
-  position:relative;z-index:2;
-  max-width:620px;width:100%;
-  display:flex;flex-direction:column;gap:0;
-}
-
-/* icon */
-.q-icon{
-  font-size:32px;color:var(--gold);
-  margin-bottom:20px;
-  animation:iconIn .5s cubic-bezier(.34,1.56,.64,1) both;
-}
+.q-body{position:relative;z-index:2;max-width:620px;width:100%;
+  display:flex;flex-direction:column;gap:0;}
+.q-icon{font-size:30px;color:var(--gold);margin-bottom:18px;
+  animation:iconIn .5s cubic-bezier(.34,1.56,.64,1) both;}
 @keyframes iconIn{from{opacity:0;transform:translateY(8px) scale(.8)}to{opacity:1;transform:none}}
-
-/* counter */
-.q-step{
-  font-size:11px;font-weight:400;letter-spacing:.2em;
+.q-step{font-size:11px;font-weight:400;letter-spacing:.2em;
   color:rgba(255,248,240,.28);text-transform:uppercase;
-  margin-bottom:16px;display:flex;align-items:center;gap:8px;
-}
+  margin-bottom:14px;display:flex;align-items:center;gap:8px;}
 .q-step em{color:var(--gold);font-style:normal;font-weight:500;}
-.q-step::after{content:'';height:1px;width:28px;background:rgba(255,248,240,.12);}
-
-/* title */
-.q-t{
-  font-size:clamp(28px,5vw,50px);font-weight:700;
-  letter-spacing:-.035em;line-height:.98;
-  color:var(--white);margin-bottom:10px;
-  animation:titleIn .5s .08s cubic-bezier(.4,0,.2,1) both;
-}
-@keyframes titleIn{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+.q-step::after{content:'';height:1px;width:24px;background:rgba(255,248,240,.1);}
+.q-t{font-size:clamp(28px,5vw,50px);font-weight:700;
+  letter-spacing:-.035em;line-height:.98;color:var(--white);margin-bottom:10px;
+  animation:fadeUp .5s .08s cubic-bezier(.4,0,.2,1) both;}
+@keyframes fadeUp{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
 .q-t em{font-style:normal;color:var(--gold);}
+.q-sub{font-size:14px;font-weight:300;color:rgba(255,248,240,.38);line-height:1.65;
+  animation:fadeUp .5s .14s cubic-bezier(.4,0,.2,1) both;}
 
-/* subtitle */
-.q-sub{
-  font-size:14px;font-weight:300;letter-spacing:.01em;
-  color:rgba(255,248,240,.38);line-height:1.65;
-  animation:titleIn .5s .14s cubic-bezier(.4,0,.2,1) both;
-}
-
-/* ── INPUTS ─────────────────────────────────────── */
-input[type=text],input[type=email],input[type=tel],textarea{
-  width:100%;background:transparent;
-  border:none;border-bottom:1.5px solid rgba(255,248,240,.15);
-  color:var(--cream);
-  font-family:'Space Grotesk',sans-serif;
+input[type=text],input[type=email],input[type=tel],input[type=url],textarea{
+  width:100%;background:transparent;border:none;
+  border-bottom:1.5px solid rgba(255,248,240,.15);
+  color:var(--cream);font-family:'Space Grotesk',sans-serif;
   font-size:clamp(18px,2.8vw,26px);font-weight:300;
-  padding:16px 0;outline:none;
-  caret-color:var(--gold);
-  transition:border-color .3s;
-  resize:none;-webkit-appearance:none;
-  margin-top:28px;
-  animation:titleIn .5s .2s cubic-bezier(.4,0,.2,1) both;
-}
-input::placeholder,textarea::placeholder{
-  color:rgba(255,248,240,.18);font-size:16px;font-weight:300;
-}
+  padding:16px 0;outline:none;caret-color:var(--gold);
+  transition:border-color .3s;resize:none;-webkit-appearance:none;
+  margin-top:24px;animation:fadeUp .5s .2s cubic-bezier(.4,0,.2,1) both;}
+input::placeholder,textarea::placeholder{color:rgba(255,248,240,.18);font-size:16px;font-weight:300;}
 input:focus,textarea:focus{border-bottom-color:var(--gold);}
 textarea{min-height:90px;line-height:1.65;}
 
-/* ── CHOICES ─────────────────────────────────────── */
-.choices{display:flex;flex-direction:column;gap:8px;margin-top:24px;
-  animation:titleIn .5s .2s cubic-bezier(.4,0,.2,1) both;}
-.choice{
-  display:flex;align-items:center;gap:14px;
-  padding:14px 18px;border-radius:12px;
-  border:1px solid rgba(255,248,240,.08);
-  background:rgba(255,248,240,.04);
-  cursor:pointer;touch-action:manipulation;
-  transition:all .18s cubic-bezier(.4,0,.2,1);
-}
+.choices{display:flex;flex-direction:column;gap:8px;margin-top:22px;
+  animation:fadeUp .5s .2s cubic-bezier(.4,0,.2,1) both;}
+.choice{display:flex;align-items:center;gap:14px;padding:13px 16px;
+  border-radius:10px;border:1px solid rgba(255,248,240,.08);
+  background:rgba(255,248,240,.03);cursor:pointer;touch-action:manipulation;
+  transition:all .18s cubic-bezier(.4,0,.2,1);}
 .choice:hover{border-color:rgba(234,179,8,.3);background:rgba(234,179,8,.06);}
 .choice.selected{border-color:var(--gold);background:rgba(234,179,8,.1);}
 .choice input{display:none;}
-.choice-key{
-  min-width:22px;height:22px;border-radius:6px;
+.choice-key{min-width:22px;height:22px;border-radius:5px;
   border:1px solid rgba(255,248,240,.14);
   display:flex;align-items:center;justify-content:center;
-  font-size:9px;font-weight:600;letter-spacing:.06em;
-  color:rgba(255,248,240,.28);flex-shrink:0;
-  transition:all .18s;
-}
+  font-size:9px;font-weight:600;color:rgba(255,248,240,.28);flex-shrink:0;transition:all .18s;}
 .choice.selected .choice-key{background:var(--gold);border-color:var(--gold);color:var(--bg);}
 .choice-text{font-size:13px;font-weight:400;color:rgba(255,248,240,.78);}
 
-/* ── BUTTONS ─────────────────────────────────────── */
-.btn-row{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-top:28px;
-  animation:titleIn .5s .26s cubic-bezier(.4,0,.2,1) both;}
-.btn-next{
-  display:inline-flex;align-items:center;gap:8px;
+.btn-row{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-top:26px;
+  animation:fadeUp .5s .26s cubic-bezier(.4,0,.2,1) both;}
+.btn-next{display:inline-flex;align-items:center;gap:8px;
   background:var(--gold);color:var(--bg);
-  padding:13px 24px;border-radius:100px;border:none;cursor:pointer;
+  padding:12px 22px;border-radius:100px;border:none;cursor:pointer;
   font-family:'Space Grotesk',sans-serif;
   font-size:12px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;
   transition:all .2s cubic-bezier(.4,0,.2,1);touch-action:manipulation;
-  box-shadow:0 0 16px rgba(234,179,8,.25);
-}
-.btn-next:hover{background:var(--gold-l);box-shadow:0 0 24px rgba(234,179,8,.4);transform:translateY(-1px);}
+  box-shadow:0 0 14px rgba(234,179,8,.22);}
+.btn-next:hover{background:var(--gold-l);box-shadow:0 0 22px rgba(234,179,8,.38);transform:translateY(-1px);}
 .btn-next:active{transform:scale(.97);}
 .btn-next.alt{background:transparent;color:var(--purple-l);
   border:1px solid rgba(167,139,250,.3);box-shadow:none;}
 .btn-next.alt:hover{background:rgba(124,58,237,.1);border-color:var(--purple-l);}
-
-.btn-back{
-  display:inline-flex;align-items:center;gap:6px;
+.btn-back{display:inline-flex;align-items:center;gap:6px;
   background:transparent;color:rgba(255,248,240,.22);
-  padding:13px 14px;border-radius:100px;
+  padding:12px 14px;border-radius:100px;
   border:1px solid rgba(255,248,240,.08);cursor:pointer;
   font-family:'Space Grotesk',sans-serif;
   font-size:10px;font-weight:500;letter-spacing:.14em;text-transform:uppercase;
-  transition:all .2s;touch-action:manipulation;
-}
+  transition:all .2s;touch-action:manipulation;}
 .btn-back:hover{color:rgba(255,248,240,.55);border-color:rgba(255,248,240,.2);}
 .key-tip{font-size:9px;letter-spacing:.12em;color:rgba(255,248,240,.12);margin-left:auto;}
 
-/* ── THANKS ─────────────────────────────────────── */
 .thanks-links{display:flex;gap:10px;flex-wrap:wrap;margin-top:22px;}
-.thanks-link{
-  display:inline-flex;align-items:center;gap:8px;
+.thanks-link{display:inline-flex;align-items:center;gap:8px;
   padding:11px 20px;border-radius:100px;
   border:1px solid rgba(255,248,240,.1);background:rgba(255,248,240,.04);
   color:var(--gold);font-size:10px;font-weight:600;letter-spacing:.14em;
-  text-transform:uppercase;text-decoration:none;transition:all .2s;cursor:pointer;
-}
+  text-transform:uppercase;text-decoration:none;transition:all .2s;cursor:pointer;}
 .thanks-link:hover{border-color:var(--gold);background:rgba(234,179,8,.07);}
 
-/* ── FOOTER ─────────────────────────────────────── */
-.ftr{
-  position:fixed;bottom:0;left:0;right:0;z-index:20;
+.ftr{position:fixed;bottom:0;left:0;right:0;z-index:20;
   padding:14px 36px;pointer-events:none;
   background:linear-gradient(to top,var(--bg) 40%,transparent);
-  display:flex;justify-content:space-between;align-items:center;
-}
+  display:flex;justify-content:space-between;align-items:center;}
 .ftr-brand{font-size:9px;letter-spacing:.2em;color:rgba(255,248,240,.12);text-transform:uppercase;}
 
-/* ── GRAIN ───────────────────────────────────────── */
-@keyframes grain{
-  0%,100%{transform:translate(0,0)} 10%{transform:translate(-2%,-3%)}
-  20%{transform:translate(3%,2%)} 30%{transform:translate(-1%,4%)}
-  40%{transform:translate(4%,-1%)} 50%{transform:translate(-3%,3%)}
-  60%{transform:translate(2%,-4%)} 70%{transform:translate(-4%,1%)}
-}
-body::after{
-  content:'';position:fixed;inset:-50%;z-index:1000;width:200%;height:200%;
+@keyframes grain{0%,100%{transform:translate(0,0)} 10%{transform:translate(-2%,-3%)} 20%{transform:translate(3%,2%)} 30%{transform:translate(-1%,4%)} 40%{transform:translate(4%,-1%)} 50%{transform:translate(-3%,3%)}}
+body::after{content:'';position:fixed;inset:-50%;z-index:1000;width:200%;height:200%;
   background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
-  opacity:.022;pointer-events:none;animation:grain 8s steps(10) infinite;
-}
+  opacity:.022;pointer-events:none;animation:grain 8s steps(10) infinite;}
 
-/* ── RESPONSIVE ─────────────────────────────────── */
 @media(max-width:540px){
-  .hdr{padding:16px 18px;}
-  .q-t{font-size:clamp(26px,8vw,40px);}
-  .slide{padding:80px 18px 72px;}
-  .key-tip{display:none;}
+  .hdr{padding:14px 18px;}.slide{padding:80px 16px 70px;}
+  .q-t{font-size:clamp(24px,8vw,38px);}.key-tip{display:none;}
 }
 @media(prefers-reduced-motion:reduce){
-  .slide,#pf,.hero-cta,canvas,body::after,.q-icon,.q-t,.q-sub,.btn-row,.choices,input,textarea{animation:none;transition:none;}
+  .slide,#pf,.hero-cta,.hero-bg img,body::after{animation:none;transition:none;}
 }
 </style>
 </head>
 <body>
-
 <div id="pb"><div id="pf"></div></div>
 
 <header class="hdr">
-  <div class="logo"><span>RMK</span><div class="logo-line"></div></div>
+  <div class="logo">
+    <span class="logo-text">RMK</span>
+    <div class="logo-line"></div>
+  </div>
   <span class="step-lbl" id="stepLbl"></span>
 </header>
 
-<!-- ══════ HERO ══════ -->
+<!-- HERO -->
 <div class="slide active" id="s0">
-  <div class="hero-bg"></div>
+  <div class="hero-bg">
+    <img src="https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=1920&q=80" alt="" loading="eager"/>
+  </div>
   <div class="hero-content">
     <div class="hero-badge"><span class="hero-dot"></span>Brief Web · RMK</div>
     <h1 class="hero-h1">
       Tu web,<br/>hecha <em id="cycleText">perfecta</em><span class="hero-cursor"></span>
     </h1>
-    <p class="hero-sub">15 minutos. Sin tecnicismos. Te preguntamos lo que necesitamos para construir algo que realmente funcione.</p>
+    <div class="hero-explain">
+      <p class="hero-explain-title">¿Por qué este formulario?</p>
+      <p class="hero-explain-sub">Queremos conocerte antes de construir. Cada pregunta nos ayuda a crear algo que realmente represente tu negocio — sin suposiciones, sin genéricos.</p>
+      <div class="hero-explain-tags">
+        <span class="hero-tag"><span class="material-symbols-rounded">schedule</span>15 minutos</span>
+        <span class="hero-tag"><span class="material-symbols-rounded">lock</span>Sin tecnicismos</span>
+        <span class="hero-tag"><span class="material-symbols-rounded">handshake</span>Hecho a tu medida</span>
+      </div>
+    </div>
     <button class="hero-cta" onclick="goTo(1)">
       Empezar ahora
       <span class="material-symbols-rounded" style="font-size:18px">arrow_forward</span>
@@ -371,16 +275,15 @@ body::after{
   </div>
 </div>
 
-<!-- ══════ PREGUNTAS ══════ -->
-
+<!-- P1 — NOMBRE (movido al inicio, cálido) -->
 <div class="slide" id="s1">
   <div class="q-slide-bg mesh-biz"><div class="q-overlay"></div></div>
   <div class="q-body">
-    <span class="material-symbols-rounded q-icon">storefront</span>
-    <div class="q-step"><em>01</em> — 21</div>
-    <h2 class="q-t">Primero lo primero.<br/>¿Cómo se llama <em>tu negocio?</em></h2>
-    <p class="q-sub">El nombre dice mucho. Empieza por ahí.</p>
-    <input type="text" id="q1" placeholder="Ej: Studio Bella · The Coffee Spot" autocomplete="organization"/>
+    <span class="material-symbols-rounded q-icon">waving_hand</span>
+    <div class="q-step"><em>01</em> — 23</div>
+    <h2 class="q-t">Gracias por estar aquí.<br/><em>¿Con quién tenemos el gusto?</em></h2>
+    <p class="q-sub">Queremos verte crecer. Y crecer juntos. Por eso lo primero es saber tu nombre.</p>
+    <input type="text" id="q_nombre" placeholder="Tu nombre completo" autocomplete="name"/>
     <div class="btn-row">
       <button class="btn-back" onclick="goTo(0)">← Atrás</button>
       <button class="btn-next" onclick="goTo(2)">Continuar <span class="material-symbols-rounded" style="font-size:16px">arrow_forward</span></button>
@@ -389,63 +292,68 @@ body::after{
   </div>
 </div>
 
+<!-- P2 — NOMBRE NEGOCIO -->
 <div class="slide" id="s2">
   <div class="q-slide-bg mesh-biz"><div class="q-overlay"></div></div>
   <div class="q-body">
-    <span class="material-symbols-rounded q-icon">business_center</span>
-    <div class="q-step"><em>02</em> — 21</div>
-    <h2 class="q-t">Cuéntanos qué haces.<br/><em>Sin rodeos.</em></h2>
-    <p class="q-sub">En tus propias palabras. 2-3 líneas está perfecto.</p>
-    <textarea id="q2" placeholder="Ej: Somos un salón especializado en coloración. Atendemos a mujeres profesionales en Calgary." rows="4"></textarea>
+    <span class="material-symbols-rounded q-icon">storefront</span>
+    <div class="q-step"><em>02</em> — 23</div>
+    <h2 class="q-t">Primero lo primero.<br/>¿Cómo se llama <em>tu negocio?</em></h2>
+    <p class="q-sub">El nombre dice mucho. Empieza por ahí.</p>
+    <input type="text" id="q1" placeholder="Ej: Studio Bella · The Coffee Spot" autocomplete="organization"/>
     <div class="btn-row">
       <button class="btn-back" onclick="goTo(1)">← Atrás</button>
       <button class="btn-next" onclick="goTo(3)">Continuar <span class="material-symbols-rounded" style="font-size:16px">arrow_forward</span></button>
-    </div>
-  </div>
-</div>
-
-<div class="slide" id="s3">
-  <div class="q-slide-bg mesh-biz"><div class="q-overlay"></div></div>
-  <div class="q-body">
-    <span class="material-symbols-rounded q-icon">location_on</span>
-    <div class="q-step"><em>03</em> — 21</div>
-    <h2 class="q-t">Ponemos tu negocio<br/><em>en el mapa.</em></h2>
-    <p class="q-sub">¿Desde dónde operas?</p>
-    <input type="text" id="q3" placeholder="Ej: Calgary, Canadá · Bogotá, Colombia"/>
-    <div class="btn-row">
-      <button class="btn-back" onclick="goTo(2)">← Atrás</button>
-      <button class="btn-next" onclick="goTo(4)">Continuar <span class="material-symbols-rounded" style="font-size:16px">arrow_forward</span></button>
       <span class="key-tip">Enter ↵</span>
     </div>
   </div>
 </div>
 
-<div class="slide" id="s4">
+<!-- P3 — DESCRIPCION -->
+<div class="slide" id="s3">
   <div class="q-slide-bg mesh-biz"><div class="q-overlay"></div></div>
   <div class="q-body">
-    <span class="material-symbols-rounded q-icon">hub</span>
-    <div class="q-step"><em>04</em> — 21</div>
-    <h2 class="q-t">¿Cómo le llegas<br/><em>a tus clientes?</em></h2>
-    <div class="choices">
-      <label class="choice" onclick="pick(this,'q4')"><span class="choice-key">A</span><input type="radio" name="q4" value="Local físico"/><span class="choice-text">Tengo un local donde los atiendo</span></label>
-      <label class="choice" onclick="pick(this,'q4')"><span class="choice-key">B</span><input type="radio" name="q4" value="Online"/><span class="choice-text">Todo online — pedidos, envíos, videollamadas</span></label>
-      <label class="choice" onclick="pick(this,'q4')"><span class="choice-key">C</span><input type="radio" name="q4" value="Local y online"/><span class="choice-text">Los dos — local y también online</span></label>
-    </div>
+    <span class="material-symbols-rounded q-icon">business_center</span>
+    <div class="q-step"><em>03</em> — 23</div>
+    <h2 class="q-t">Cuéntanos qué haces.<br/><em>Sin rodeos.</em></h2>
+    <p class="q-sub">En tus propias palabras. 2-3 líneas está perfecto.</p>
+    <textarea id="q2" placeholder="Ej: Somos un salón especializado en coloración. Atendemos a mujeres profesionales en Calgary." rows="4"></textarea>
     <div class="btn-row">
-      <button class="btn-back" onclick="goTo(3)">← Atrás</button>
-      <button class="btn-next" onclick="goTo(5)">Continuar <span class="material-symbols-rounded" style="font-size:16px">arrow_forward</span></button>
+      <button class="btn-back" onclick="goTo(2)">← Atrás</button>
+      <button class="btn-next" onclick="goTo(4)">Continuar <span class="material-symbols-rounded" style="font-size:16px">arrow_forward</span></button>
     </div>
   </div>
 </div>
 
-<div class="slide" id="s5">
-  <div class="q-slide-bg mesh-service"><div class="q-overlay"></div></div>
+<!-- P4 — CIUDAD -->
+<div class="slide" id="s4">
+  <div class="q-slide-bg mesh-biz"><div class="q-overlay"></div></div>
   <div class="q-body">
-    <span class="material-symbols-rounded q-icon">inventory_2</span>
-    <div class="q-step"><em>05</em> — 21</div>
-    <h2 class="q-t">Ahora la parte buena.<br/><em>¿Qué vendes?</em></h2>
-    <p class="q-sub">Cuéntanos qué ofreces. Puedes hacer una lista.</p>
-    <textarea id="q5" placeholder="Ej: Coloración, corte, tratamientos, manicure…" rows="4"></textarea>
+    <span class="material-symbols-rounded q-icon">location_on</span>
+    <div class="q-step"><em>04</em> — 23</div>
+    <h2 class="q-t">Ponemos tu negocio<br/><em>en el mapa.</em></h2>
+    <p class="q-sub">¿Desde dónde operas?</p>
+    <input type="text" id="q3" placeholder="Ej: Calgary, Canadá · Bogotá, Colombia"/>
+    <div class="btn-row">
+      <button class="btn-back" onclick="goTo(3)">← Atrás</button>
+      <button class="btn-next" onclick="goTo(5)">Continuar <span class="material-symbols-rounded" style="font-size:16px">arrow_forward</span></button>
+      <span class="key-tip">Enter ↵</span>
+    </div>
+  </div>
+</div>
+
+<!-- P5 — MODALIDAD (ajuste Juli: punto físico/consultorio) -->
+<div class="slide" id="s5">
+  <div class="q-slide-bg mesh-biz"><div class="q-overlay"></div></div>
+  <div class="q-body">
+    <span class="material-symbols-rounded q-icon">hub</span>
+    <div class="q-step"><em>05</em> — 23</div>
+    <h2 class="q-t">¿Cómo le llegas<br/><em>a tus clientes?</em></h2>
+    <div class="choices">
+      <label class="choice" onclick="pick(this,'q4')"><span class="choice-key">A</span><input type="radio" name="q4" value="Punto físico / local / consultorio"/><span class="choice-text">Tengo un punto físico, local o consultorio</span></label>
+      <label class="choice" onclick="pick(this,'q4')"><span class="choice-key">B</span><input type="radio" name="q4" value="Online"/><span class="choice-text">Todo online — pedidos, envíos, videollamadas</span></label>
+      <label class="choice" onclick="pick(this,'q4')"><span class="choice-key">C</span><input type="radio" name="q4" value="Punto físico y online"/><span class="choice-text">Los dos — presencial y también online</span></label>
+    </div>
     <div class="btn-row">
       <button class="btn-back" onclick="goTo(4)">← Atrás</button>
       <button class="btn-next" onclick="goTo(6)">Continuar <span class="material-symbols-rounded" style="font-size:16px">arrow_forward</span></button>
@@ -453,56 +361,48 @@ body::after{
   </div>
 </div>
 
+<!-- P6 — SERVICIOS -->
 <div class="slide" id="s6">
   <div class="q-slide-bg mesh-service"><div class="q-overlay"></div></div>
   <div class="q-body">
+    <span class="material-symbols-rounded q-icon">inventory_2</span>
+    <div class="q-step"><em>06</em> — 23</div>
+    <h2 class="q-t">Ahora la parte buena.<br/><em>¿Qué vendes?</em></h2>
+    <p class="q-sub">Cuéntanos qué ofreces. Puedes hacer una lista.</p>
+    <textarea id="q5" placeholder="Ej: Coloración, corte, tratamientos, manicure…" rows="4"></textarea>
+    <div class="btn-row">
+      <button class="btn-back" onclick="goTo(5)">← Atrás</button>
+      <button class="btn-next" onclick="goTo(7)">Continuar <span class="material-symbols-rounded" style="font-size:16px">arrow_forward</span></button>
+    </div>
+  </div>
+</div>
+
+<!-- P7 — ESTRELLA -->
+<div class="slide" id="s7">
+  <div class="q-slide-bg mesh-service"><div class="q-overlay"></div></div>
+  <div class="q-body">
     <span class="material-symbols-rounded q-icon">star</span>
-    <div class="q-step"><em>06</em> — 21</div>
+    <div class="q-step"><em>07</em> — 23</div>
     <h2 class="q-t">Si pudieras elegir uno.<br/><em>¿Cuál sería tu estrella?</em></h2>
     <p class="q-sub">El servicio o producto del que más te enorgulleces.</p>
     <input type="text" id="q6" placeholder="Ej: La coloración balayage personalizada"/>
     <div class="btn-row">
-      <button class="btn-back" onclick="goTo(5)">← Atrás</button>
-      <button class="btn-next" onclick="goTo(7)">Continuar <span class="material-symbols-rounded" style="font-size:16px">arrow_forward</span></button>
+      <button class="btn-back" onclick="goTo(6)">← Atrás</button>
+      <button class="btn-next" onclick="goTo(8)">Continuar <span class="material-symbols-rounded" style="font-size:16px">arrow_forward</span></button>
       <span class="key-tip">Enter ↵</span>
     </div>
   </div>
 </div>
 
-<div class="slide" id="s7">
+<!-- P8 — DESAFÍOS (nueva) -->
+<div class="slide" id="s8">
   <div class="q-slide-bg mesh-client"><div class="q-overlay"></div></div>
   <div class="q-body">
-    <span class="material-symbols-rounded q-icon">diversity_3</span>
-    <div class="q-step"><em>07</em> — 21</div>
-    <h2 class="q-t">¿Por dónde te encuentra<br/><em>la gente hoy?</em></h2>
-    <p class="q-sub">Marca todos los que apliquen.</p>
-    <div class="choices">
-      <label class="choice" onclick="chk(this)"><span class="choice-key">☐</span><input type="checkbox" name="q7" value="Instagram / Facebook"/><span class="choice-text">Instagram / Facebook</span></label>
-      <label class="choice" onclick="chk(this)"><span class="choice-key">☐</span><input type="checkbox" name="q7" value="Recomendación (voz a voz)"/><span class="choice-text">Recomendación entre conocidos</span></label>
-      <label class="choice" onclick="chk(this)"><span class="choice-key">☐</span><input type="checkbox" name="q7" value="Google"/><span class="choice-text">Google</span></label>
-      <label class="choice" onclick="chk(this)"><span class="choice-key">☐</span><input type="checkbox" name="q7" value="TikTok"/><span class="choice-text">TikTok</span></label>
-      <label class="choice" onclick="chk(this)"><span class="choice-key">☐</span><input type="checkbox" name="q7" value="WhatsApp directo"/><span class="choice-text">WhatsApp directo</span></label>
-      <label class="choice" onclick="chk(this)"><span class="choice-key">☐</span><input type="checkbox" name="q7" value="Ferias o eventos"/><span class="choice-text">Ferias o eventos</span></label>
-    </div>
-    <div class="btn-row">
-      <button class="btn-back" onclick="goTo(6)">← Atrás</button>
-      <button class="btn-next" onclick="goTo(8)">Continuar <span class="material-symbols-rounded" style="font-size:16px">arrow_forward</span></button>
-    </div>
-  </div>
-</div>
-
-<div class="slide" id="s8">
-  <div class="q-slide-bg mesh-brand"><div class="q-overlay"></div></div>
-  <div class="q-body">
-    <span class="material-symbols-rounded q-icon">draw</span>
-    <div class="q-step"><em>08</em> — 21</div>
-    <h2 class="q-t">Hablemos de<br/><em>tu imagen.</em> ¿Tienes logo?</h2>
-    <div class="choices">
-      <label class="choice" onclick="pick(this,'q8')"><span class="choice-key">A</span><input type="radio" name="q8" value="Sí, tengo logo"/><span class="choice-text">Sí, y me encanta</span></label>
-      <label class="choice" onclick="pick(this,'q8')"><span class="choice-key">B</span><input type="radio" name="q8" value="Tengo algo pero no me convence"/><span class="choice-text">Tengo algo pero podría mejorar</span></label>
-      <label class="choice" onclick="pick(this,'q8')"><span class="choice-key">C</span><input type="radio" name="q8" value="No tengo todavía"/><span class="choice-text">Nada todavía</span></label>
-    </div>
-    <p class="q-sub" style="margin-top:14px;">Si tienes → envíalo al WhatsApp +1 587 585 4143 después.</p>
+    <span class="material-symbols-rounded q-icon">construction</span>
+    <div class="q-step"><em>08</em> — 23</div>
+    <h2 class="q-t">Seamos honestos.<br/><em>¿Cuál es tu mayor desafío?</em></h2>
+    <p class="q-sub">Atraer clientes, diferenciarte, comunicar mejor… cuéntanos qué te quita el sueño.</p>
+    <textarea id="q_desafio" placeholder="Ej: Me cuesta que la gente me encuentre online. No sé cómo diferenciarme de la competencia." rows="4"></textarea>
     <div class="btn-row">
       <button class="btn-back" onclick="goTo(7)">← Atrás</button>
       <button class="btn-next" onclick="goTo(9)">Continuar <span class="material-symbols-rounded" style="font-size:16px">arrow_forward</span></button>
@@ -510,27 +410,87 @@ body::after{
   </div>
 </div>
 
+<!-- P9 — META DE MARCA (nueva) -->
 <div class="slide" id="s9">
-  <div class="q-slide-bg mesh-brand"><div class="q-overlay"></div></div>
+  <div class="q-slide-bg mesh-client"><div class="q-overlay"></div></div>
   <div class="q-body">
-    <span class="material-symbols-rounded q-icon">palette</span>
-    <div class="q-step"><em>09</em> — 21</div>
-    <h2 class="q-t">Los colores dicen mucho.<br/><em>¿Ya tienes los tuyos?</em></h2>
-    <p class="q-sub">Nombres o códigos hex. Si no tienes, deja en blanco.</p>
-    <input type="text" id="q9" placeholder="Ej: negro y dorado · rosa nude y blanco"/>
+    <span class="material-symbols-rounded q-icon">rocket_launch</span>
+    <div class="q-step"><em>09</em> — 23</div>
+    <h2 class="q-t">Si todo sale perfecto,<br/><em>¿dónde quieres estar?</em></h2>
+    <p class="q-sub">¿Cuál es tu meta con tu marca? Sueña en grande — eso nos da dirección.</p>
+    <textarea id="q_meta" placeholder="Ej: Quiero ser la referencia de coloración en Calgary. Tener agenda llena los 30 días del mes." rows="4"></textarea>
     <div class="btn-row">
       <button class="btn-back" onclick="goTo(8)">← Atrás</button>
       <button class="btn-next" onclick="goTo(10)">Continuar <span class="material-symbols-rounded" style="font-size:16px">arrow_forward</span></button>
+    </div>
+  </div>
+</div>
+
+<!-- P10 — CANALES (ajuste Juli: WhatsApp más claro) -->
+<div class="slide" id="s10">
+  <div class="q-slide-bg mesh-client"><div class="q-overlay"></div></div>
+  <div class="q-body">
+    <span class="material-symbols-rounded q-icon">diversity_3</span>
+    <div class="q-step"><em>10</em> — 23</div>
+    <h2 class="q-t">¿Por dónde te encuentra<br/><em>la gente hoy?</em></h2>
+    <p class="q-sub">Marca todos los que apliquen.</p>
+    <div class="choices">
+      <label class="choice" onclick="chk(this)"><span class="choice-key">☐</span><input type="checkbox" name="q7" value="Instagram / Facebook"/><span class="choice-text">Instagram / Facebook</span></label>
+      <label class="choice" onclick="chk(this)"><span class="choice-key">☐</span><input type="checkbox" name="q7" value="Recomendación entre conocidos"/><span class="choice-text">Recomendación entre conocidos</span></label>
+      <label class="choice" onclick="chk(this)"><span class="choice-key">☐</span><input type="checkbox" name="q7" value="Google"/><span class="choice-text">Google</span></label>
+      <label class="choice" onclick="chk(this)"><span class="choice-key">☐</span><input type="checkbox" name="q7" value="TikTok"/><span class="choice-text">TikTok</span></label>
+      <label class="choice" onclick="chk(this)"><span class="choice-key">☐</span><input type="checkbox" name="q7" value="Me escriben por WhatsApp o mensaje directo"/><span class="choice-text">Me escriben por WhatsApp o mensaje directo</span></label>
+      <label class="choice" onclick="chk(this)"><span class="choice-key">☐</span><input type="checkbox" name="q7" value="Ferias o eventos"/><span class="choice-text">Ferias o eventos</span></label>
+    </div>
+    <div class="btn-row">
+      <button class="btn-back" onclick="goTo(9)">← Atrás</button>
+      <button class="btn-next" onclick="goTo(11)">Continuar <span class="material-symbols-rounded" style="font-size:16px">arrow_forward</span></button>
+    </div>
+  </div>
+</div>
+
+<!-- P11 — LOGO -->
+<div class="slide" id="s11">
+  <div class="q-slide-bg mesh-brand"><div class="q-overlay"></div></div>
+  <div class="q-body">
+    <span class="material-symbols-rounded q-icon">draw</span>
+    <div class="q-step"><em>11</em> — 23</div>
+    <h2 class="q-t">Hablemos de<br/><em>tu imagen.</em> ¿Tienes logo?</h2>
+    <div class="choices">
+      <label class="choice" onclick="pick(this,'q8')"><span class="choice-key">A</span><input type="radio" name="q8" value="Sí, y me encanta"/><span class="choice-text">Sí, y me encanta</span></label>
+      <label class="choice" onclick="pick(this,'q8')"><span class="choice-key">B</span><input type="radio" name="q8" value="Tengo algo pero podría mejorar"/><span class="choice-text">Tengo algo pero podría mejorar</span></label>
+      <label class="choice" onclick="pick(this,'q8')"><span class="choice-key">C</span><input type="radio" name="q8" value="No tengo todavía"/><span class="choice-text">Nada todavía</span></label>
+    </div>
+    <div class="btn-row">
+      <button class="btn-back" onclick="goTo(10)">← Atrás</button>
+      <button class="btn-next" onclick="goTo(12)">Continuar <span class="material-symbols-rounded" style="font-size:16px">arrow_forward</span></button>
+    </div>
+  </div>
+</div>
+
+<!-- P12 — COLORES -->
+<div class="slide" id="s12">
+  <div class="q-slide-bg mesh-brand"><div class="q-overlay"></div></div>
+  <div class="q-body">
+    <span class="material-symbols-rounded q-icon">palette</span>
+    <div class="q-step"><em>12</em> — 23</div>
+    <h2 class="q-t">Los colores dicen mucho.<br/><em>¿Ya tienes los tuyos?</em></h2>
+    <p class="q-sub">Nombres o códigos hex. Si no tienes, deja en blanco y seguimos.</p>
+    <input type="text" id="q9" placeholder="Ej: negro y dorado · rosa nude y blanco"/>
+    <div class="btn-row">
+      <button class="btn-back" onclick="goTo(11)">← Atrás</button>
+      <button class="btn-next" onclick="goTo(13)">Continuar <span class="material-symbols-rounded" style="font-size:16px">arrow_forward</span></button>
       <span class="key-tip">Enter ↵</span>
     </div>
   </div>
 </div>
 
-<div class="slide" id="s10">
+<!-- P13 — ESTILO -->
+<div class="slide" id="s13">
   <div class="q-slide-bg mesh-brand"><div class="q-overlay"></div></div>
   <div class="q-body">
     <span class="material-symbols-rounded q-icon">auto_awesome</span>
-    <div class="q-step"><em>10</em> — 21</div>
+    <div class="q-step"><em>13</em> — 23</div>
     <h2 class="q-t">¿Cómo quieres<br/><em>que te perciban?</em></h2>
     <p class="q-sub">Elige los que más te representen.</p>
     <div class="choices">
@@ -544,72 +504,21 @@ body::after{
       <label class="choice" onclick="chk(this)"><span class="choice-key">☐</span><input type="checkbox" name="q10" value="Juvenil y fresco"/><span class="choice-text">Juvenil y fresco</span></label>
     </div>
     <div class="btn-row">
-      <button class="btn-back" onclick="goTo(9)">← Atrás</button>
-      <button class="btn-next" onclick="goTo(11)">Continuar <span class="material-symbols-rounded" style="font-size:16px">arrow_forward</span></button>
-    </div>
-  </div>
-</div>
-
-<div class="slide" id="s11">
-  <div class="q-slide-bg mesh-ref"><div class="q-overlay"></div></div>
-  <div class="q-body">
-    <span class="material-symbols-rounded q-icon">favorite</span>
-    <div class="q-step"><em>11</em> — 21</div>
-    <h2 class="q-t">La inspiración importa.<br/><em>¿Qué web te enamora?</em></h2>
-    <p class="q-sub">Links o nombres de marcas. No tiene que ser del mismo rubro.</p>
-    <textarea id="q11" placeholder="Ej: glossier.com · @zara · la web de Apple…" rows="4"></textarea>
-    <div class="btn-row">
-      <button class="btn-back" onclick="goTo(10)">← Atrás</button>
-      <button class="btn-next" onclick="goTo(12)">Continuar <span class="material-symbols-rounded" style="font-size:16px">arrow_forward</span></button>
-    </div>
-  </div>
-</div>
-
-<div class="slide" id="s12">
-  <div class="q-slide-bg mesh-ref"><div class="q-overlay"></div></div>
-  <div class="q-body">
-    <span class="material-symbols-rounded q-icon">do_not_disturb_on</span>
-    <div class="q-step"><em>12</em> — 21</div>
-    <h2 class="q-t">¿Qué te atrae de eso?<br/><em>¿Y qué jamás quieres?</em></h2>
-    <p class="q-sub">Ser honesto aquí nos ahorra mucho tiempo a los dos.</p>
-    <textarea id="q12" placeholder="Ej: Me gustan las webs limpias, con fotos grandes. Nada recargado, nada de pop-ups." rows="4"></textarea>
-    <div class="btn-row">
-      <button class="btn-back" onclick="goTo(11)">← Atrás</button>
-      <button class="btn-next" onclick="goTo(13)">Continuar <span class="material-symbols-rounded" style="font-size:16px">arrow_forward</span></button>
-    </div>
-  </div>
-</div>
-
-<div class="slide" id="s13">
-  <div class="q-slide-bg mesh-photo"><div class="q-overlay"></div></div>
-  <div class="q-body">
-    <span class="material-symbols-rounded q-icon">photo_camera</span>
-    <div class="q-step"><em>13</em> — 21</div>
-    <h2 class="q-t">Las fotos hacen<br/><em>la diferencia.</em> ¿Tienes?</h2>
-    <div class="choices">
-      <label class="choice" onclick="pick(this,'q13')"><span class="choice-key">A</span><input type="radio" name="q13" value="Sí, varias buenas"/><span class="choice-text">Sí, tengo varias buenas</span></label>
-      <label class="choice" onclick="pick(this,'q13')"><span class="choice-key">B</span><input type="radio" name="q13" value="Pocas"/><span class="choice-text">Pocas, pero algo hay</span></label>
-      <label class="choice" onclick="pick(this,'q13')"><span class="choice-key">C</span><input type="radio" name="q13" value="No tengo aún"/><span class="choice-text">Nada por ahora</span></label>
-    </div>
-    <p class="q-sub" style="margin-top:14px;">Envía tus fotos al WhatsApp +1 587 585 4143 cuando termines.</p>
-    <div class="btn-row">
       <button class="btn-back" onclick="goTo(12)">← Atrás</button>
       <button class="btn-next" onclick="goTo(14)">Continuar <span class="material-symbols-rounded" style="font-size:16px">arrow_forward</span></button>
     </div>
   </div>
 </div>
 
+<!-- P14 — REFERENCIAS WEB (ajuste Juli: páginas web específicas) -->
 <div class="slide" id="s14">
-  <div class="q-slide-bg mesh-photo"><div class="q-overlay"></div></div>
+  <div class="q-slide-bg mesh-ref"><div class="q-overlay"></div></div>
   <div class="q-body">
-    <span class="material-symbols-rounded q-icon">translate</span>
-    <div class="q-step"><em>14</em> — 21</div>
-    <h2 class="q-t">¿En qué idioma<br/><em>habla tu negocio?</em></h2>
-    <div class="choices">
-      <label class="choice" onclick="pick(this,'q14')"><span class="choice-key">A</span><input type="radio" name="q14" value="Solo español"/><span class="choice-text">Solo español</span></label>
-      <label class="choice" onclick="pick(this,'q14')"><span class="choice-key">B</span><input type="radio" name="q14" value="Solo inglés"/><span class="choice-text">Solo inglés</span></label>
-      <label class="choice" onclick="pick(this,'q14')"><span class="choice-key">C</span><input type="radio" name="q14" value="Español e inglés (bilingüe)"/><span class="choice-text">Los dos — bilingüe</span></label>
-    </div>
+    <span class="material-symbols-rounded q-icon">favorite</span>
+    <div class="q-step"><em>14</em> — 23</div>
+    <h2 class="q-t">La inspiración importa.<br/><em>¿Qué páginas web te gustan?</em></h2>
+    <p class="q-sub">Páginas web que sean parecidas a lo que tú quieres — pueden ser del mismo rubro o no. Pon el link o el nombre.</p>
+    <textarea id="q11" placeholder="Ej: https://glossier.com · wolverineworldwide.com · me gusta cómo se ve Zara online" rows="4"></textarea>
     <div class="btn-row">
       <button class="btn-back" onclick="goTo(13)">← Atrás</button>
       <button class="btn-next" onclick="goTo(15)">Continuar <span class="material-symbols-rounded" style="font-size:16px">arrow_forward</span></button>
@@ -617,21 +526,15 @@ body::after{
   </div>
 </div>
 
+<!-- P15 — QUE TE GUSTA/EVITAR -->
 <div class="slide" id="s15">
-  <div class="q-slide-bg mesh-goals"><div class="q-overlay"></div></div>
+  <div class="q-slide-bg mesh-ref"><div class="q-overlay"></div></div>
   <div class="q-body">
-    <span class="material-symbols-rounded q-icon">flag</span>
-    <div class="q-step"><em>15</em> — 21</div>
-    <h2 class="q-t">¿Qué quieres lograr<br/><em>con tu web?</em></h2>
-    <p class="q-sub">Sé honesto. Eso nos ayuda a construir lo correcto.</p>
-    <div class="choices">
-      <label class="choice" onclick="chk(this)"><span class="choice-key">☐</span><input type="checkbox" name="q15" value="Que me encuentren en Google"/><span class="choice-text">Que me encuentren en Google</span></label>
-      <label class="choice" onclick="chk(this)"><span class="choice-key">☐</span><input type="checkbox" name="q15" value="Mostrar mis servicios"/><span class="choice-text">Mostrar mis servicios o productos</span></label>
-      <label class="choice" onclick="chk(this)"><span class="choice-key">☐</span><input type="checkbox" name="q15" value="Recibir pedidos"/><span class="choice-text">Recibir pedidos o solicitudes</span></label>
-      <label class="choice" onclick="chk(this)"><span class="choice-key">☐</span><input type="checkbox" name="q15" value="Vender en línea"/><span class="choice-text">Vender en línea — tienda</span></label>
-      <label class="choice" onclick="chk(this)"><span class="choice-key">☐</span><input type="checkbox" name="q15" value="Tener algo profesional"/><span class="choice-text">Tener algo profesional que compartir</span></label>
-      <label class="choice" onclick="chk(this)"><span class="choice-key">☐</span><input type="checkbox" name="q15" value="Portafolio"/><span class="choice-text">Mostrar mi portafolio</span></label>
-    </div>
+    <span class="material-symbols-rounded q-icon">do_not_disturb_on</span>
+    <div class="q-step"><em>15</em> — 23</div>
+    <h2 class="q-t">¿Qué te atrae de eso?<br/><em>¿Y qué jamás quieres?</em></h2>
+    <p class="q-sub">Ser honesto aquí nos ahorra mucho tiempo a los dos.</p>
+    <textarea id="q12" placeholder="Ej: Me gustan las webs limpias, con fotos grandes. Nada recargado, nada de pop-ups." rows="4"></textarea>
     <div class="btn-row">
       <button class="btn-back" onclick="goTo(14)">← Atrás</button>
       <button class="btn-next" onclick="goTo(16)">Continuar <span class="material-symbols-rounded" style="font-size:16px">arrow_forward</span></button>
@@ -639,14 +542,18 @@ body::after{
   </div>
 </div>
 
+<!-- P16 — FOTOS -->
 <div class="slide" id="s16">
-  <div class="q-slide-bg mesh-goals"><div class="q-overlay"></div></div>
+  <div class="q-slide-bg mesh-photo"><div class="q-overlay"></div></div>
   <div class="q-body">
-    <span class="material-symbols-rounded q-icon">ads_click</span>
-    <div class="q-step"><em>16</em> — 21</div>
-    <h2 class="q-t">Cuando alguien llegue,<br/><em>¿qué quieres que haga?</em></h2>
-    <p class="q-sub">El primer paso ideal. Que llame, que compre, que escriba…</p>
-    <textarea id="q16" placeholder="Ej: Que nos escriba por WhatsApp para reservar cita." rows="3"></textarea>
+    <span class="material-symbols-rounded q-icon">photo_camera</span>
+    <div class="q-step"><em>16</em> — 23</div>
+    <h2 class="q-t">Las fotos hacen<br/><em>la diferencia.</em> ¿Tienes?</h2>
+    <div class="choices">
+      <label class="choice" onclick="pick(this,'q13')"><span class="choice-key">A</span><input type="radio" name="q13" value="Sí, varias buenas"/><span class="choice-text">Sí, tengo varias buenas</span></label>
+      <label class="choice" onclick="pick(this,'q13')"><span class="choice-key">B</span><input type="radio" name="q13" value="Pocas"/><span class="choice-text">Pocas, pero algo hay</span></label>
+      <label class="choice" onclick="pick(this,'q13')"><span class="choice-key">C</span><input type="radio" name="q13" value="No tengo aún"/><span class="choice-text">Nada por ahora</span></label>
+    </div>
     <div class="btn-row">
       <button class="btn-back" onclick="goTo(15)">← Atrás</button>
       <button class="btn-next" onclick="goTo(17)">Continuar <span class="material-symbols-rounded" style="font-size:16px">arrow_forward</span></button>
@@ -654,103 +561,146 @@ body::after{
   </div>
 </div>
 
+<!-- P17 — IDIOMA -->
 <div class="slide" id="s17">
-  <div class="q-slide-bg mesh-contact"><div class="q-overlay"></div></div>
+  <div class="q-slide-bg mesh-photo"><div class="q-overlay"></div></div>
   <div class="q-body">
-    <span class="material-symbols-rounded q-icon">chat</span>
-    <div class="q-step"><em>17</em> — 21</div>
-    <h2 class="q-t">¿A qué número<br/><em>te escriben?</em></h2>
-    <p class="q-sub">El WhatsApp que va en tu web.</p>
-    <input type="tel" id="q17" placeholder="+1 587… · +57 310…" autocomplete="tel"/>
+    <span class="material-symbols-rounded q-icon">translate</span>
+    <div class="q-step"><em>17</em> — 23</div>
+    <h2 class="q-t">¿En qué idioma<br/><em>habla tu negocio?</em></h2>
+    <div class="choices">
+      <label class="choice" onclick="pick(this,'q14')"><span class="choice-key">A</span><input type="radio" name="q14" value="Solo español"/><span class="choice-text">Solo español</span></label>
+      <label class="choice" onclick="pick(this,'q14')"><span class="choice-key">B</span><input type="radio" name="q14" value="Solo inglés"/><span class="choice-text">Solo inglés</span></label>
+      <label class="choice" onclick="pick(this,'q14')"><span class="choice-key">C</span><input type="radio" name="q14" value="Español e inglés (bilingüe)"/><span class="choice-text">Los dos — bilingüe</span></label>
+    </div>
     <div class="btn-row">
       <button class="btn-back" onclick="goTo(16)">← Atrás</button>
       <button class="btn-next" onclick="goTo(18)">Continuar <span class="material-symbols-rounded" style="font-size:16px">arrow_forward</span></button>
+    </div>
+  </div>
+</div>
+
+<!-- P18 — OBJETIVOS -->
+<div class="slide" id="s18">
+  <div class="q-slide-bg mesh-goals"><div class="q-overlay"></div></div>
+  <div class="q-body">
+    <span class="material-symbols-rounded q-icon">flag</span>
+    <div class="q-step"><em>18</em> — 23</div>
+    <h2 class="q-t">¿Qué quieres lograr<br/><em>con tu web?</em></h2>
+    <p class="q-sub">Sé honesto. Eso nos ayuda a construir lo correcto.</p>
+    <div class="choices">
+      <label class="choice" onclick="chk(this)"><span class="choice-key">☐</span><input type="checkbox" name="q15" value="Que me encuentren en Google"/><span class="choice-text">Que me encuentren en Google</span></label>
+      <label class="choice" onclick="chk(this)"><span class="choice-key">☐</span><input type="checkbox" name="q15" value="Mostrar mis servicios o productos"/><span class="choice-text">Mostrar mis servicios o productos</span></label>
+      <label class="choice" onclick="chk(this)"><span class="choice-key">☐</span><input type="checkbox" name="q15" value="Recibir pedidos o solicitudes"/><span class="choice-text">Recibir pedidos o solicitudes</span></label>
+      <label class="choice" onclick="chk(this)"><span class="choice-key">☐</span><input type="checkbox" name="q15" value="Vender en línea — tienda"/><span class="choice-text">Vender en línea — tienda</span></label>
+      <label class="choice" onclick="chk(this)"><span class="choice-key">☐</span><input type="checkbox" name="q15" value="Tener algo profesional para compartir"/><span class="choice-text">Tener algo profesional para compartir</span></label>
+      <label class="choice" onclick="chk(this)"><span class="choice-key">☐</span><input type="checkbox" name="q15" value="Mostrar mi portafolio"/><span class="choice-text">Mostrar mi portafolio</span></label>
+    </div>
+    <div class="btn-row">
+      <button class="btn-back" onclick="goTo(17)">← Atrás</button>
+      <button class="btn-next" onclick="goTo(19)">Continuar <span class="material-symbols-rounded" style="font-size:16px">arrow_forward</span></button>
+    </div>
+  </div>
+</div>
+
+<!-- P19 — ACCION VISITANTE (ajuste Juli: más claro) -->
+<div class="slide" id="s19">
+  <div class="q-slide-bg mesh-goals"><div class="q-overlay"></div></div>
+  <div class="q-body">
+    <span class="material-symbols-rounded q-icon">ads_click</span>
+    <div class="q-step"><em>19</em> — 23</div>
+    <h2 class="q-t">Cuando alguien entre<br/>a tu web, <em>¿qué quieres que haga?</em></h2>
+    <p class="q-sub">El primer paso ideal. Que llame, que compre, que agende…</p>
+    <textarea id="q16" placeholder="Ej: Que agende una cita directo. Que nos escriba para pedir una cotización." rows="3"></textarea>
+    <div class="btn-row">
+      <button class="btn-back" onclick="goTo(18)">← Atrás</button>
+      <button class="btn-next" onclick="goTo(20)">Continuar <span class="material-symbols-rounded" style="font-size:16px">arrow_forward</span></button>
+    </div>
+  </div>
+</div>
+
+<!-- P20 — TELÉFONO (ajuste Juli: número de teléfono, sin WhatsApp personal) -->
+<div class="slide" id="s20">
+  <div class="q-slide-bg mesh-contact"><div class="q-overlay"></div></div>
+  <div class="q-body">
+    <span class="material-symbols-rounded q-icon">call</span>
+    <div class="q-step"><em>20</em> — 23</div>
+    <h2 class="q-t">¿A qué número<br/><em>te contactan?</em></h2>
+    <p class="q-sub">El número de teléfono que va en tu web.</p>
+    <input type="tel" id="q17" placeholder="+1 587… · +57 310…" autocomplete="tel"/>
+    <div class="btn-row">
+      <button class="btn-back" onclick="goTo(19)">← Atrás</button>
+      <button class="btn-next" onclick="goTo(21)">Continuar <span class="material-symbols-rounded" style="font-size:16px">arrow_forward</span></button>
       <span class="key-tip">Enter ↵</span>
     </div>
   </div>
 </div>
 
-<div class="slide" id="s18">
+<!-- P21 — EMAIL -->
+<div class="slide" id="s21">
   <div class="q-slide-bg mesh-contact"><div class="q-overlay"></div></div>
   <div class="q-body">
     <span class="material-symbols-rounded q-icon">mail</span>
-    <div class="q-step"><em>18</em> — 21</div>
+    <div class="q-step"><em>21</em> — 23</div>
     <h2 class="q-t">¿Tienes <em>email</em><br/>de negocio?</h2>
     <p class="q-sub">Si no tienes, no pasa nada — déjalo en blanco.</p>
     <input type="email" id="q18" placeholder="hola@minegocio.com" autocomplete="email"/>
     <div class="btn-row">
-      <button class="btn-back" onclick="goTo(17)">← Atrás</button>
-      <button class="btn-next" onclick="goTo(19)">Continuar <span class="material-symbols-rounded" style="font-size:16px">arrow_forward</span></button>
+      <button class="btn-back" onclick="goTo(20)">← Atrás</button>
+      <button class="btn-next" onclick="goTo(22)">Continuar <span class="material-symbols-rounded" style="font-size:16px">arrow_forward</span></button>
       <span class="key-tip">Enter ↵</span>
     </div>
   </div>
 </div>
 
-<div class="slide" id="s19">
+<!-- P22 — INSTAGRAM + TIMING -->
+<div class="slide" id="s22">
   <div class="q-slide-bg mesh-contact"><div class="q-overlay"></div></div>
   <div class="q-body">
-    <span class="material-symbols-rounded q-icon">tag</span>
-    <div class="q-step"><em>19</em> — 21</div>
-    <h2 class="q-t">¿Tu <em>Instagram?</em></h2>
-    <p class="q-sub">Ayuda a que todo quede conectado. Opcional.</p>
-    <input type="text" id="q19" placeholder="@minegocio"/>
-    <div class="btn-row">
-      <button class="btn-back" onclick="goTo(18)">← Atrás</button>
-      <button class="btn-next" onclick="goTo(20)">Continuar <span class="material-symbols-rounded" style="font-size:16px">arrow_forward</span></button>
-      <span class="key-tip">Enter ↵</span>
-    </div>
-  </div>
-</div>
-
-<div class="slide" id="s20">
-  <div class="q-slide-bg mesh-timing"><div class="q-overlay"></div></div>
-  <div class="q-body">
     <span class="material-symbols-rounded q-icon">schedule</span>
-    <div class="q-step"><em>20</em> — 21</div>
-    <h2 class="q-t">¿Cuándo la necesitas?<br/><em>Prometemos cumplir.</em></h2>
-    <div class="choices">
+    <div class="q-step"><em>22</em> — 23</div>
+    <h2 class="q-t">Dos últimas cosas<br/><em>y terminamos.</em></h2>
+    <p class="q-sub">Instagram (si tienes) y cuándo necesitas la web lista.</p>
+    <input type="text" id="q19" placeholder="@minegocio (opcional)" style="margin-top:24px;"/>
+    <div class="choices" style="margin-top:20px;">
       <label class="choice" onclick="pick(this,'q20')"><span class="choice-key">A</span><input type="radio" name="q20" value="Urgente — menos de 2 semanas"/><span class="choice-text">Urgente — menos de 2 semanas</span></label>
       <label class="choice" onclick="pick(this,'q20')"><span class="choice-key">B</span><input type="radio" name="q20" value="Normal — 3 a 4 semanas"/><span class="choice-text">Normal — 3 a 4 semanas</span></label>
       <label class="choice" onclick="pick(this,'q20')"><span class="choice-key">C</span><input type="radio" name="q20" value="Sin apuro"/><span class="choice-text">Sin apuro — cuando puedan</span></label>
     </div>
     <div class="btn-row">
-      <button class="btn-back" onclick="goTo(19)">← Atrás</button>
-      <button class="btn-next" onclick="goTo(21)">Continuar <span class="material-symbols-rounded" style="font-size:16px">arrow_forward</span></button>
-    </div>
-  </div>
-</div>
-
-<div class="slide" id="s21">
-  <div class="q-slide-bg mesh-timing"><div class="q-overlay"></div></div>
-  <div class="q-body">
-    <span class="material-symbols-rounded q-icon">waving_hand</span>
-    <div class="q-step"><em>21</em> — 21 · Último paso</div>
-    <h2 class="q-t">Y para cerrar,<br/><em>¿con quién hablamos?</em></h2>
-    <p class="q-sub">El nombre de quien llena este formulario.</p>
-    <input type="text" id="q21" placeholder="Tu nombre" autocomplete="name"/>
-    <div class="btn-row">
-      <button class="btn-back" onclick="goTo(20)">← Atrás</button>
+      <button class="btn-back" onclick="goTo(21)">← Atrás</button>
       <button class="btn-next alt" onclick="send()">Enviar brief <span class="material-symbols-rounded" style="font-size:16px">send</span></button>
     </div>
   </div>
 </div>
 
 <!-- GRACIAS -->
-<div class="slide" id="s22">
+<div class="slide" id="s23">
   <div class="q-slide-bg mesh-ref"><div class="q-overlay"></div></div>
   <div class="q-body">
     <span class="material-symbols-rounded q-icon" style="font-size:40px;color:var(--gold);">check_circle</span>
-    <div class="q-step"><em>Listo</em> ·· Recibido</div>
-    <h2 class="q-t">Recibimos todo.<br/><em>Gracias por confiar.</em></h2>
-    <p class="q-sub">Te contactamos en máximo 48 horas con los próximos pasos.<br/>Si tienes logo, fotos o materiales, envíalos por:</p>
-    <div class="thanks-links">
-      <a class="thanks-link" href="https://wa.me/15875854143" target="_blank">
-        <span class="material-symbols-rounded" style="font-size:16px">chat</span>
-        WhatsApp +1 587 585 4143
+    <div class="q-step"><em>¡Listo!</em></div>
+    <h2 class="q-t">Recibimos todo.<br/><em>Gracias por confiar en nosotros.</em></h2>
+    <p class="q-sub" style="margin-top:10px;">Te contactamos en máximo 48 horas con los próximos pasos.</p>
+
+    <div style="margin-top:20px;padding:16px 20px;border-radius:12px;border:1px solid rgba(255,248,240,.08);background:rgba(255,248,240,.03);">
+      <p style="font-size:12px;font-weight:500;letter-spacing:.08em;color:rgba(255,248,240,.5);text-transform:uppercase;margin-bottom:10px;">
+        <span class="material-symbols-rounded" style="font-size:14px;color:var(--gold);vertical-align:middle;margin-right:6px;">folder</span>
+        ¿Tienes material de marca?
+      </p>
+      <p style="font-size:13px;font-weight:300;color:rgba(255,248,240,.4);line-height:1.6;">
+        Si tienes logo, manual de marca, fotos propias o cualquier archivo que quieras compartir, envíalo a:
+      </p>
+      <a href="mailto:mateo.corredor@helloremake.com" style="display:inline-flex;align-items:center;gap:6px;margin-top:12px;color:var(--gold);font-size:13px;font-weight:500;text-decoration:none;">
+        <span class="material-symbols-rounded" style="font-size:16px;">mail</span>
+        mateo.corredor@helloremake.com
       </a>
+    </div>
+
+    <div class="thanks-links" style="margin-top:16px;">
       <a class="thanks-link" href="mailto:mateo.corredor@helloremake.com">
         <span class="material-symbols-rounded" style="font-size:16px">mail</span>
-        Enviar por email
+        Enviar archivos por email
       </a>
     </div>
     <p style="margin-top:22px;font-size:10px;letter-spacing:.18em;color:rgba(255,248,240,.18);text-transform:uppercase;">— RMK · Tus ideas en digital</p>
@@ -762,7 +712,6 @@ body::after{
 </footer>
 
 <script>
-// ── HERO CYCLE ────────────────────────────────────
 var words=['perfecta','increíble','única','extraordinaria'];
 var wi=0,el=document.getElementById('cycleText');
 function cycle(){
@@ -776,8 +725,7 @@ function cycle(){
 }
 if(el){el.style.transition='opacity .35s ease,transform .35s ease';setInterval(cycle,2800);}
 
-// ── FORM STATE ────────────────────────────────────
-var cur=0,TOTAL=21;
+var cur=0,TOTAL=23;
 function goTo(idx){
   var p=document.getElementById('s'+cur);
   var n=document.getElementById('s'+idx);
@@ -794,12 +742,12 @@ function updateUI(){
   var pct=cur===0?0:Math.round((cur/TOTAL)*100);
   document.getElementById('pf').style.width=pct+'%';
   var lbl=document.getElementById('stepLbl');
-  lbl.textContent=(cur>0&&cur<=TOTAL)?cur+' / '+TOTAL:'';
+  lbl.textContent=(cur>0&&cur<TOTAL)?cur+' / '+TOTAL:'';
 }
 function pick(el,n){
   document.querySelectorAll('[name='+n+']').forEach(function(r){r.parentElement.classList.remove('selected');});
   el.classList.add('selected');el.querySelector('input').checked=true;
-  setTimeout(function(){var nx=cur+1;if(nx<=TOTAL+1)goTo(nx);},280);
+  setTimeout(function(){var nx=cur+1;if(nx<=TOTAL)goTo(nx);},280);
 }
 function chk(el){
   var inp=el.querySelector('input');
@@ -811,7 +759,7 @@ document.addEventListener('keydown',function(e){
   var t=document.activeElement.tagName;
   if(e.key==='Enter'&&t!=='TEXTAREA'){
     e.preventDefault();
-    if(cur===21)send();else if(cur>0&&cur<22)goTo(cur+1);else if(cur===0)goTo(1);
+    if(cur===22)send();else if(cur>0&&cur<23)goTo(cur+1);else if(cur===0)goTo(1);
   }
   if(e.key==='Escape'&&cur>0)goTo(cur-1);
 });
@@ -819,13 +767,23 @@ function collect(){
   var g=function(id){var e=document.getElementById(id);return e?e.value.trim():'';};
   var r=function(n){var e=document.querySelector('[name='+n+']:checked');return e?e.value:'';};
   var c=function(n){return[...document.querySelectorAll('[name='+n+']:checked')].map(function(x){return x.value;}).join(', ');};
-  return{negocio:g('q1'),descripcion:g('q2'),ciudad:g('q3'),modalidad:r('q4'),servicios:g('q5'),estrella:g('q6'),canales:c('q7'),logo:r('q8'),colores:g('q9'),estilo:c('q10'),referencias:g('q11'),opinion:g('q12'),fotos:r('q13'),idioma:r('q14'),objetivo:c('q15'),accion:g('q16'),whatsapp:g('q17'),email:g('q18'),instagram:g('q19'),timing:r('q20'),nombre:g('q21'),fecha:new Date().toLocaleString('es-CO',{timeZone:'America/Bogota'}),fuente:'Brief RMK'};
+  return{
+    nombre:g('q_nombre'),negocio:g('q1'),descripcion:g('q2'),ciudad:g('q3'),
+    modalidad:r('q4'),servicios:g('q5'),estrella:g('q6'),
+    desafios:g('q_desafio'),meta_marca:g('q_meta'),
+    canales:c('q7'),logo:r('q8'),colores:g('q9'),estilo:c('q10'),
+    referencias_web:g('q11'),opinion:g('q12'),fotos:r('q13'),idioma:r('q14'),
+    objetivo:c('q15'),accion_visitante:g('q16'),
+    telefono:g('q17'),email:g('q18'),instagram:g('q19'),timing:r('q20'),
+    fecha:new Date().toLocaleString('es-CO',{timeZone:'America/Bogota'}),
+    fuente:'Brief Web RMK'
+  };
 }
 async function send(){
   var data=collect();
   try{await fetch('https://hook.us2.make.com/TU_WEBHOOK_AQUI',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(data)});}
   catch(e){console.log(e);}
-  goTo(22);
+  goTo(23);
 }
 updateUI();
 </script>
