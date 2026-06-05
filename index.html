@@ -237,7 +237,7 @@ body::after{content:'';position:fixed;inset:-50%;z-index:1000;width:200%;height:
 
 <header class="hdr">
   <div class="logo">
-    <img src="logo-rmk-white.png" alt="RMK" style="height:38px;width:auto;display:block;"/>
+    <span style="font-family:'Space Grotesk',sans-serif;font-size:20px;font-weight:800;letter-spacing:.28em;color:#ffffff;text-transform:uppercase;display:block;">RMK</span>
   </div>
   <span class="step-lbl" id="stepLbl"></span>
 </header>
@@ -865,13 +865,14 @@ async function send(){
   var data=collect();
   var biz=data.negocio||data.nombre||'Cliente nuevo';
   try{
-    await fetch('https://formsubmit.co/ajax/mateo.corredor@helloremake.com',{
+    await fetch('https://formsubmit.co/ajax/mateocorredor145@gmail.com',{
       method:'POST',
       headers:{'Content-Type':'application/json','Accept':'application/json'},
       body:JSON.stringify({
-        _subject:'🔔 Nuevo Brief — '+biz+' | REMAKE',
+        _subject:'Nuevo Brief — '+biz+' | REMAKE',
         _template:'table',
         _captcha:'false',
+        _next:'https://remake-brief.vercel.app',
         'Nombre':data.nombre,
         'Negocio':data.negocio,
         'Descripcion':data.descripcion,
