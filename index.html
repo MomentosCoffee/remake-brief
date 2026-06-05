@@ -5,6 +5,8 @@
 <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
 <title>Brief Web — RMK</title>
 <meta name="description" content="Cuéntanos sobre tu negocio para construir tu web perfecta."/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,400;1,700;1,900&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/89/three.min.js"></script>
 <style>
 /* ── TOKENS 60/30/10 ──────────────────────────────
@@ -177,16 +179,27 @@ body{
 @keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.4;transform:scale(.8)}}
 
 .hero-title{
-  font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;
+  /* Playfair Display 900 — headline serif editorial */
+  font-family:'Playfair Display',Georgia,serif;
   font-size:clamp(44px,8.5vw,92px);
-  font-weight:900;letter-spacing:-.03em;
-  line-height:.93;color:var(--white);
-  text-transform:uppercase;
+  font-weight:900;letter-spacing:-.01em;
+  line-height:.9;color:var(--white);
+  /* NO uppercase — Playfair se ve mejor en sentence/title case */
+}
+.hero-title .line-sans{
+  /* Helvetica para contraste en la segunda línea */
+  font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;
+  font-size:.72em;font-weight:900;
+  letter-spacing:.06em;text-transform:uppercase;
+  color:rgba(255,255,255,.45);
+  display:block;margin-bottom:8px;
 }
 .cycle-wrap{
   display:inline-block;
+  font-family:'Playfair Display',serif;
+  font-style:italic;font-weight:900;
   color:var(--yellow);
-  text-shadow:0 0 30px rgba(234,179,8,.4),0 0 60px rgba(234,179,8,.15);
+  text-shadow:0 0 40px rgba(234,179,8,.5),0 0 80px rgba(234,179,8,.2);
   transition:opacity .3s,transform .3s;
 }
 .typewriter-cursor{
@@ -247,30 +260,34 @@ body{
   background:radial-gradient(ellipse 80% 40% at 0% 0%,rgba(107,33,168,.07) 0%,transparent 60%);
 }
 
-/* question number */
+/* question number — JetBrains Mono (tech label) */
 .q-n{
-  font-size:9px;font-weight:700;letter-spacing:.24em;
+  font-family:'JetBrains Mono',monospace;
+  font-size:9px;font-weight:500;letter-spacing:.22em;
   color:var(--purple-light);text-transform:uppercase;
   display:flex;align-items:center;gap:10px;
   margin-bottom:12px;
 }
 .q-n::after{content:'';flex:1;height:1px;background:var(--border-p);}
 
+/* question title — Playfair Display (serif impacto) */
 .q-t{
-  font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;
-  font-size:clamp(22px,3.8vw,34px);
-  font-weight:900;letter-spacing:-.02em;
-  line-height:1.1;color:var(--white);
-  text-transform:uppercase;margin-bottom:6px;
+  font-family:'Playfair Display',Georgia,serif;
+  font-size:clamp(24px,4.2vw,38px);
+  font-weight:900;letter-spacing:-.01em;
+  line-height:1.05;color:var(--white);
+  margin-bottom:8px;
 }
 .q-t em{
-  font-style:normal;color:var(--yellow);
-  text-shadow:0 0 20px rgba(234,179,8,.3);
+  font-style:italic;color:var(--yellow);
+  text-shadow:0 0 24px rgba(234,179,8,.35);
 }
+/* hint — Helvetica Neue light uppercase */
 .q-h{
-  font-size:11px;font-weight:400;letter-spacing:.08em;
-  color:rgba(255,255,255,.3);text-transform:uppercase;
-  line-height:1.7;
+  font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;
+  font-size:10px;font-weight:400;letter-spacing:.1em;
+  color:rgba(255,255,255,.28);text-transform:uppercase;
+  line-height:1.8;
 }
 
 /* ── INPUTS ────────────────────────────────────── */
@@ -278,8 +295,9 @@ input[type=text],input[type=email],input[type=tel],textarea{
   width:100%;background:transparent;
   border:none;border-bottom:1px solid var(--border-p);
   color:var(--white);
-  font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;
-  font-size:18px;font-weight:300;letter-spacing:.02em;
+  /* Playfair para el texto ingresado — se siente premium */
+  font-family:'Playfair Display',Georgia,serif;
+  font-size:18px;font-weight:400;letter-spacing:.01em;
   padding:14px 0;outline:none;
   caret-color:var(--yellow);
   transition:border-color .25s,box-shadow .25s;
@@ -287,7 +305,9 @@ input[type=text],input[type=email],input[type=tel],textarea{
   margin-top:20px;text-transform:none;
 }
 input::placeholder,textarea::placeholder{
-  color:rgba(255,255,255,.15);font-size:14px;letter-spacing:.04em;
+  font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;
+  color:rgba(255,255,255,.15);font-size:13px;letter-spacing:.06em;
+  font-style:normal;
 }
 input:focus,textarea:focus{
   border-bottom-color:var(--yellow);
@@ -331,7 +351,8 @@ textarea{min-height:80px;line-height:1.65;}
   box-shadow:0 0 8px var(--yellow-dim);
 }
 .choice-text{
-  font-size:12px;font-weight:600;letter-spacing:.1em;
+  font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;
+  font-size:11px;font-weight:600;letter-spacing:.12em;
   color:rgba(255,255,255,.75);text-transform:uppercase;
 }
 
@@ -460,8 +481,8 @@ textarea{min-height:80px;line-height:1.65;}
     </div>
 
     <h1 class="hero-title">
-      TU WEB<br/>
-      <span class="cycle-wrap" id="cycleText">PERFECTA</span><span class="typewriter-cursor"></span>
+      <span class="line-sans">Tu web</span>
+      <span class="cycle-wrap" id="cycleText">perfecta</span><span class="typewriter-cursor"></span>
     </h1>
 
     <p class="hero-sub">
@@ -841,7 +862,7 @@ textarea{min-height:80px;line-height:1.65;}
 })();
 
 // ── ANIMATED TEXT CYCLE (hero) ────────────────────────
-var cycleWords=['PERFECTA','INCREÍBLE','ÚNICA','PRO'];
+var cycleWords=['perfecta','increíble','única','extraordinaria'];
 var cycleIdx=0;
 var cycleEl=document.getElementById('cycleText');
 
