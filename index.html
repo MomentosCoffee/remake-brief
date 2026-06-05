@@ -53,22 +53,16 @@ body{font-family:'Space Grotesk',system-ui,sans-serif;background:var(--bg);
 
 /* HERO */
 #s0{padding:0;overflow:hidden;}
-.hero-bg{position:absolute;inset:0;z-index:0;overflow:hidden;}
-.hero-bg img{
-  width:100%;height:100%;object-fit:cover;
-  animation:kenBurns 18s ease-in-out infinite alternate;
-  transform-origin:center center;
+.hero-bg{
+  position:absolute;inset:0;z-index:0;overflow:hidden;
+  background:radial-gradient(ellipse 70% 60% at 50% 50%,#1a0a2e 0%,#0C0A07 70%);
 }
-@keyframes kenBurns{
-  0%{transform:scale(1) translate(0,0);}
-  33%{transform:scale(1.08) translate(-1%,-.5%);}
-  66%{transform:scale(1.05) translate(1%,.8%);}
-  100%{transform:scale(1.1) translate(-.5%,-.3%);}
-}
-.hero-bg::after{content:'';position:absolute;inset:0;
+.hero-bg::after{
+  content:'';position:absolute;inset:0;pointer-events:none;
   background:
-    linear-gradient(to bottom,rgba(12,10,7,.6) 0%,rgba(12,10,7,.4) 40%,rgba(12,10,7,.88) 100%),
-    linear-gradient(to right,rgba(12,10,7,.5) 0%,transparent 70%);}
+    radial-gradient(ellipse 90% 50% at 50% 110%,rgba(12,10,7,.92) 0%,transparent 55%),
+    radial-gradient(ellipse 70% 40% at 50% -5%,rgba(12,10,7,.75) 0%,transparent 50%);
+}
 .hero-content{position:relative;z-index:2;text-align:center;
   display:flex;flex-direction:column;align-items:center;
   gap:18px;padding:0 24px;max-width:680px;}
@@ -243,6 +237,7 @@ body::after{content:'';position:fixed;inset:-50%;z-index:1000;width:200%;height:
 
 <header class="hdr">
   <div class="logo">
+    <!-- Logo RMK: sube el PNG al repo y reemplaza el src -->
     <span class="logo-text">RMK</span>
     <div class="logo-line"></div>
   </div>
@@ -251,9 +246,7 @@ body::after{content:'';position:fixed;inset:-50%;z-index:1000;width:200%;height:
 
 <!-- HERO -->
 <div class="slide active" id="s0">
-  <div class="hero-bg">
-    <img src="https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=1920&q=80" alt="" loading="eager"/>
-  </div>
+  <div class="hero-bg" id="wovenMount" style="pointer-events:none;"></div>
   <div class="hero-content">
     <div class="hero-badge"><span class="hero-dot"></span>Brief Web · RMK</div>
     <h1 class="hero-h1">
@@ -712,6 +705,81 @@ body::after{content:'';position:fixed;inset:-50%;z-index:1000;width:200%;height:
 </footer>
 
 <script>
+// ── WOVEN LIGHT HERO (Three.js, colores RMK, liviano) ─
+(function initWoven(){
+  var THREE=window.THREE;
+  if(!THREE){return;}
+  var mount=document.getElementById('wovenMount');
+  if(!mount)return;
+
+  var scene=new THREE.Scene();
+  var cam=new THREE.PerspectiveCamera(72,innerWidth/innerHeight,0.1,1000);
+  cam.position.z=5;
+
+  var renderer=new THREE.WebGLRenderer({antialias:true,alpha:true});
+  renderer.setSize(innerWidth,innerHeight);
+  renderer.setPixelRatio(Math.min(devicePixelRatio,1.5));
+  renderer.domElement.style.position='absolute';
+  renderer.domElement.style.inset='0';
+  renderer.domElement.style.pointerEvents='none';
+  mount.appendChild(renderer.domElement);
+
+  // TorusKnot geometry
+  var N=12000;
+  var torus=new THREE.TorusKnotGeometry(1.6,0.5,220,32);
+  var posAttr=torus.attributes.position;
+
+  var pos=new Float32Array(N*3);
+  var col=new Float32Array(N*3);
+
+  // Paleta RMK: amarillo/dorado, morado, naranja
+  var palette=[
+    [0.918,0.702,0.031],  // gold #EAB308
+    [0.984,0.631,0.016],  // orange #F97316
+    [0.486,0.227,0.929],  // purple #7C3AED
+    [0.651,0.545,0.980],  // purple-light #A78BFA
+    [0.980,0.800,0.082],  // gold-light #FACC15
+  ];
+
+  for(var i=0;i<N;i++){
+    var vi=i%posAttr.count;
+    pos[i*3]=posAttr.getX(vi);
+    pos[i*3+1]=posAttr.getY(vi);
+    pos[i*3+2]=posAttr.getZ(vi);
+    var c=palette[Math.floor(Math.random()*palette.length)];
+    col[i*3]=c[0];col[i*3+1]=c[1];col[i*3+2]=c[2];
+  }
+
+  var geo=new THREE.BufferGeometry();
+  geo.setAttribute('position',new THREE.BufferAttribute(pos,3));
+  geo.setAttribute('color',new THREE.BufferAttribute(col,3));
+
+  var mat=new THREE.PointsMaterial({
+    size:0.025,vertexColors:true,
+    blending:THREE.AdditiveBlending,
+    transparent:true,opacity:.85
+  });
+
+  var points=new THREE.Points(geo,mat);
+  scene.add(points);
+
+  var t=0;
+  (function animate(){
+    requestAnimationFrame(animate);
+    t+=0.008;
+    points.rotation.y=t*0.18;
+    points.rotation.x=Math.sin(t*0.12)*0.25;
+    points.rotation.z=Math.cos(t*0.08)*0.1;
+    renderer.render(scene,cam);
+  })();
+
+  window.addEventListener('resize',function(){
+    cam.aspect=innerWidth/innerHeight;
+    cam.updateProjectionMatrix();
+    renderer.setSize(innerWidth,innerHeight);
+  });
+})();
+
 var words=['perfecta','increíble','única','extraordinaria'];
 var wi=0,el=document.getElementById('cycleText');
 function cycle(){
