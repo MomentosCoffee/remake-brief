@@ -237,7 +237,7 @@ body::after{content:'';position:fixed;inset:-50%;z-index:1000;width:200%;height:
 
 <header class="hdr">
   <div class="logo">
-    <img src="logo_RMK.png" alt="RMK" style="height:36px;width:36px;object-fit:contain;object-position:center;border-radius:50%;"/>
+    <img src="logo_RMK.png" alt="RMK" style="height:40px;width:auto;mix-blend-mode:screen;filter:brightness(1.15);display:block;"/>
   </div>
   <span class="step-lbl" id="stepLbl"></span>
 </header>
@@ -702,11 +702,12 @@ body::after{content:'';position:fixed;inset:-50%;z-index:1000;width:200%;height:
   <span class="ftr-brand">RMK · Brief Web</span>
 </footer>
 
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r134/three.min.js"></script>
 <script>
-// ── WOVEN LIGHT HERO (Three.js, colores RMK, liviano) ─
+// ── WOVEN LIGHT HERO (Three.js r134, colores RMK) ─────────────────
 (function initWoven(){
   var THREE=window.THREE;
-  if(!THREE){return;}
+  if(!THREE){console.warn('Three.js no cargó');return;}
   var mount=document.getElementById('wovenMount');
   if(!mount)return;
 
@@ -722,7 +723,7 @@ body::after{content:'';position:fixed;inset:-50%;z-index:1000;width:200%;height:
   renderer.domElement.style.pointerEvents='none';
   mount.appendChild(renderer.domElement);
 
-  // TorusKnot geometry
+  // TorusKnot geometry (r134: TorusKnotGeometry ES BufferGeometry ✅)
   var N=12000;
   var torus=new THREE.TorusKnotGeometry(1.6,0.5,220,32);
   var posAttr=torus.attributes.position;
