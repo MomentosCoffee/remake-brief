@@ -7,901 +7,777 @@
 <meta name="description" content="Cuéntanos sobre tu negocio para construir tu web perfecta."/>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/89/three.min.js"></script>
 <style>
-/* ── TOKENS ──────────────────────────────────────── */
 :root{
   --prune:#412143;
-  --prune-light:#5a2e5c;
   --brique:#BF5E40;
   --brique-light:#d4714f;
   --lin:#DBC583;
-  --lin-dim:rgba(219,197,131,.55);
+  --lin-dim:rgba(219,197,131,.5);
   --raisin:#815488;
   --raisin-light:#9b6da3;
-  --ink:#0a0a0a;
-  --white:#ffffff;
-  --surface:rgba(255,255,255,.04);
-  --border:rgba(219,197,131,.18);
-  --radius:14px;
-  --grad:linear-gradient(90deg,#4A90D9,#6b5ea8,#BF5E40,#DBC583);
+  --border:rgba(219,197,131,.15);
+  --surface:rgba(255,255,255,.05);
+  --grad:linear-gradient(90deg,#4A90D9 0%,#7b5ea8 30%,#BF5E40 65%,#DBC583 100%);
 }
-
-/* ── RESET ───────────────────────────────────────── */
 *,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
-html{scroll-behavior:smooth;}
+html,body{width:100%;height:100%;overflow:hidden;}
 body{
   font-family:'Inter',-apple-system,sans-serif;
   background:var(--prune);
-  color:var(--white);
-  min-height:100vh;
-  min-height:100dvh;
-  overflow:hidden;
+  color:#fff;
   -webkit-font-smoothing:antialiased;
 }
 
-/* ── PROGRESS ────────────────────────────────────── */
-.progress-bar{
-  position:fixed;top:0;left:0;right:0;z-index:100;
-  height:3px;background:rgba(255,255,255,.1);
+/* ── SHADER CANVAS ── */
+#shader-canvas{
+  position:fixed;inset:0;z-index:0;
+  opacity:.55;
+  mix-blend-mode:screen;
 }
+
+/* ── OVERLAY ── */
+.overlay{
+  position:fixed;inset:0;z-index:1;
+  background:
+    radial-gradient(ellipse 70% 60% at 50% 110%,rgba(65,33,67,.92) 0%,transparent 70%),
+    radial-gradient(ellipse 100% 80% at 50% -10%,rgba(65,33,67,.75) 0%,transparent 60%);
+  pointer-events:none;
+}
+
+/* ── PROGRESS ── */
+.progress-bar{position:fixed;top:0;left:0;right:0;z-index:100;height:2px;background:rgba(255,255,255,.08);}
 .progress-fill{
   height:100%;
   background:var(--grad);
-  background-size:400% 100%;
-  animation:gradMove 4s linear infinite;
-  transition:width .5s cubic-bezier(.4,0,.2,1);
-  border-radius:0 2px 2px 0;
+  background-size:300% 100%;
+  animation:gradShift 3s linear infinite;
+  transition:width .6s cubic-bezier(.4,0,.2,1);
 }
-@keyframes gradMove{
-  0%{background-position:0% 50%}
-  100%{background-position:100% 50%}
-}
+@keyframes gradShift{0%{background-position:0%}100%{background-position:100%}}
 
-/* ── HEADER ──────────────────────────────────────── */
+/* ── HEADER ── */
 .header{
-  position:fixed;top:16px;left:0;right:0;z-index:90;
+  position:fixed;top:0;left:0;right:0;z-index:90;
   display:flex;align-items:center;justify-content:space-between;
-  padding:0 28px;
+  padding:20px 32px;
+  background:linear-gradient(to bottom,rgba(65,33,67,.9) 0%,transparent 100%);
 }
-.logo-wrap{display:flex;flex-direction:column;gap:4px;}
+.logo-group{display:flex;flex-direction:column;gap:5px;}
 .logo-text{
   font-family:'Cormorant Garamond',serif;
-  font-size:22px;font-weight:600;letter-spacing:4px;
-  color:var(--white);text-transform:uppercase;
+  font-size:20px;font-weight:600;letter-spacing:5px;
+  color:#fff;text-transform:uppercase;
+  text-shadow:0 0 30px rgba(219,197,131,.3);
 }
+.logo-sub{font-size:9px;letter-spacing:.18em;color:rgba(255,255,255,.35);text-transform:uppercase;}
 .logo-line{
-  height:2px;width:100%;
-  background:var(--grad);
-  background-size:400% 100%;
-  animation:gradMove 4s linear infinite;
+  height:1.5px;width:100%;
+  background:var(--grad);background-size:300% 100%;
+  animation:gradShift 3s linear infinite;
   border-radius:1px;
+  box-shadow:0 0 8px rgba(191,94,64,.4);
 }
-.step-counter{
-  font-size:12px;font-weight:500;
-  color:var(--lin-dim);letter-spacing:.05em;
-}
+.step-label{font-size:11px;letter-spacing:.1em;color:var(--lin-dim);}
 
-/* ── STAGE ───────────────────────────────────────── */
-.stage{
-  position:fixed;inset:0;
-  display:flex;align-items:center;justify-content:center;
-  padding:80px 24px 100px;
-  overflow-y:auto;
-}
-
-/* ── SLIDES ──────────────────────────────────────── */
+/* ── SLIDES ── */
 .slide{
-  position:absolute;inset:0;
+  position:fixed;inset:0;z-index:10;
   display:flex;align-items:center;justify-content:center;
-  padding:80px 24px 100px;
+  padding:90px 24px 90px;
+  overflow-y:auto;
   opacity:0;pointer-events:none;
-  transition:opacity .45s cubic-bezier(.4,0,.2,1),transform .45s cubic-bezier(.4,0,.2,1);
-  transform:translateY(40px);
+  transition:opacity .5s cubic-bezier(.4,0,.2,1),transform .5s cubic-bezier(.4,0,.2,1);
+  transform:translateY(36px) scale(.98);
 }
 .slide.active{
   opacity:1;pointer-events:all;
-  transform:translateY(0);
+  transform:translateY(0) scale(1);
 }
-.slide.exit-up{
-  opacity:0;transform:translateY(-40px);
-  pointer-events:none;
+.slide.exit{
+  opacity:0;transform:translateY(-36px) scale(.98);
+  pointer-events:none;transition-duration:.35s;
 }
 
-/* ── CARD ────────────────────────────────────────── */
+/* ── CARD ── */
 .card{
-  max-width:640px;width:100%;
-  display:flex;flex-direction:column;gap:32px;
+  max-width:620px;width:100%;
+  display:flex;flex-direction:column;gap:28px;
+  position:relative;
 }
 
-/* ── QUESTION ────────────────────────────────────── */
-.q-label{
-  font-size:12px;font-weight:500;letter-spacing:.12em;
-  color:var(--brique);text-transform:uppercase;
-  margin-bottom:4px;
+/* ── GLASS PANEL ── */
+.glass{
+  background:rgba(65,33,67,.45);
+  backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);
+  border:1px solid var(--border);
+  border-radius:20px;
+  padding:40px 44px;
+  box-shadow:
+    0 0 0 1px rgba(219,197,131,.04),
+    0 24px 48px rgba(0,0,0,.35),
+    inset 0 1px 0 rgba(255,255,255,.06);
 }
+
+/* ── QUESTION TEXT ── */
+.q-num{
+  font-size:11px;font-weight:600;letter-spacing:.14em;
+  color:var(--brique);text-transform:uppercase;
+  margin-bottom:6px;display:flex;align-items:center;gap:8px;
+}
+.q-num::after{content:'';flex:1;height:1px;background:linear-gradient(to right,rgba(191,94,64,.3),transparent);}
 .q-text{
   font-family:'Cormorant Garamond',serif;
-  font-size:clamp(26px,5vw,42px);
-  font-weight:400;line-height:1.25;
-  color:var(--white);
+  font-size:clamp(26px,4.5vw,40px);
+  font-weight:400;line-height:1.2;color:#fff;
+  margin-bottom:6px;
 }
 .q-text em{font-style:italic;color:var(--lin);}
-.q-hint{
-  font-size:14px;color:var(--lin-dim);
-  line-height:1.6;margin-top:8px;
-}
+.q-hint{font-size:13px;color:rgba(255,255,255,.4);line-height:1.6;}
 
-/* ── INPUTS ──────────────────────────────────────── */
-.input-wrap{position:relative;}
-input[type="text"],
-input[type="email"],
-input[type="tel"],
-textarea{
+/* ── INPUTS ── */
+input[type=text],input[type=email],input[type=tel],textarea{
   width:100%;background:transparent;
-  border:none;border-bottom:1.5px solid var(--border);
-  color:var(--white);font-family:'Inter',sans-serif;
-  font-size:22px;font-weight:300;
-  padding:12px 0;
-  outline:none;caret-color:var(--lin);
-  transition:border-color .25s;
-  resize:none;
-  -webkit-appearance:none;
+  border:none;border-bottom:1.5px solid rgba(219,197,131,.2);
+  color:#fff;font-family:'Inter',sans-serif;
+  font-size:20px;font-weight:300;
+  padding:14px 0;outline:none;
+  caret-color:var(--lin);
+  transition:border-color .3s;
+  resize:none;-webkit-appearance:none;
+  margin-top:20px;
 }
-input[type="text"]::placeholder,
-input[type="email"]::placeholder,
-input[type="tel"]::placeholder,
-textarea::placeholder{color:rgba(255,255,255,.22);font-size:18px;}
-input[type="text"]:focus,
-input[type="email"]:focus,
-input[type="tel"]:focus,
-textarea:focus{border-bottom-color:var(--brique);}
-textarea{min-height:90px;line-height:1.6;}
+input::placeholder,textarea::placeholder{color:rgba(255,255,255,.18);font-size:16px;}
+input:focus,textarea:focus{border-bottom-color:var(--brique);}
+textarea{min-height:90px;line-height:1.65;}
 
-/* ── CHOICES ─────────────────────────────────────── */
-.choices{display:flex;flex-direction:column;gap:12px;}
-.choice-item{
-  display:flex;align-items:center;gap:16px;
-  padding:16px 20px;
-  border:1.5px solid var(--border);border-radius:var(--radius);
-  cursor:pointer;background:var(--surface);
+/* ── CHOICES ── */
+.choices{display:flex;flex-direction:column;gap:10px;margin-top:22px;}
+.choice{
+  display:flex;align-items:center;gap:14px;
+  padding:15px 20px;border-radius:12px;
+  border:1px solid rgba(219,197,131,.12);
+  background:rgba(255,255,255,.03);
+  cursor:pointer;
   transition:all .2s cubic-bezier(.4,0,.2,1);
+  position:relative;overflow:hidden;
 }
-.choice-item:hover{
-  border-color:rgba(191,94,64,.5);
-  background:rgba(191,94,64,.08);
+.choice::before{
+  content:'';position:absolute;inset:0;
+  background:linear-gradient(135deg,rgba(191,94,64,.08),transparent);
+  opacity:0;transition:opacity .2s;
 }
-.choice-item.selected{
-  border-color:var(--brique);
-  background:rgba(191,94,64,.12);
-}
+.choice:hover{border-color:rgba(191,94,64,.35);background:rgba(191,94,64,.06);}
+.choice:hover::before{opacity:1;}
+.choice.selected{border-color:var(--brique);background:rgba(191,94,64,.12);}
+.choice.selected::before{opacity:1;}
+.choice input{display:none;}
 .choice-key{
-  min-width:28px;height:28px;
-  border-radius:6px;
-  border:1.5px solid var(--border);
+  min-width:26px;height:26px;border-radius:6px;
+  border:1px solid rgba(219,197,131,.2);
   display:flex;align-items:center;justify-content:center;
-  font-size:12px;font-weight:600;color:var(--lin-dim);
-  flex-shrink:0;transition:all .2s;
+  font-size:11px;font-weight:700;color:var(--lin-dim);
+  flex-shrink:0;transition:all .2s;font-family:'Inter',sans-serif;
 }
-.choice-item.selected .choice-key{
-  background:var(--brique);border-color:var(--brique);color:white;
-}
-.choice-item input{display:none;}
-.choice-label{font-size:16px;font-weight:400;color:rgba(255,255,255,.9);line-height:1.4;}
+.choice.selected .choice-key{background:var(--brique);border-color:var(--brique);color:#fff;}
+.choice-text{font-size:15px;color:rgba(255,255,255,.88);line-height:1.4;}
 
-/* ── WELCOME / THANKS ────────────────────────────── */
-.welcome-icon{
-  width:64px;height:64px;border-radius:16px;
-  background:var(--surface);border:1.5px solid var(--border);
-  display:flex;align-items:center;justify-content:center;
-  margin-bottom:8px;
-}
-.welcome-icon svg{width:32px;height:32px;}
-
-/* ── BUTTONS ─────────────────────────────────────── */
-.btn-row{display:flex;align-items:center;gap:16px;flex-wrap:wrap;}
+/* ── BUTTONS ── */
+.btn-row{display:flex;align-items:center;gap:14px;flex-wrap:wrap;}
 .btn-next{
-  display:inline-flex;align-items:center;gap:10px;
-  background:var(--brique);color:white;
-  padding:14px 28px;border-radius:100px;
-  border:none;cursor:pointer;
-  font-family:'Inter',sans-serif;font-size:15px;font-weight:600;
-  letter-spacing:.02em;
-  transition:all .2s cubic-bezier(.4,0,.2,1);
-  box-shadow:0 4px 20px rgba(191,94,64,.35);
+  display:inline-flex;align-items:center;gap:9px;
+  background:var(--brique);color:#fff;
+  padding:13px 26px;border-radius:100px;border:none;
+  cursor:pointer;font-family:'Inter',sans-serif;
+  font-size:14px;font-weight:600;letter-spacing:.03em;
+  transition:all .22s cubic-bezier(.4,0,.2,1);
+  box-shadow:0 4px 20px rgba(191,94,64,.4),0 0 0 0 rgba(191,94,64,.2);
+  position:relative;overflow:hidden;
 }
-.btn-next:hover{background:var(--brique-light);transform:translateY(-1px);box-shadow:0 6px 28px rgba(191,94,64,.45);}
-.btn-next:active{transform:translateY(0);}
-.btn-next svg{width:16px;height:16px;transition:transform .2s;}
+.btn-next::after{
+  content:'';position:absolute;inset:-1px;
+  background:linear-gradient(135deg,rgba(255,255,255,.15),transparent 60%);
+  pointer-events:none;
+}
+.btn-next:hover{
+  background:var(--brique-light);
+  transform:translateY(-2px);
+  box-shadow:0 8px 28px rgba(191,94,64,.5),0 0 0 4px rgba(191,94,64,.1);
+}
+.btn-next svg{width:15px;height:15px;transition:transform .2s;}
 .btn-next:hover svg{transform:translateX(3px);}
+
 .btn-back{
   display:inline-flex;align-items:center;gap:6px;
   background:transparent;color:var(--lin-dim);
-  padding:14px 16px;border-radius:100px;
-  border:1.5px solid var(--border);cursor:pointer;
-  font-family:'Inter',sans-serif;font-size:14px;font-weight:500;
+  padding:13px 18px;border-radius:100px;
+  border:1px solid rgba(219,197,131,.15);cursor:pointer;
+  font-family:'Inter',sans-serif;font-size:13px;font-weight:500;
   transition:all .2s;
 }
-.btn-back:hover{color:var(--lin);border-color:rgba(219,197,131,.4);}
-.key-hint{
-  font-size:12px;color:rgba(255,255,255,.25);
-  letter-spacing:.04em;margin-left:auto;
-}
+.btn-back:hover{color:var(--lin);border-color:rgba(219,197,131,.35);}
+.key-tip{font-size:11px;color:rgba(255,255,255,.2);letter-spacing:.04em;margin-left:auto;}
 
-/* ── FOOTER ──────────────────────────────────────── */
-.footer{
-  position:fixed;bottom:0;left:0;right:0;
-  padding:20px 28px;
-  display:flex;align-items:center;justify-content:space-between;
-  background:linear-gradient(to top,var(--prune) 60%,transparent);
-  pointer-events:none;
+/* ── WELCOME ── */
+.welcome-badge{
+  display:inline-flex;align-items:center;gap:8px;
+  padding:6px 14px;border-radius:100px;
+  border:1px solid rgba(219,197,131,.2);
+  background:rgba(219,197,131,.06);
+  font-size:11px;font-weight:600;letter-spacing:.1em;
+  color:var(--lin-dim);text-transform:uppercase;
+  margin-bottom:16px;
 }
-.footer-brand{
-  font-size:11px;color:rgba(255,255,255,.2);
-  letter-spacing:.08em;text-transform:uppercase;
+.dot-pulse{
+  width:6px;height:6px;border-radius:50%;
+  background:var(--brique);
+  animation:pulse 2s ease-in-out infinite;
 }
+@keyframes pulse{0%,100%{opacity:1;transform:scale(1);}50%{opacity:.5;transform:scale(.8);}}
 
-/* ── THANKS ──────────────────────────────────────── */
-.thanks-emoji{font-size:52px;margin-bottom:8px;}
-.thanks-links{
-  display:flex;gap:12px;flex-wrap:wrap;margin-top:8px;
-}
+/* ── THANKS ── */
+.thanks-icon{font-size:56px;margin-bottom:4px;display:block;}
+.thanks-links{display:flex;gap:10px;flex-wrap:wrap;margin-top:20px;}
 .thanks-link{
   display:inline-flex;align-items:center;gap:8px;
-  padding:12px 20px;border-radius:100px;
-  border:1.5px solid var(--border);background:var(--surface);
-  color:var(--lin);font-size:14px;font-weight:500;
-  text-decoration:none;transition:all .2s;
-  cursor:pointer;
+  padding:11px 18px;border-radius:100px;
+  border:1px solid var(--border);background:rgba(255,255,255,.04);
+  color:var(--lin);font-size:13px;font-weight:500;
+  text-decoration:none;transition:all .2s;cursor:pointer;
 }
-.thanks-link:hover{border-color:var(--lin-dim);background:rgba(219,197,131,.08);}
+.thanks-link:hover{background:rgba(219,197,131,.1);border-color:rgba(219,197,131,.35);}
 
-/* ── RESPONSIVE ──────────────────────────────────── */
-@media(max-width:480px){
-  .header{padding:0 20px;}
+/* ── FOOTER ── */
+.footer{
+  position:fixed;bottom:0;left:0;right:0;z-index:20;
+  padding:18px 32px;
+  background:linear-gradient(to top,rgba(65,33,67,.95) 50%,transparent);
+  display:flex;justify-content:space-between;align-items:center;
+  pointer-events:none;
+}
+.footer-brand{font-size:10px;letter-spacing:.1em;color:rgba(255,255,255,.18);text-transform:uppercase;}
+
+/* ── ANIMATED HEADLINE (shiny text effect) ── */
+.shiny{
+  background:linear-gradient(90deg,var(--lin) 0%,#fff 40%,var(--lin) 60%,var(--brique) 80%,var(--lin) 100%);
+  background-size:200% auto;
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;
+  background-clip:text;
+  animation:shine 4s linear infinite;
+}
+@keyframes shine{0%{background-position:0%}100%{background-position:200%}}
+
+/* ── RESPONSIVE ── */
+@media(max-width:540px){
+  .glass{padding:28px 24px;}
+  .header{padding:18px 20px;}
   .q-text{font-size:clamp(22px,6vw,32px);}
-  input[type="text"],input[type="email"],input[type="tel"],textarea{font-size:18px;}
-  .choice-label{font-size:15px;}
-  .key-hint{display:none;}
+  .key-tip{display:none;}
 }
-
-/* ── REDUCED MOTION ──────────────────────────────── */
 @media(prefers-reduced-motion:reduce){
-  .slide,.progress-fill,.btn-next,.btn-next svg{transition:none;animation:none;}
+  .slide,.btn-next,.progress-fill,#shader-canvas{animation:none;transition:none;}
 }
-
-/* ── DECORATIVE BG ───────────────────────────────── */
-body::before{
-  content:'';position:fixed;inset:0;
-  background:
-    radial-gradient(ellipse 60% 50% at 15% 100%,rgba(129,84,136,.18) 0%,transparent 70%),
-    radial-gradient(ellipse 50% 40% at 85% 0%,rgba(191,94,64,.12) 0%,transparent 60%);
-  pointer-events:none;z-index:0;
-}
-.slide,.header,.footer,.progress-bar{z-index:1;}
-
-/* ── SCROLL INSIDE SLIDE ─────────────────────────── */
-.slide{overflow-y:auto;}
 </style>
 </head>
 <body>
 
+<!-- SHADER BACKGROUND -->
+<canvas id="shader-canvas"></canvas>
+<div class="overlay"></div>
+
 <!-- PROGRESS -->
-<div class="progress-bar"><div class="progress-fill" id="progressFill" style="width:0%"></div></div>
+<div class="progress-bar"><div class="progress-fill" id="prog" style="width:0%"></div></div>
 
 <!-- HEADER -->
-<div class="header">
-  <div class="logo-wrap">
+<header class="header">
+  <div class="logo-group">
     <div class="logo-text">REMAKE</div>
     <div class="logo-line"></div>
+    <div class="logo-sub">Tus ideas en digital</div>
   </div>
-  <div class="step-counter" id="stepCounter"></div>
-</div>
+  <div class="step-label" id="stepLbl"></div>
+</header>
 
-<!-- ════════════ SLIDES ════════════ -->
-
-<!-- 0: BIENVENIDA -->
-<div class="slide active" data-index="0" id="slide-0">
+<!-- ══════════ SLIDE 0: BIENVENIDA ══════════ -->
+<div class="slide active" id="s0">
   <div class="card">
-    <div>
-      <div class="welcome-icon">
-        <svg viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <rect x="4" y="6" width="24" height="20" rx="3" stroke="#DBC583" stroke-width="1.5"/>
-          <path d="M4 11h24" stroke="#DBC583" stroke-width="1.5"/>
-          <path d="M9 16h14M9 20h8" stroke="#BF5E40" stroke-width="1.5" stroke-linecap="round"/>
-        </svg>
-      </div>
-      <p class="q-label">Bienvenido</p>
-      <h1 class="q-text">Cuéntanos sobre<br/><em>tu negocio</em></h1>
-      <p class="q-hint" style="margin-top:16px;">Este formulario tarda unos 15 minutos. Con esta información construimos tu web sin tener que molestarte después con preguntas.</p>
-    </div>
-    <div class="btn-row">
-      <button class="btn-next" onclick="goNext()">
-        Empezar
-        <svg viewBox="0 0 16 16" fill="none"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
-      </button>
-    </div>
-  </div>
-</div>
-
-<!-- 1 -->
-<div class="slide" data-index="1" id="slide-1">
-  <div class="card">
-    <div>
-      <p class="q-label">Pregunta 1 de 21</p>
-      <h2 class="q-text">¿Cómo se llama<br/><em>tu negocio?</em></h2>
-      <div class="input-wrap" style="margin-top:28px;">
-        <input type="text" id="q1" placeholder="Ej: Studio Bella / The Coffee Spot" autocomplete="organization"/>
+    <div class="glass">
+      <div class="welcome-badge"><span class="dot-pulse"></span>Brief Web · REMAKE</div>
+      <h1 class="q-text">Cuéntanos sobre<br/><em class="shiny">tu negocio</em></h1>
+      <p class="q-hint" style="margin-top:14px;font-size:15px;color:rgba(255,255,255,.55);line-height:1.7;">
+        Este formulario tarda unos 15 minutos.<br/>
+        Con esta información construimos tu web sin tener que molestarte después.
+      </p>
+      <div class="btn-row" style="margin-top:32px;">
+        <button class="btn-next" onclick="next()">
+          Empezar
+          <svg viewBox="0 0 16 16" fill="none"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
       </div>
     </div>
-    <div class="btn-row">
-      <button class="btn-back" onclick="goBack()">← Atrás</button>
-      <button class="btn-next" onclick="goNext()">
-        Siguiente
-        <svg viewBox="0 0 16 16" fill="none"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
-      </button>
-      <span class="key-hint">Presiona Enter ↵</span>
-    </div>
   </div>
 </div>
 
-<!-- 2 -->
-<div class="slide" data-index="2" id="slide-2">
-  <div class="card">
-    <div>
-      <p class="q-label">Pregunta 2 de 21</p>
-      <h2 class="q-text">¿A qué se <em>dedica?</em><br/>Cuéntanos en 2-3 líneas.</h2>
-      <div class="input-wrap" style="margin-top:28px;">
-        <textarea id="q2" placeholder="Ej: Hacemos galletas artesanales para eventos y venta online en Calgary…" rows="4"></textarea>
-      </div>
-    </div>
-    <div class="btn-row">
-      <button class="btn-back" onclick="goBack()">← Atrás</button>
-      <button class="btn-next" onclick="goNext()">Siguiente <svg viewBox="0 0 16 16" fill="none"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
-    </div>
-  </div>
-</div>
+<!-- ══════════ PREGUNTAS 1–21 ══════════ -->
 
-<!-- 3 -->
-<div class="slide" data-index="3" id="slide-3">
-  <div class="card">
-    <div>
-      <p class="q-label">Pregunta 3 de 21</p>
-      <h2 class="q-text">¿En qué <em>ciudad y país</em> operas?</h2>
-      <div class="input-wrap" style="margin-top:28px;">
-        <input type="text" id="q3" placeholder="Ej: Calgary, Canadá"/>
-      </div>
-    </div>
-    <div class="btn-row">
-      <button class="btn-back" onclick="goBack()">← Atrás</button>
-      <button class="btn-next" onclick="goNext()">Siguiente <svg viewBox="0 0 16 16" fill="none"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
-      <span class="key-hint">Enter ↵</span>
-    </div>
+<div class="slide" id="s1"><div class="card"><div class="glass">
+  <div class="q-num">01 / 21</div>
+  <h2 class="q-text">¿Cómo se llama<br/><em>tu negocio?</em></h2>
+  <input type="text" id="q1" placeholder="Ej: Studio Bella / The Coffee Spot" autocomplete="organization"/>
+  <div class="btn-row" style="margin-top:28px;">
+    <button class="btn-back" onclick="back()">← Atrás</button>
+    <button class="btn-next" onclick="next()">Siguiente <svg viewBox="0 0 16 16" fill="none"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+    <span class="key-tip">Enter ↵</span>
   </div>
-</div>
+</div></div></div>
 
-<!-- 4 -->
-<div class="slide" data-index="4" id="slide-4">
-  <div class="card">
-    <div>
-      <p class="q-label">Pregunta 4 de 21</p>
-      <h2 class="q-text">¿Cómo <em>funciona</em><br/>tu negocio?</h2>
-      <div class="choices" style="margin-top:28px;">
-        <label class="choice-item" onclick="selectRadio(this,'q4')"><span class="choice-key">A</span><input type="radio" name="q4" value="Tengo local físico donde atiendo"/><span class="choice-label">Tengo local físico donde atiendo</span></label>
-        <label class="choice-item" onclick="selectRadio(this,'q4')"><span class="choice-key">B</span><input type="radio" name="q4" value="Solo trabajo online"/><span class="choice-label">Solo trabajo online</span></label>
-        <label class="choice-item" onclick="selectRadio(this,'q4')"><span class="choice-key">C</span><input type="radio" name="q4" value="Los dos: local y online"/><span class="choice-label">Los dos: local y online</span></label>
-      </div>
-    </div>
-    <div class="btn-row" style="margin-top:24px;">
-      <button class="btn-back" onclick="goBack()">← Atrás</button>
-      <button class="btn-next" onclick="goNext()">Siguiente <svg viewBox="0 0 16 16" fill="none"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
-    </div>
+<div class="slide" id="s2"><div class="card"><div class="glass">
+  <div class="q-num">02 / 21</div>
+  <h2 class="q-text">¿A qué se <em>dedica?</em><br/>Cuéntanos brevemente.</h2>
+  <textarea id="q2" placeholder="Ej: Hacemos galletas artesanales para eventos y venta online en Calgary…" rows="4" style="margin-top:20px;"></textarea>
+  <div class="btn-row" style="margin-top:24px;">
+    <button class="btn-back" onclick="back()">← Atrás</button>
+    <button class="btn-next" onclick="next()">Siguiente <svg viewBox="0 0 16 16" fill="none"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
   </div>
-</div>
+</div></div></div>
 
-<!-- 5 -->
-<div class="slide" data-index="5" id="slide-5">
-  <div class="card">
-    <div>
-      <p class="q-label">Pregunta 5 de 21</p>
-      <h2 class="q-text">¿Qué vendes o qué<br/><em>servicios ofreces?</em></h2>
-      <p class="q-hint">Puedes hacer una lista.</p>
-      <div class="input-wrap" style="margin-top:20px;">
-        <textarea id="q5" placeholder="Ej: Corte de cabello, coloración, tratamientos de keratina…" rows="5"></textarea>
-      </div>
-    </div>
-    <div class="btn-row">
-      <button class="btn-back" onclick="goBack()">← Atrás</button>
-      <button class="btn-next" onclick="goNext()">Siguiente <svg viewBox="0 0 16 16" fill="none"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
-    </div>
+<div class="slide" id="s3"><div class="card"><div class="glass">
+  <div class="q-num">03 / 21</div>
+  <h2 class="q-text">¿En qué <em>ciudad y país</em> operas?</h2>
+  <input type="text" id="q3" placeholder="Ej: Calgary, Canadá"/>
+  <div class="btn-row" style="margin-top:28px;">
+    <button class="btn-back" onclick="back()">← Atrás</button>
+    <button class="btn-next" onclick="next()">Siguiente <svg viewBox="0 0 16 16" fill="none"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+    <span class="key-tip">Enter ↵</span>
   </div>
-</div>
+</div></div></div>
 
-<!-- 6 -->
-<div class="slide" data-index="6" id="slide-6">
-  <div class="card">
-    <div>
-      <p class="q-label">Pregunta 6 de 21</p>
-      <h2 class="q-text">¿Cuál es tu <em>servicio estrella?</em></h2>
-      <p class="q-hint">El que más vendes o del que más te enorgulleces.</p>
-      <div class="input-wrap" style="margin-top:20px;">
-        <input type="text" id="q6" placeholder="Ej: La coloración personalizada balayage"/>
-      </div>
-    </div>
-    <div class="btn-row">
-      <button class="btn-back" onclick="goBack()">← Atrás</button>
-      <button class="btn-next" onclick="goNext()">Siguiente <svg viewBox="0 0 16 16" fill="none"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
-      <span class="key-hint">Enter ↵</span>
-    </div>
+<div class="slide" id="s4"><div class="card"><div class="glass">
+  <div class="q-num">04 / 21</div>
+  <h2 class="q-text">¿Cómo <em>funciona</em> tu negocio?</h2>
+  <div class="choices" id="q4g">
+    <label class="choice" onclick="pick(this,'q4')"><span class="choice-key">A</span><input type="radio" name="q4" value="Tengo local físico donde atiendo"/><span class="choice-text">Tengo local físico donde atiendo</span></label>
+    <label class="choice" onclick="pick(this,'q4')"><span class="choice-key">B</span><input type="radio" name="q4" value="Solo trabajo online"/><span class="choice-text">Solo trabajo online</span></label>
+    <label class="choice" onclick="pick(this,'q4')"><span class="choice-key">C</span><input type="radio" name="q4" value="Los dos: local y online"/><span class="choice-text">Los dos: local y online</span></label>
   </div>
-</div>
+  <div class="btn-row" style="margin-top:24px;">
+    <button class="btn-back" onclick="back()">← Atrás</button>
+    <button class="btn-next" onclick="next()">Siguiente <svg viewBox="0 0 16 16" fill="none"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+  </div>
+</div></div></div>
 
-<!-- 7 -->
-<div class="slide" data-index="7" id="slide-7">
-  <div class="card">
-    <div>
-      <p class="q-label">Pregunta 7 de 21</p>
-      <h2 class="q-text">¿Cómo llegan tus<br/><em>clientes hoy?</em></h2>
-      <p class="q-hint">Puedes marcar varios.</p>
-      <div class="choices" style="margin-top:20px;">
-        <label class="choice-item" onclick="toggleCheck(this)"><span class="choice-key">☐</span><input type="checkbox" name="q7" value="Instagram / Facebook"/><span class="choice-label">Instagram / Facebook</span></label>
-        <label class="choice-item" onclick="toggleCheck(this)"><span class="choice-key">☐</span><input type="checkbox" name="q7" value="Recomendación (voz a voz)"/><span class="choice-label">Recomendación (voz a voz)</span></label>
-        <label class="choice-item" onclick="toggleCheck(this)"><span class="choice-key">☐</span><input type="checkbox" name="q7" value="Google"/><span class="choice-label">Google</span></label>
-        <label class="choice-item" onclick="toggleCheck(this)"><span class="choice-key">☐</span><input type="checkbox" name="q7" value="TikTok"/><span class="choice-label">TikTok</span></label>
-        <label class="choice-item" onclick="toggleCheck(this)"><span class="choice-key">☐</span><input type="checkbox" name="q7" value="WhatsApp directo"/><span class="choice-label">WhatsApp directo</span></label>
-        <label class="choice-item" onclick="toggleCheck(this)"><span class="choice-key">☐</span><input type="checkbox" name="q7" value="Ferias o eventos"/><span class="choice-label">Ferias o eventos</span></label>
-      </div>
-    </div>
-    <div class="btn-row" style="margin-top:20px;">
-      <button class="btn-back" onclick="goBack()">← Atrás</button>
-      <button class="btn-next" onclick="goNext()">Siguiente <svg viewBox="0 0 16 16" fill="none"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
-    </div>
+<div class="slide" id="s5"><div class="card"><div class="glass">
+  <div class="q-num">05 / 21</div>
+  <h2 class="q-text">¿Qué vendes o qué<br/><em>servicios ofreces?</em></h2>
+  <p class="q-hint">Puedes hacer una lista.</p>
+  <textarea id="q5" placeholder="Ej: Corte de cabello, coloración, keratina, manicure…" rows="5" style="margin-top:16px;"></textarea>
+  <div class="btn-row" style="margin-top:24px;">
+    <button class="btn-back" onclick="back()">← Atrás</button>
+    <button class="btn-next" onclick="next()">Siguiente <svg viewBox="0 0 16 16" fill="none"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
   </div>
-</div>
+</div></div></div>
 
-<!-- 8 -->
-<div class="slide" data-index="8" id="slide-8">
-  <div class="card">
-    <div>
-      <p class="q-label">Pregunta 8 de 21</p>
-      <h2 class="q-text">¿Ya tienes <em>logo?</em></h2>
-      <div class="choices" style="margin-top:28px;">
-        <label class="choice-item" onclick="selectRadio(this,'q8')"><span class="choice-key">A</span><input type="radio" name="q8" value="Sí, tengo logo"/><span class="choice-label">Sí, tengo logo</span></label>
-        <label class="choice-item" onclick="selectRadio(this,'q8')"><span class="choice-key">B</span><input type="radio" name="q8" value="No tengo todavía"/><span class="choice-label">No tengo todavía</span></label>
-        <label class="choice-item" onclick="selectRadio(this,'q8')"><span class="choice-key">C</span><input type="radio" name="q8" value="Tengo algo pero no me convence"/><span class="choice-label">Tengo algo pero no me convence</span></label>
-      </div>
-      <p class="q-hint" style="margin-top:16px;">Si tienes logo → envíalo por WhatsApp o email junto con el formulario.</p>
-    </div>
-    <div class="btn-row" style="margin-top:20px;">
-      <button class="btn-back" onclick="goBack()">← Atrás</button>
-      <button class="btn-next" onclick="goNext()">Siguiente <svg viewBox="0 0 16 16" fill="none"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
-    </div>
+<div class="slide" id="s6"><div class="card"><div class="glass">
+  <div class="q-num">06 / 21</div>
+  <h2 class="q-text">¿Cuál es tu <em>servicio estrella?</em></h2>
+  <p class="q-hint">El que más vendes o del que más te enorgulleces.</p>
+  <input type="text" id="q6" placeholder="Ej: La coloración balayage personalizada"/>
+  <div class="btn-row" style="margin-top:28px;">
+    <button class="btn-back" onclick="back()">← Atrás</button>
+    <button class="btn-next" onclick="next()">Siguiente <svg viewBox="0 0 16 16" fill="none"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+    <span class="key-tip">Enter ↵</span>
   </div>
-</div>
+</div></div></div>
 
-<!-- 9 -->
-<div class="slide" data-index="9" id="slide-9">
-  <div class="card">
-    <div>
-      <p class="q-label">Pregunta 9 de 21</p>
-      <h2 class="q-text">¿Cuáles son tus<br/><em>colores de marca?</em></h2>
-      <p class="q-hint">Si los tienes. Puedes escribir nombres o códigos.</p>
-      <div class="input-wrap" style="margin-top:20px;">
-        <input type="text" id="q9" placeholder="Ej: negro y dorado / rosa nude y blanco"/>
-      </div>
-    </div>
-    <div class="btn-row">
-      <button class="btn-back" onclick="goBack()">← Atrás</button>
-      <button class="btn-next" onclick="goNext()">Siguiente <svg viewBox="0 0 16 16" fill="none"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
-      <span class="key-hint">Enter ↵</span>
-    </div>
+<div class="slide" id="s7"><div class="card"><div class="glass">
+  <div class="q-num">07 / 21</div>
+  <h2 class="q-text">¿Cómo llegan tus<br/><em>clientes hoy?</em></h2>
+  <p class="q-hint">Puedes marcar varios.</p>
+  <div class="choices" style="margin-top:16px;">
+    <label class="choice" onclick="chk(this)"><span class="choice-key">☐</span><input type="checkbox" name="q7" value="Instagram / Facebook"/><span class="choice-text">Instagram / Facebook</span></label>
+    <label class="choice" onclick="chk(this)"><span class="choice-key">☐</span><input type="checkbox" name="q7" value="Recomendación (voz a voz)"/><span class="choice-text">Recomendación (voz a voz)</span></label>
+    <label class="choice" onclick="chk(this)"><span class="choice-key">☐</span><input type="checkbox" name="q7" value="Google"/><span class="choice-text">Google</span></label>
+    <label class="choice" onclick="chk(this)"><span class="choice-key">☐</span><input type="checkbox" name="q7" value="TikTok"/><span class="choice-text">TikTok</span></label>
+    <label class="choice" onclick="chk(this)"><span class="choice-key">☐</span><input type="checkbox" name="q7" value="WhatsApp directo"/><span class="choice-text">WhatsApp directo</span></label>
+    <label class="choice" onclick="chk(this)"><span class="choice-key">☐</span><input type="checkbox" name="q7" value="Ferias o eventos"/><span class="choice-text">Ferias o eventos</span></label>
   </div>
-</div>
+  <div class="btn-row" style="margin-top:20px;">
+    <button class="btn-back" onclick="back()">← Atrás</button>
+    <button class="btn-next" onclick="next()">Siguiente <svg viewBox="0 0 16 16" fill="none"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+  </div>
+</div></div></div>
 
-<!-- 10 -->
-<div class="slide" data-index="10" id="slide-10">
-  <div class="card">
-    <div>
-      <p class="q-label">Pregunta 10 de 21</p>
-      <h2 class="q-text">¿Cómo quieres que se<br/><em>vea tu marca?</em></h2>
-      <p class="q-hint">Elige los que más te representen.</p>
-      <div class="choices" style="margin-top:20px;">
-        <label class="choice-item" onclick="toggleCheck(this)"><span class="choice-key">☐</span><input type="checkbox" name="q10" value="Moderno y limpio"/><span class="choice-label">Moderno y limpio</span></label>
-        <label class="choice-item" onclick="toggleCheck(this)"><span class="choice-key">☐</span><input type="checkbox" name="q10" value="Elegante y sofisticado"/><span class="choice-label">Elegante y sofisticado</span></label>
-        <label class="choice-item" onclick="toggleCheck(this)"><span class="choice-key">☐</span><input type="checkbox" name="q10" value="Divertido y con personalidad"/><span class="choice-label">Divertido y con personalidad</span></label>
-        <label class="choice-item" onclick="toggleCheck(this)"><span class="choice-key">☐</span><input type="checkbox" name="q10" value="Natural y orgánico"/><span class="choice-label">Natural y orgánico</span></label>
-        <label class="choice-item" onclick="toggleCheck(this)"><span class="choice-key">☐</span><input type="checkbox" name="q10" value="Minimalista"/><span class="choice-label">Minimalista (menos es más)</span></label>
-        <label class="choice-item" onclick="toggleCheck(this)"><span class="choice-key">☐</span><input type="checkbox" name="q10" value="Cálido y acogedor"/><span class="choice-label">Cálido y acogedor</span></label>
-        <label class="choice-item" onclick="toggleCheck(this)"><span class="choice-key">☐</span><input type="checkbox" name="q10" value="Profesional y serio"/><span class="choice-label">Profesional y serio</span></label>
-        <label class="choice-item" onclick="toggleCheck(this)"><span class="choice-key">☐</span><input type="checkbox" name="q10" value="Juvenil y fresco"/><span class="choice-label">Juvenil y fresco</span></label>
-      </div>
-    </div>
-    <div class="btn-row" style="margin-top:20px;">
-      <button class="btn-back" onclick="goBack()">← Atrás</button>
-      <button class="btn-next" onclick="goNext()">Siguiente <svg viewBox="0 0 16 16" fill="none"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
-    </div>
+<div class="slide" id="s8"><div class="card"><div class="glass">
+  <div class="q-num">08 / 21</div>
+  <h2 class="q-text">¿Ya tienes <em>logo?</em></h2>
+  <div class="choices" style="margin-top:20px;">
+    <label class="choice" onclick="pick(this,'q8')"><span class="choice-key">A</span><input type="radio" name="q8" value="Sí, tengo logo"/><span class="choice-text">Sí, tengo logo</span></label>
+    <label class="choice" onclick="pick(this,'q8')"><span class="choice-key">B</span><input type="radio" name="q8" value="No tengo todavía"/><span class="choice-text">No tengo todavía</span></label>
+    <label class="choice" onclick="pick(this,'q8')"><span class="choice-key">C</span><input type="radio" name="q8" value="Tengo algo pero no me convence"/><span class="choice-text">Tengo algo pero no me convence</span></label>
   </div>
-</div>
+  <p class="q-hint" style="margin-top:14px;">Si tienes logo → envíalo por WhatsApp al +1 587 585 4143 después de completar este formulario.</p>
+  <div class="btn-row" style="margin-top:20px;">
+    <button class="btn-back" onclick="back()">← Atrás</button>
+    <button class="btn-next" onclick="next()">Siguiente <svg viewBox="0 0 16 16" fill="none"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+  </div>
+</div></div></div>
 
-<!-- 11 -->
-<div class="slide" data-index="11" id="slide-11">
-  <div class="card">
-    <div>
-      <p class="q-label">Pregunta 11 de 21</p>
-      <h2 class="q-text">¿Hay alguna <em>web o marca</em><br/>que te guste visualmente?</h2>
-      <p class="q-hint">1-3 ejemplos. Links o nombres de marcas que te inspiren. No tiene que ser del mismo rubro.</p>
-      <div class="input-wrap" style="margin-top:20px;">
-        <textarea id="q11" placeholder="Ej: Me gusta mucho glossier.com / el Instagram de @zara / la web de Apple…" rows="4"></textarea>
-      </div>
-    </div>
-    <div class="btn-row">
-      <button class="btn-back" onclick="goBack()">← Atrás</button>
-      <button class="btn-next" onclick="goNext()">Siguiente <svg viewBox="0 0 16 16" fill="none"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
-    </div>
+<div class="slide" id="s9"><div class="card"><div class="glass">
+  <div class="q-num">09 / 21</div>
+  <h2 class="q-text">¿Cuáles son tus<br/><em>colores de marca?</em></h2>
+  <p class="q-hint">Si los tienes. Puedes escribir nombres o códigos hex.</p>
+  <input type="text" id="q9" placeholder="Ej: negro y dorado / rosa nude y blanco"/>
+  <div class="btn-row" style="margin-top:28px;">
+    <button class="btn-back" onclick="back()">← Atrás</button>
+    <button class="btn-next" onclick="next()">Siguiente <svg viewBox="0 0 16 16" fill="none"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+    <span class="key-tip">Enter ↵</span>
   </div>
-</div>
+</div></div></div>
 
-<!-- 12 -->
-<div class="slide" data-index="12" id="slide-12">
-  <div class="card">
-    <div>
-      <p class="q-label">Pregunta 12 de 21</p>
-      <h2 class="q-text">¿Qué te gusta de esas referencias?<br/><em>¿Qué quieres evitar?</em></h2>
-      <div class="input-wrap" style="margin-top:28px;">
-        <textarea id="q12" placeholder="Ej: Me gustan las webs limpias, con fotos grandes. No quiero algo muy recargado ni con muchos colores." rows="4"></textarea>
-      </div>
-    </div>
-    <div class="btn-row">
-      <button class="btn-back" onclick="goBack()">← Atrás</button>
-      <button class="btn-next" onclick="goNext()">Siguiente <svg viewBox="0 0 16 16" fill="none"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
-    </div>
+<div class="slide" id="s10"><div class="card"><div class="glass">
+  <div class="q-num">10 / 21</div>
+  <h2 class="q-text">¿Cómo quieres que se<br/><em>vea tu marca?</em></h2>
+  <p class="q-hint">Elige los que más te representen.</p>
+  <div class="choices" style="margin-top:16px;">
+    <label class="choice" onclick="chk(this)"><span class="choice-key">☐</span><input type="checkbox" name="q10" value="Moderno y limpio"/><span class="choice-text">Moderno y limpio</span></label>
+    <label class="choice" onclick="chk(this)"><span class="choice-key">☐</span><input type="checkbox" name="q10" value="Elegante y sofisticado"/><span class="choice-text">Elegante y sofisticado</span></label>
+    <label class="choice" onclick="chk(this)"><span class="choice-key">☐</span><input type="checkbox" name="q10" value="Divertido y con personalidad"/><span class="choice-text">Divertido y con personalidad</span></label>
+    <label class="choice" onclick="chk(this)"><span class="choice-key">☐</span><input type="checkbox" name="q10" value="Natural y orgánico"/><span class="choice-text">Natural y orgánico</span></label>
+    <label class="choice" onclick="chk(this)"><span class="choice-key">☐</span><input type="checkbox" name="q10" value="Minimalista"/><span class="choice-text">Minimalista (menos es más)</span></label>
+    <label class="choice" onclick="chk(this)"><span class="choice-key">☐</span><input type="checkbox" name="q10" value="Cálido y acogedor"/><span class="choice-text">Cálido y acogedor</span></label>
+    <label class="choice" onclick="chk(this)"><span class="choice-key">☐</span><input type="checkbox" name="q10" value="Profesional y serio"/><span class="choice-text">Profesional y serio</span></label>
+    <label class="choice" onclick="chk(this)"><span class="choice-key">☐</span><input type="checkbox" name="q10" value="Juvenil y fresco"/><span class="choice-text">Juvenil y fresco</span></label>
   </div>
-</div>
+  <div class="btn-row" style="margin-top:20px;">
+    <button class="btn-back" onclick="back()">← Atrás</button>
+    <button class="btn-next" onclick="next()">Siguiente <svg viewBox="0 0 16 16" fill="none"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+  </div>
+</div></div></div>
 
-<!-- 13 -->
-<div class="slide" data-index="13" id="slide-13">
-  <div class="card">
-    <div>
-      <p class="q-label">Pregunta 13 de 21</p>
-      <h2 class="q-text">¿Tienes <em>fotos</em> del negocio<br/>o productos?</h2>
-      <div class="choices" style="margin-top:28px;">
-        <label class="choice-item" onclick="selectRadio(this,'q13')"><span class="choice-key">A</span><input type="radio" name="q13" value="Sí, varias buenas"/><span class="choice-label">Sí, varias buenas</span></label>
-        <label class="choice-item" onclick="selectRadio(this,'q13')"><span class="choice-key">B</span><input type="radio" name="q13" value="Pocas"/><span class="choice-label">Pocas</span></label>
-        <label class="choice-item" onclick="selectRadio(this,'q13')"><span class="choice-key">C</span><input type="radio" name="q13" value="No tengo aún"/><span class="choice-label">No tengo aún</span></label>
-      </div>
-      <p class="q-hint" style="margin-top:16px;">Envía tus fotos al WhatsApp +1 587 585 4143 o email después de llenar el formulario.</p>
-    </div>
-    <div class="btn-row" style="margin-top:20px;">
-      <button class="btn-back" onclick="goBack()">← Atrás</button>
-      <button class="btn-next" onclick="goNext()">Siguiente <svg viewBox="0 0 16 16" fill="none"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
-    </div>
+<div class="slide" id="s11"><div class="card"><div class="glass">
+  <div class="q-num">11 / 21</div>
+  <h2 class="q-text">¿Hay alguna <em>web o marca</em><br/>que te guste visualmente?</h2>
+  <p class="q-hint">1-3 ejemplos. No tiene que ser del mismo rubro.</p>
+  <textarea id="q11" placeholder="Ej: glossier.com / @zara en Instagram / la web de Apple…" rows="4" style="margin-top:16px;"></textarea>
+  <div class="btn-row" style="margin-top:24px;">
+    <button class="btn-back" onclick="back()">← Atrás</button>
+    <button class="btn-next" onclick="next()">Siguiente <svg viewBox="0 0 16 16" fill="none"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
   </div>
-</div>
+</div></div></div>
 
-<!-- 14 -->
-<div class="slide" data-index="14" id="slide-14">
-  <div class="card">
-    <div>
-      <p class="q-label">Pregunta 14 de 21</p>
-      <h2 class="q-text">¿En qué <em>idioma</em><br/>quieres la web?</h2>
-      <div class="choices" style="margin-top:28px;">
-        <label class="choice-item" onclick="selectRadio(this,'q14')"><span class="choice-key">A</span><input type="radio" name="q14" value="Solo español"/><span class="choice-label">Solo español</span></label>
-        <label class="choice-item" onclick="selectRadio(this,'q14')"><span class="choice-key">B</span><input type="radio" name="q14" value="Solo inglés"/><span class="choice-label">Solo inglés</span></label>
-        <label class="choice-item" onclick="selectRadio(this,'q14')"><span class="choice-key">C</span><input type="radio" name="q14" value="Español e inglés (bilingüe)"/><span class="choice-label">Español e inglés (bilingüe)</span></label>
-      </div>
-    </div>
-    <div class="btn-row" style="margin-top:24px;">
-      <button class="btn-back" onclick="goBack()">← Atrás</button>
-      <button class="btn-next" onclick="goNext()">Siguiente <svg viewBox="0 0 16 16" fill="none"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
-    </div>
+<div class="slide" id="s12"><div class="card"><div class="glass">
+  <div class="q-num">12 / 21</div>
+  <h2 class="q-text">¿Qué te gusta de esas referencias?<br/><em>¿Qué quieres evitar?</em></h2>
+  <textarea id="q12" placeholder="Ej: Me gustan las webs limpias, con fotos grandes. No quiero nada recargado." rows="4" style="margin-top:20px;"></textarea>
+  <div class="btn-row" style="margin-top:24px;">
+    <button class="btn-back" onclick="back()">← Atrás</button>
+    <button class="btn-next" onclick="next()">Siguiente <svg viewBox="0 0 16 16" fill="none"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
   </div>
-</div>
+</div></div></div>
 
-<!-- 15 -->
-<div class="slide" data-index="15" id="slide-15">
-  <div class="card">
-    <div>
-      <p class="q-label">Pregunta 15 de 21</p>
-      <h2 class="q-text">¿Para qué quieres<br/><em>la web?</em></h2>
-      <p class="q-hint">Puedes marcar varios.</p>
-      <div class="choices" style="margin-top:20px;">
-        <label class="choice-item" onclick="toggleCheck(this)"><span class="choice-key">☐</span><input type="checkbox" name="q15" value="Que me encuentren en Google"/><span class="choice-label">Que me encuentren en Google</span></label>
-        <label class="choice-item" onclick="toggleCheck(this)"><span class="choice-key">☐</span><input type="checkbox" name="q15" value="Mostrar mis servicios o productos"/><span class="choice-label">Mostrar mis servicios o productos</span></label>
-        <label class="choice-item" onclick="toggleCheck(this)"><span class="choice-key">☐</span><input type="checkbox" name="q15" value="Recibir pedidos o solicitudes"/><span class="choice-label">Recibir pedidos o solicitudes</span></label>
-        <label class="choice-item" onclick="toggleCheck(this)"><span class="choice-key">☐</span><input type="checkbox" name="q15" value="Vender en línea (tienda)"/><span class="choice-label">Vender en línea (tienda)</span></label>
-        <label class="choice-item" onclick="toggleCheck(this)"><span class="choice-key">☐</span><input type="checkbox" name="q15" value="Tener algo profesional para compartir"/><span class="choice-label">Tener algo profesional para compartir</span></label>
-        <label class="choice-item" onclick="toggleCheck(this)"><span class="choice-key">☐</span><input type="checkbox" name="q15" value="Mostrar mi portafolio"/><span class="choice-label">Mostrar mi portafolio</span></label>
-      </div>
-    </div>
-    <div class="btn-row" style="margin-top:20px;">
-      <button class="btn-back" onclick="goBack()">← Atrás</button>
-      <button class="btn-next" onclick="goNext()">Siguiente <svg viewBox="0 0 16 16" fill="none"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
-    </div>
+<div class="slide" id="s13"><div class="card"><div class="glass">
+  <div class="q-num">13 / 21</div>
+  <h2 class="q-text">¿Tienes <em>fotos</em> del negocio<br/>o productos?</h2>
+  <div class="choices" style="margin-top:20px;">
+    <label class="choice" onclick="pick(this,'q13')"><span class="choice-key">A</span><input type="radio" name="q13" value="Sí, varias buenas"/><span class="choice-text">Sí, varias buenas</span></label>
+    <label class="choice" onclick="pick(this,'q13')"><span class="choice-key">B</span><input type="radio" name="q13" value="Pocas"/><span class="choice-text">Pocas</span></label>
+    <label class="choice" onclick="pick(this,'q13')"><span class="choice-key">C</span><input type="radio" name="q13" value="No tengo aún"/><span class="choice-text">No tengo aún</span></label>
   </div>
-</div>
+  <p class="q-hint" style="margin-top:14px;">Envía tus fotos al WhatsApp +1 587 585 4143 después de llenar el formulario.</p>
+  <div class="btn-row" style="margin-top:20px;">
+    <button class="btn-back" onclick="back()">← Atrás</button>
+    <button class="btn-next" onclick="next()">Siguiente <svg viewBox="0 0 16 16" fill="none"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+  </div>
+</div></div></div>
 
-<!-- 16 -->
-<div class="slide" data-index="16" id="slide-16">
-  <div class="card">
-    <div>
-      <p class="q-label">Pregunta 16 de 21</p>
-      <h2 class="q-text">¿Qué quieres que haga el visitante<br/>cuando llegue <em>a tu web?</em></h2>
-      <div class="input-wrap" style="margin-top:28px;">
-        <textarea id="q16" placeholder="Ej: Que nos llame / Que haga un pedido / Que llene el formulario de contacto" rows="3"></textarea>
-      </div>
-    </div>
-    <div class="btn-row">
-      <button class="btn-back" onclick="goBack()">← Atrás</button>
-      <button class="btn-next" onclick="goNext()">Siguiente <svg viewBox="0 0 16 16" fill="none"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
-    </div>
+<div class="slide" id="s14"><div class="card"><div class="glass">
+  <div class="q-num">14 / 21</div>
+  <h2 class="q-text">¿En qué <em>idioma</em><br/>quieres la web?</h2>
+  <div class="choices" style="margin-top:20px;">
+    <label class="choice" onclick="pick(this,'q14')"><span class="choice-key">A</span><input type="radio" name="q14" value="Solo español"/><span class="choice-text">Solo español</span></label>
+    <label class="choice" onclick="pick(this,'q14')"><span class="choice-key">B</span><input type="radio" name="q14" value="Solo inglés"/><span class="choice-text">Solo inglés</span></label>
+    <label class="choice" onclick="pick(this,'q14')"><span class="choice-key">C</span><input type="radio" name="q14" value="Español e inglés (bilingüe)"/><span class="choice-text">Español e inglés (bilingüe)</span></label>
   </div>
-</div>
+  <div class="btn-row" style="margin-top:24px;">
+    <button class="btn-back" onclick="back()">← Atrás</button>
+    <button class="btn-next" onclick="next()">Siguiente <svg viewBox="0 0 16 16" fill="none"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+  </div>
+</div></div></div>
 
-<!-- 17 -->
-<div class="slide" data-index="17" id="slide-17">
-  <div class="card">
-    <div>
-      <p class="q-label">Pregunta 17 de 21</p>
-      <h2 class="q-text">¿Cuál es el <em>WhatsApp</em><br/>del negocio?</h2>
-      <div class="input-wrap" style="margin-top:28px;">
-        <input type="tel" id="q17" placeholder="+1 587… / +57 310…" autocomplete="tel"/>
-      </div>
-    </div>
-    <div class="btn-row">
-      <button class="btn-back" onclick="goBack()">← Atrás</button>
-      <button class="btn-next" onclick="goNext()">Siguiente <svg viewBox="0 0 16 16" fill="none"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
-      <span class="key-hint">Enter ↵</span>
-    </div>
+<div class="slide" id="s15"><div class="card"><div class="glass">
+  <div class="q-num">15 / 21</div>
+  <h2 class="q-text">¿Para qué quieres<br/><em>la web?</em></h2>
+  <p class="q-hint">Puedes marcar varios.</p>
+  <div class="choices" style="margin-top:16px;">
+    <label class="choice" onclick="chk(this)"><span class="choice-key">☐</span><input type="checkbox" name="q15" value="Que me encuentren en Google"/><span class="choice-text">Que me encuentren en Google</span></label>
+    <label class="choice" onclick="chk(this)"><span class="choice-key">☐</span><input type="checkbox" name="q15" value="Mostrar mis servicios o productos"/><span class="choice-text">Mostrar mis servicios o productos</span></label>
+    <label class="choice" onclick="chk(this)"><span class="choice-key">☐</span><input type="checkbox" name="q15" value="Recibir pedidos o solicitudes"/><span class="choice-text">Recibir pedidos o solicitudes</span></label>
+    <label class="choice" onclick="chk(this)"><span class="choice-key">☐</span><input type="checkbox" name="q15" value="Vender en línea (tienda)"/><span class="choice-text">Vender en línea (tienda)</span></label>
+    <label class="choice" onclick="chk(this)"><span class="choice-key">☐</span><input type="checkbox" name="q15" value="Tener algo profesional para compartir"/><span class="choice-text">Tener algo profesional para compartir</span></label>
+    <label class="choice" onclick="chk(this)"><span class="choice-key">☐</span><input type="checkbox" name="q15" value="Mostrar mi portafolio"/><span class="choice-text">Mostrar mi portafolio</span></label>
   </div>
-</div>
+  <div class="btn-row" style="margin-top:20px;">
+    <button class="btn-back" onclick="back()">← Atrás</button>
+    <button class="btn-next" onclick="next()">Siguiente <svg viewBox="0 0 16 16" fill="none"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+  </div>
+</div></div></div>
 
-<!-- 18 -->
-<div class="slide" data-index="18" id="slide-18">
-  <div class="card">
-    <div>
-      <p class="q-label">Pregunta 18 de 21</p>
-      <h2 class="q-text"><em>Email</em> del negocio</h2>
-      <p class="q-hint">Si tienes. Si no, deja en blanco y continúa.</p>
-      <div class="input-wrap" style="margin-top:20px;">
-        <input type="email" id="q18" placeholder="hola@minegocio.com" autocomplete="email"/>
-      </div>
-    </div>
-    <div class="btn-row">
-      <button class="btn-back" onclick="goBack()">← Atrás</button>
-      <button class="btn-next" onclick="goNext()">Siguiente <svg viewBox="0 0 16 16" fill="none"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
-      <span class="key-hint">Enter ↵</span>
-    </div>
+<div class="slide" id="s16"><div class="card"><div class="glass">
+  <div class="q-num">16 / 21</div>
+  <h2 class="q-text">¿Qué quieres que haga el visitante<br/>al llegar <em>a tu web?</em></h2>
+  <textarea id="q16" placeholder="Ej: Que nos llame / Que haga un pedido / Que llene el formulario" rows="3" style="margin-top:20px;"></textarea>
+  <div class="btn-row" style="margin-top:24px;">
+    <button class="btn-back" onclick="back()">← Atrás</button>
+    <button class="btn-next" onclick="next()">Siguiente <svg viewBox="0 0 16 16" fill="none"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
   </div>
-</div>
+</div></div></div>
 
-<!-- 19 -->
-<div class="slide" data-index="19" id="slide-19">
-  <div class="card">
-    <div>
-      <p class="q-label">Pregunta 19 de 21</p>
-      <h2 class="q-text"><em>Instagram</em> del negocio</h2>
-      <p class="q-hint">Si tienes. Si no, deja en blanco.</p>
-      <div class="input-wrap" style="margin-top:20px;">
-        <input type="text" id="q19" placeholder="@minegocio"/>
-      </div>
-    </div>
-    <div class="btn-row">
-      <button class="btn-back" onclick="goBack()">← Atrás</button>
-      <button class="btn-next" onclick="goNext()">Siguiente <svg viewBox="0 0 16 16" fill="none"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
-      <span class="key-hint">Enter ↵</span>
-    </div>
+<div class="slide" id="s17"><div class="card"><div class="glass">
+  <div class="q-num">17 / 21</div>
+  <h2 class="q-text">¿Cuál es el <em>WhatsApp</em><br/>del negocio?</h2>
+  <input type="tel" id="q17" placeholder="+1 587… / +57 310…" autocomplete="tel"/>
+  <div class="btn-row" style="margin-top:28px;">
+    <button class="btn-back" onclick="back()">← Atrás</button>
+    <button class="btn-next" onclick="next()">Siguiente <svg viewBox="0 0 16 16" fill="none"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+    <span class="key-tip">Enter ↵</span>
   </div>
-</div>
+</div></div></div>
 
-<!-- 20 -->
-<div class="slide" data-index="20" id="slide-20">
-  <div class="card">
-    <div>
-      <p class="q-label">Pregunta 20 de 21</p>
-      <h2 class="q-text">¿Cuándo necesitas<br/><em>la web lista?</em></h2>
-      <div class="choices" style="margin-top:28px;">
-        <label class="choice-item" onclick="selectRadio(this,'q20')"><span class="choice-key">A</span><input type="radio" name="q20" value="Urgente — menos de 2 semanas"/><span class="choice-label">Urgente — menos de 2 semanas</span></label>
-        <label class="choice-item" onclick="selectRadio(this,'q20')"><span class="choice-key">B</span><input type="radio" name="q20" value="Normal — 3 a 4 semanas"/><span class="choice-label">Normal — 3 a 4 semanas</span></label>
-        <label class="choice-item" onclick="selectRadio(this,'q20')"><span class="choice-key">C</span><input type="radio" name="q20" value="Sin apuro"/><span class="choice-label">Sin apuro — cuando puedan</span></label>
-      </div>
-    </div>
-    <div class="btn-row" style="margin-top:24px;">
-      <button class="btn-back" onclick="goBack()">← Atrás</button>
-      <button class="btn-next" onclick="goNext()">Siguiente <svg viewBox="0 0 16 16" fill="none"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
-    </div>
+<div class="slide" id="s18"><div class="card"><div class="glass">
+  <div class="q-num">18 / 21</div>
+  <h2 class="q-text"><em>Email</em> del negocio</h2>
+  <p class="q-hint">Si no tienes, deja en blanco y continúa.</p>
+  <input type="email" id="q18" placeholder="hola@minegocio.com" autocomplete="email"/>
+  <div class="btn-row" style="margin-top:28px;">
+    <button class="btn-back" onclick="back()">← Atrás</button>
+    <button class="btn-next" onclick="next()">Siguiente <svg viewBox="0 0 16 16" fill="none"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+    <span class="key-tip">Enter ↵</span>
   </div>
-</div>
+</div></div></div>
 
-<!-- 21 — ÚLTIMO -->
-<div class="slide" data-index="21" id="slide-21">
-  <div class="card">
-    <div>
-      <p class="q-label">Pregunta 21 de 21 · Último paso</p>
-      <h2 class="q-text">¿Cuál es <em>tu nombre?</em></h2>
-      <p class="q-hint">Quien llena este formulario.</p>
-      <div class="input-wrap" style="margin-top:20px;">
-        <input type="text" id="q21" placeholder="Tu nombre completo" autocomplete="name"/>
-      </div>
-    </div>
-    <div class="btn-row">
-      <button class="btn-back" onclick="goBack()">← Atrás</button>
-      <button class="btn-next" onclick="submitForm()" style="background:var(--raisin);box-shadow:0 4px 20px rgba(129,84,136,.4);">
-        Enviar brief
-        <svg viewBox="0 0 16 16" fill="none"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
-      </button>
-    </div>
+<div class="slide" id="s19"><div class="card"><div class="glass">
+  <div class="q-num">19 / 21</div>
+  <h2 class="q-text"><em>Instagram</em> del negocio</h2>
+  <p class="q-hint">Si no tienes, deja en blanco.</p>
+  <input type="text" id="q19" placeholder="@minegocio"/>
+  <div class="btn-row" style="margin-top:28px;">
+    <button class="btn-back" onclick="back()">← Atrás</button>
+    <button class="btn-next" onclick="next()">Siguiente <svg viewBox="0 0 16 16" fill="none"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+    <span class="key-tip">Enter ↵</span>
   </div>
-</div>
+</div></div></div>
+
+<div class="slide" id="s20"><div class="card"><div class="glass">
+  <div class="q-num">20 / 21</div>
+  <h2 class="q-text">¿Cuándo necesitas<br/><em>la web lista?</em></h2>
+  <div class="choices" style="margin-top:20px;">
+    <label class="choice" onclick="pick(this,'q20')"><span class="choice-key">A</span><input type="radio" name="q20" value="Urgente — menos de 2 semanas"/><span class="choice-text">Urgente — menos de 2 semanas</span></label>
+    <label class="choice" onclick="pick(this,'q20')"><span class="choice-key">B</span><input type="radio" name="q20" value="Normal — 3 a 4 semanas"/><span class="choice-text">Normal — 3 a 4 semanas</span></label>
+    <label class="choice" onclick="pick(this,'q20')"><span class="choice-key">C</span><input type="radio" name="q20" value="Sin apuro"/><span class="choice-text">Sin apuro — cuando puedan</span></label>
+  </div>
+  <div class="btn-row" style="margin-top:24px;">
+    <button class="btn-back" onclick="back()">← Atrás</button>
+    <button class="btn-next" onclick="next()">Siguiente <svg viewBox="0 0 16 16" fill="none"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+  </div>
+</div></div></div>
+
+<div class="slide" id="s21"><div class="card"><div class="glass">
+  <div class="q-num">21 / 21 · Último paso</div>
+  <h2 class="q-text">¿Cuál es <em>tu nombre?</em></h2>
+  <p class="q-hint">Quien llena este formulario.</p>
+  <input type="text" id="q21" placeholder="Tu nombre completo" autocomplete="name"/>
+  <div class="btn-row" style="margin-top:28px;">
+    <button class="btn-back" onclick="back()">← Atrás</button>
+    <button class="btn-next" onclick="send()" style="background:var(--raisin);box-shadow:0 4px 20px rgba(129,84,136,.45);">
+      Enviar brief
+      <svg viewBox="0 0 16 16" fill="none"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </button>
+  </div>
+</div></div></div>
 
 <!-- GRACIAS -->
-<div class="slide" data-index="22" id="slide-22">
-  <div class="card">
-    <div>
-      <div class="thanks-emoji">🎉</div>
-      <p class="q-label">¡Listo!</p>
-      <h2 class="q-text">Ya recibimos<br/><em>todo lo que necesitamos.</em></h2>
-      <p class="q-hint" style="margin-top:16px;font-size:16px;color:rgba(255,255,255,.7);line-height:1.7;">
-        Te contactamos en máximo <strong style="color:var(--lin)">48 horas</strong> para darte los próximos pasos.<br/><br/>
-        Si tienes logo, fotos o materiales de marca, envíalos por:
-      </p>
-      <div class="thanks-links" style="margin-top:20px;">
-        <a class="thanks-link" href="https://wa.me/15875854143" target="_blank">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M17.5 14.4c-.3-.1-1.7-.8-2-.9-.3-.1-.5-.1-.7.1-.2.3-.7.9-.9 1.1-.2.2-.3.2-.6.1-.3-.1-1.2-.5-2.4-1.5-.9-.8-1.5-1.8-1.6-2.1-.2-.3 0-.5.1-.6.1-.1.3-.3.4-.5.1-.2.2-.3.3-.5.1-.2 0-.4 0-.5 0-.1-.7-1.6-.9-2.2-.2-.6-.5-.5-.7-.5h-.6c-.2 0-.5.1-.8.4-.3.3-1 1-1 2.4 0 1.4 1 2.8 1.2 3 .1.2 2 3.1 4.9 4.3 1.7.7 2.4.8 3.3.7.5-.1 1.7-.7 1.9-1.4.2-.7.2-1.3.2-1.4-.1-.1-.3-.2-.6-.3zM12 2C6.5 2 2 6.5 2 12c0 1.8.5 3.5 1.3 4.9L2 22l5.3-1.4c1.4.7 3 1.1 4.7 1.1 5.5 0 10-4.5 10-10S17.5 2 12 2z"/></svg>
-          WhatsApp +1 587 585 4143
-        </a>
-        <a class="thanks-link" href="mailto:mateo.corredor@helloremake.com">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="M2 7l10 7 10-7"/></svg>
-          Enviar por email
-        </a>
-      </div>
-      <p style="margin-top:28px;font-size:13px;color:rgba(255,255,255,.3);">— Equipo REMAKE · mateo.corredor@helloremake.com</p>
-    </div>
+<div class="slide" id="s22"><div class="card"><div class="glass">
+  <span class="thanks-icon">🎉</span>
+  <div class="q-num">¡Listo!</div>
+  <h2 class="q-text">Ya recibimos<br/><em class="shiny">todo lo que necesitamos.</em></h2>
+  <p style="margin-top:14px;font-size:15px;color:rgba(255,255,255,.6);line-height:1.7;">
+    Te contactamos en máximo <strong style="color:var(--lin)">48 horas</strong>.<br/>
+    Si tienes logo, fotos o materiales de marca, envíalos por:
+  </p>
+  <div class="thanks-links">
+    <a class="thanks-link" href="https://wa.me/15875854143" target="_blank">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M17.5 14.4c-.3-.1-1.7-.8-2-.9-.3-.1-.5-.1-.7.1-.2.3-.7.9-.9 1.1-.2.2-.3.2-.6.1-.3-.1-1.2-.5-2.4-1.5-.9-.8-1.5-1.8-1.6-2.1-.2-.3 0-.5.1-.6.1-.1.3-.3.4-.5.1-.2.2-.3.3-.5.1-.2 0-.4 0-.5 0-.1-.7-1.6-.9-2.2-.2-.6-.5-.5-.7-.5h-.6c-.2 0-.5.1-.8.4-.3.3-1 1-1 2.4 0 1.4 1 2.8 1.2 3 .1.2 2 3.1 4.9 4.3 1.7.7 2.4.8 3.3.7.5-.1 1.7-.7 1.9-1.4.2-.7.2-1.3.2-1.4-.1-.1-.3-.2-.6-.3zM12 2C6.5 2 2 6.5 2 12c0 1.8.5 3.5 1.3 4.9L2 22l5.3-1.4c1.4.7 3 1.1 4.7 1.1 5.5 0 10-4.5 10-10S17.5 2 12 2z"/></svg>
+      WhatsApp +1 587 585 4143
+    </a>
+    <a class="thanks-link" href="mailto:mateo.corredor@helloremake.com">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="M2 7l10 7 10-7"/></svg>
+      Enviar por email
+    </a>
   </div>
-</div>
+  <p style="margin-top:24px;font-size:12px;color:rgba(255,255,255,.25);">— Equipo REMAKE · helloremake.com</p>
+</div></div></div>
 
 <!-- FOOTER -->
-<div class="footer">
+<footer class="footer">
   <span class="footer-brand">REMAKE · Tus ideas en digital</span>
-</div>
+</footer>
 
 <script>
-// ── STATE ──────────────────────────────────────────
-const TOTAL = 22; // slides 0-21 + gracias(22)
-let current = 0;
+// ── SHADER (Three.js CDN) ────────────────────────────
+(function(){
+  var canvas=document.getElementById('shader-canvas');
+  var THREE=window.THREE;
+  if(!THREE){return;}
 
-// ── NAVIGATION ─────────────────────────────────────
-function showSlide(idx, dir = 1) {
-  const prev = document.getElementById(`slide-${current}`);
-  const next = document.getElementById(`slide-${idx}`);
-  if (!next) return;
+  var camera=new THREE.Camera();
+  camera.position.z=1;
+  var scene=new THREE.Scene();
+  var geo=new THREE.PlaneBufferGeometry(2,2);
 
-  prev.classList.remove('active');
-  prev.classList.add(dir > 0 ? 'exit-up' : 'exit-down');
-  setTimeout(() => { prev.classList.remove('exit-up','exit-down'); }, 500);
+  var uniforms={
+    time:{type:'f',value:1.0},
+    resolution:{type:'v2',value:new THREE.Vector2()}
+  };
 
-  next.classList.add('active');
-  current = idx;
+  var mat=new THREE.ShaderMaterial({
+    uniforms:uniforms,
+    vertexShader:'void main(){gl_Position=vec4(position,1.0);}',
+    fragmentShader:`
+      #define TWO_PI 6.2831853072
+      precision highp float;
+      uniform vec2 resolution;
+      uniform float time;
+      float random(in float x){return fract(sin(x)*1e4);}
+      float random(vec2 st){return fract(sin(dot(st.xy,vec2(12.9898,78.233)))*43758.5453123);}
+      void main(void){
+        vec2 uv=(gl_FragCoord.xy*2.0-resolution.xy)/min(resolution.x,resolution.y);
+        vec2 fMs=vec2(4.0,2.0);
+        vec2 vSS=vec2(256.0,256.0);
+        uv.x=floor(uv.x*vSS.x/fMs.x)/(vSS.x/fMs.x);
+        uv.y=floor(uv.y*vSS.y/fMs.y)/(vSS.y/fMs.y);
+        float t=time*0.06+random(uv.x)*0.4;
+        float lw=0.0008;
+        vec3 color=vec3(0.0);
+        for(int j=0;j<3;j++){
+          for(int i=0;i<5;i++){
+            color[j]+=lw*float(i*i)/abs(fract(t-0.01*float(j)+float(i)*0.01)*1.0-length(uv));
+          }
+        }
+        gl_FragColor=vec4(color[2],color[1],color[0],1.0);
+      }`
+  });
 
-  updateProgress();
+  var mesh=new THREE.Mesh(geo,mat);
+  scene.add(mesh);
 
-  // autofocus first input
-  setTimeout(() => {
-    const inp = next.querySelector('input:not([type=radio]):not([type=checkbox]),textarea');
-    if (inp) inp.focus();
-  }, 350);
-}
+  var renderer=new THREE.WebGLRenderer({canvas:canvas,antialias:true});
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio,1.5));
 
-function goNext() {
-  const next = current + 1;
-  if (next <= TOTAL) showSlide(next, 1);
-}
-
-function goBack() {
-  if (current > 0) showSlide(current - 1, -1);
-}
-
-// ── PROGRESS ───────────────────────────────────────
-function updateProgress() {
-  const pct = current === 0 ? 0 : Math.round((current / 21) * 100);
-  document.getElementById('progressFill').style.width = pct + '%';
-  const counter = document.getElementById('stepCounter');
-  if (current === 0 || current === 22) {
-    counter.textContent = '';
-  } else {
-    counter.textContent = current + ' / 21';
+  function resize(){
+    renderer.setSize(window.innerWidth,window.innerHeight);
+    uniforms.resolution.value.x=renderer.domElement.width;
+    uniforms.resolution.value.y=renderer.domElement.height;
   }
+  resize();
+  window.addEventListener('resize',resize);
+
+  var id;
+  (function animate(){
+    id=requestAnimationFrame(animate);
+    uniforms.time.value+=0.04;
+    renderer.render(scene,camera);
+  })();
+})();
+
+// ── FORM STATE ───────────────────────────────────────
+var cur=0, total=21;
+
+function showSlide(idx,dir){
+  var prev=document.getElementById('s'+cur);
+  var nxt=document.getElementById('s'+idx);
+  if(!nxt)return;
+  prev.classList.remove('active');
+  prev.classList.add('exit');
+  setTimeout(function(){prev.classList.remove('exit');},400);
+  nxt.classList.add('active');
+  cur=idx;
+  updateUI();
+  setTimeout(function(){
+    var inp=nxt.querySelector('input:not([type=radio]):not([type=checkbox]),textarea');
+    if(inp)inp.focus();
+  },400);
 }
 
-// ── CHOICES ────────────────────────────────────────
-function selectRadio(el, name) {
-  document.querySelectorAll(`input[name="${name}"]`).forEach(r => {
+function next(){
+  if(cur<total+1)showSlide(cur+1,1);
+}
+function back(){
+  if(cur>0)showSlide(cur-1,-1);
+}
+
+function updateUI(){
+  var p=cur===0?0:Math.round((cur/total)*100);
+  document.getElementById('prog').style.width=p+'%';
+  var lbl=document.getElementById('stepLbl');
+  lbl.textContent=(cur>0&&cur<=total)?cur+' / '+total:'';
+}
+
+function pick(el,name){
+  document.querySelectorAll('[name='+name+']').forEach(function(r){
     r.parentElement.classList.remove('selected');
   });
   el.classList.add('selected');
-  el.querySelector('input').checked = true;
-  setTimeout(goNext, 320);
+  el.querySelector('input').checked=true;
+  setTimeout(next,280);
 }
 
-function toggleCheck(el) {
-  const inp = el.querySelector('input');
-  inp.checked = !inp.checked;
-  el.classList.toggle('selected', inp.checked);
-  const key = el.querySelector('.choice-key');
-  key.textContent = inp.checked ? '✓' : '☐';
+function chk(el){
+  var inp=el.querySelector('input');
+  inp.checked=!inp.checked;
+  el.classList.toggle('selected',inp.checked);
+  el.querySelector('.choice-key').textContent=inp.checked?'✓':'☐';
 }
 
-// ── KEYBOARD ───────────────────────────────────────
-document.addEventListener('keydown', e => {
-  if (e.key === 'Enter' && e.target.tagName !== 'TEXTAREA') {
+document.addEventListener('keydown',function(e){
+  var tag=document.activeElement.tagName;
+  if(e.key==='Enter'&&tag!=='TEXTAREA'){
     e.preventDefault();
-    if (current === 21) { submitForm(); }
-    else if (current < 22) { goNext(); }
+    if(cur===21)send();
+    else if(cur<22)next();
   }
-  if (e.key === 'Escape' && current > 0) { goBack(); }
+  if(e.key==='Escape'&&cur>0)back();
 });
 
-// ── COLLECT DATA ────────────────────────────────────
-function collectData() {
-  const get = id => {
-    const el = document.getElementById(id);
-    return el ? el.value.trim() : '';
-  };
-  const getRadio = name => {
-    const el = document.querySelector(`input[name="${name}"]:checked`);
-    return el ? el.value : '';
-  };
-  const getChecks = name => {
-    return [...document.querySelectorAll(`input[name="${name}"]:checked`)]
-      .map(c => c.value).join(', ');
-  };
-
-  return {
-    negocio: get('q1'),
-    descripcion: get('q2'),
-    ciudad: get('q3'),
-    modalidad: getRadio('q4'),
-    servicios: get('q5'),
-    estrella: get('q6'),
-    canales: getChecks('q7'),
-    logo: getRadio('q8'),
-    colores: get('q9'),
-    estilo_marca: getChecks('q10'),
-    referencias_web: get('q11'),
-    referencias_opinion: get('q12'),
-    fotos: getRadio('q13'),
-    idioma: getRadio('q14'),
-    objetivo_web: getChecks('q15'),
-    accion_visitante: get('q16'),
-    whatsapp: get('q17'),
-    email: get('q18'),
-    instagram: get('q19'),
-    timing: getRadio('q20'),
-    nombre: get('q21'),
-    fecha: new Date().toLocaleString('es-CO',{timeZone:'America/Bogota'}),
-    fuente: 'Brief Web REMAKE'
+function collect(){
+  var g=function(id){var e=document.getElementById(id);return e?e.value.trim():'';};
+  var r=function(n){var e=document.querySelector('[name='+n+']:checked');return e?e.value:'';};
+  var c=function(n){return[...document.querySelectorAll('[name='+n+']:checked')].map(function(x){return x.value;}).join(', ');};
+  return{
+    negocio:g('q1'),descripcion:g('q2'),ciudad:g('q3'),
+    modalidad:r('q4'),servicios:g('q5'),estrella:g('q6'),
+    canales:c('q7'),logo:r('q8'),colores:g('q9'),
+    estilo_marca:c('q10'),referencias_web:g('q11'),
+    referencias_opinion:g('q12'),fotos:r('q13'),
+    idioma:r('q14'),objetivo_web:c('q15'),
+    accion_visitante:g('q16'),whatsapp:g('q17'),
+    email:g('q18'),instagram:g('q19'),timing:r('q20'),
+    nombre:g('q21'),
+    fecha:new Date().toLocaleString('es-CO',{timeZone:'America/Bogota'}),
+    fuente:'Brief Web REMAKE'
   };
 }
 
-// ── SUBMIT ─────────────────────────────────────────
-async function submitForm() {
-  const data = collectData();
-  const WEBHOOK = 'https://hook.us2.make.com/TU_WEBHOOK_AQUI'; // ← reemplazar
-
-  try {
-    await fetch(WEBHOOK, {
-      method: 'POST',
-      headers: {'Content-Type':'application/json'},
-      body: JSON.stringify(data)
-    });
-  } catch(e) {
-    // fail silently — show thanks anyway
-    console.error('Webhook error:', e);
-  }
-
-  showSlide(22, 1);
+async function send(){
+  var data=collect();
+  var HOOK='https://hook.us2.make.com/TU_WEBHOOK_AQUI';
+  try{
+    await fetch(HOOK,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(data)});
+  }catch(e){console.log('webhook error',e);}
+  showSlide(22,1);
 }
 
-// ── INIT ───────────────────────────────────────────
-updateProgress();
+updateUI();
 </script>
 </body>
 </html>
