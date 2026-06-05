@@ -682,14 +682,14 @@ body::after{content:'';position:fixed;top:-50%;left:-50%;z-index:1000;width:200%
       <p style="font-size:13px;font-weight:300;color:rgba(255,248,240,.4);line-height:1.6;">
         Si tienes logo, manual de marca, fotos propias o cualquier archivo que quieras compartir, envíalo a:
       </p>
-      <a href="mailto:mateo.corredor@helloremake.com" style="display:inline-flex;align-items:center;gap:6px;margin-top:12px;color:var(--gold);font-size:13px;font-weight:500;text-decoration:none;">
+      <a href="mailto:mateocorredor145@gmail.com" style="display:inline-flex;align-items:center;gap:6px;margin-top:12px;color:var(--gold);font-size:13px;font-weight:500;text-decoration:none;">
         <span class="material-symbols-rounded" style="font-size:16px;">mail</span>
-        mateo.corredor@helloremake.com
+        mateocorredor145@gmail.com
       </a>
     </div>
 
     <div class="thanks-links" style="margin-top:16px;">
-      <a class="thanks-link" href="mailto:mateo.corredor@helloremake.com">
+      <a class="thanks-link" href="mailto:mateocorredor145@gmail.com">
         <span class="material-symbols-rounded" style="font-size:16px">mail</span>
         Enviar archivos por email
       </a>
@@ -865,11 +865,12 @@ async function send(){
   var data=collect();
   var biz=data.negocio||data.nombre||'Cliente nuevo';
   try{
-    await fetch('https://api.web3forms.com/submit',{
+    var res=await fetch('https://api.web3forms.com/submit',{
       method:'POST',
       headers:{'Content-Type':'application/json','Accept':'application/json'},
       body:JSON.stringify({
         access_key:'6dedb9ad-7eb1-4df1-bbb1-5607911b455f',
+        to:'mateocorredor145@gmail.com',
         subject:'Nuevo Brief — '+biz+' | REMAKE',
         from_name:'Brief Web REMAKE',
         replyto:data.email||'sin-email@brief.com',
@@ -899,6 +900,8 @@ async function send(){
         'Fecha':data.fecha
       })
     });
+    var json=await res.json();
+    console.log('Web3Forms:',json);
   }catch(e){console.log('Email error:',e);}
   goTo(23);
 }
