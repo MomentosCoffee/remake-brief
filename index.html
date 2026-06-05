@@ -42,7 +42,7 @@ body{font-family:'Space Grotesk',system-ui,sans-serif;background:var(--bg);
   letter-spacing:.15em;color:rgba(255,248,240,.3);}
 
 /* SLIDES */
-.slide{position:fixed;inset:0;z-index:10;
+.slide{position:fixed;top:0;left:0;right:0;bottom:0;z-index:10;
   display:flex;align-items:center;justify-content:center;
   padding:90px 20px 80px;overflow-y:auto;
   opacity:0;pointer-events:none;
@@ -54,11 +54,11 @@ body{font-family:'Space Grotesk',system-ui,sans-serif;background:var(--bg);
 /* HERO */
 #s0{padding:0;overflow:hidden;}
 .hero-bg{
-  position:absolute;inset:0;z-index:0;overflow:hidden;
+  position:absolute;top:0;left:0;right:0;bottom:0;z-index:0;overflow:hidden;
   background:radial-gradient(ellipse 70% 60% at 50% 50%,#1a0a2e 0%,#0C0A07 70%);
 }
 .hero-bg::after{
-  content:'';position:absolute;inset:0;pointer-events:none;
+  content:'';position:absolute;top:0;left:0;right:0;bottom:0;pointer-events:none;
   background:
     radial-gradient(ellipse 90% 50% at 50% 110%,rgba(12,10,7,.92) 0%,transparent 55%),
     radial-gradient(ellipse 70% 40% at 50% -5%,rgba(12,10,7,.75) 0%,transparent 50%);
@@ -113,14 +113,14 @@ body{font-family:'Space Grotesk',system-ui,sans-serif;background:var(--bg);
 .hero-cta:active{transform:scale(.97);}
 
 /* QUESTION SLIDES */
-.q-slide-bg{position:absolute;inset:0;z-index:0;overflow:hidden;}
-.q-slide-bg::before{content:'';position:absolute;inset:0;
+.q-slide-bg{position:absolute;top:0;left:0;right:0;bottom:0;z-index:0;overflow:hidden;}
+.q-slide-bg::before{content:'';position:absolute;top:0;left:0;right:0;bottom:0;
   background:var(--mesh);opacity:.85;}
-.q-slide-bg::after{content:'';position:absolute;inset:0;
+.q-slide-bg::after{content:'';position:absolute;top:0;left:0;right:0;bottom:0;
   background-image:radial-gradient(circle,rgba(255,248,240,.18) 1px,transparent 1px);
   background-size:28px 28px;
   mask-image:radial-gradient(ellipse 80% 70% at 50% 50%,black 40%,transparent 100%);}
-.q-overlay{position:absolute;inset:0;z-index:1;pointer-events:none;
+.q-overlay{position:absolute;top:0;left:0;right:0;bottom:0;z-index:1;pointer-events:none;
   background:
     linear-gradient(to bottom,rgba(12,10,7,.88) 0%,rgba(12,10,7,.7) 40%,rgba(12,10,7,.88) 100%);}
 
@@ -219,7 +219,7 @@ textarea{min-height:90px;line-height:1.65;}
 .ftr-brand{font-size:9px;letter-spacing:.2em;color:rgba(255,248,240,.12);text-transform:uppercase;}
 
 @keyframes grain{0%,100%{transform:translate(0,0)} 10%{transform:translate(-2%,-3%)} 20%{transform:translate(3%,2%)} 30%{transform:translate(-1%,4%)} 40%{transform:translate(4%,-1%)} 50%{transform:translate(-3%,3%)}}
-body::after{content:'';position:fixed;inset:-50%;z-index:1000;width:200%;height:200%;
+body::after{content:'';position:fixed;top:-50%;left:-50%;z-index:1000;width:200%;height:200%;
   background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
   opacity:.022;pointer-events:none;animation:grain 8s steps(10) infinite;}
 
@@ -704,12 +704,12 @@ body::after{content:'';position:fixed;inset:-50%;z-index:1000;width:200%;height:
 
 <script>
 // ── BEAMS BACKGROUND — Canvas puro, colores RMK ──────────────────
-(function initBeams(){
+try{(function initBeams(){
   var mount=document.getElementById('wovenMount');
   if(!mount)return;
 
   var canvas=document.createElement('canvas');
-  canvas.style.cssText='position:absolute;inset:0;pointer-events:none;filter:blur(15px);';
+  canvas.style.cssText='position:absolute;top:0;left:0;right:0;bottom:0;width:100%;height:100%;pointer-events:none;filter:blur(15px);';
   mount.appendChild(canvas);
 
   var ctx=canvas.getContext('2d');
@@ -792,7 +792,7 @@ body::after{content:'';position:fixed;inset:-50%;z-index:1000;width:200%;height:
   }
 
   animate();
-})();
+})();}catch(e){console.log('Beams:',e);}
 
 var words=['perfecta','increíble','única','extraordinaria'];
 var wi=0,el=document.getElementById('cycleText');
@@ -865,14 +865,14 @@ async function send(){
   var data=collect();
   var biz=data.negocio||data.nombre||'Cliente nuevo';
   try{
-    await fetch('https://formsubmit.co/ajax/mateocorredor145@gmail.com',{
+    await fetch('https://api.web3forms.com/submit',{
       method:'POST',
       headers:{'Content-Type':'application/json','Accept':'application/json'},
       body:JSON.stringify({
-        _subject:'Nuevo Brief — '+biz+' | REMAKE',
-        _template:'table',
-        _captcha:'false',
-        _next:'https://remake-brief.vercel.app',
+        access_key:'3b5a0c3e-5b9a-4f1e-9c2d-8e7f6a4b3c1d',
+        subject:'Nuevo Brief — '+biz+' | REMAKE',
+        from_name:'Brief Web REMAKE',
+        replyto:data.email||'sin-email@brief.com',
         'Nombre':data.nombre,
         'Negocio':data.negocio,
         'Descripcion':data.descripcion,
@@ -896,11 +896,10 @@ async function send(){
         'Email':data.email,
         'Instagram':data.instagram,
         'Timing':data.timing,
-        'Fecha':data.fecha,
-        'Fuente':'Brief Web RMK'
+        'Fecha':data.fecha
       })
     });
-  }catch(e){console.log('FormSubmit error:',e);}
+  }catch(e){console.log('Email error:',e);}
   goTo(23);
 }
 updateUI();
