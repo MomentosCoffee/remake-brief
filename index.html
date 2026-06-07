@@ -230,6 +230,9 @@ body::after{content:'';position:fixed;top:-50%;left:-50%;z-index:1000;width:200%
 @media(prefers-reduced-motion:reduce){
   .slide,#pf,.hero-cta,.hero-bg img,body::after{animation:none;transition:none;}
 }
+
+@keyframes bshake{10%,90%{transform:translateX(-3px)}20%,80%{transform:translateX(5px)}30%,50%,70%{transform:translateX(-9px)}40%,60%{transform:translateX(9px)}}
+.shake{animation:bshake .45s cubic-bezier(.36,.07,.19,.97);}
 </style>
 </head>
 <body>
@@ -808,7 +811,25 @@ function cycle(){
 if(el){el.style.transition='opacity .35s ease,transform .35s ease';setInterval(cycle,2800);}
 
 var cur=0,TOTAL=23;
+var OPTIONAL={9:1,14:1,15:1};
+function stepFilled(step){
+  var sec=document.getElementById('s'+step); if(!sec)return true;
+  var radios=sec.querySelectorAll('input[type="radio"]');
+  var checks=sec.querySelectorAll('input[type="checkbox"]');
+  if(radios.length && ![].some.call(radios,function(r){return r.checked;})) return false;
+  if(checks.length && ![].some.call(checks,function(c){return c.checked;})) return false;
+  var texts=sec.querySelectorAll('textarea,input:not([type="radio"]):not([type="checkbox"]):not([type="hidden"]):not([type="submit"]):not([type="button"])');
+  for(var i=0;i<texts.length;i++){ if(!texts[i].value.trim()){ if(step===22) continue; return false; } }
+  return true;
+}
+function validateStep(step){ return OPTIONAL[step]?true:stepFilled(step); }
+function shake(step){
+  var sec=document.getElementById('s'+step); if(!sec)return;
+  sec.classList.add('shake'); setTimeout(function(){sec.classList.remove('shake');},480);
+  var bad=sec.querySelector('textarea,input:not([type="hidden"])'); if(bad)bad.focus();
+}
 function goTo(idx){
+  if(idx>cur && cur>=1 && cur<=22 && !validateStep(cur)){ shake(cur); return; }
   var p=document.getElementById('s'+cur);
   var n=document.getElementById('s'+idx);
   if(!n)return;
@@ -862,8 +883,11 @@ function collect(){
   };
 }
 async function send(){
+  if(!validateStep(22)){ shake(22); return; }
   var data=collect();
   var biz=data.negocio||data.nombre||'Cliente nuevo';
+  var _reply=data.email||'sin-email@brief.com';
+  for(var _k in data){ if(data[_k]===''||data[_k]==null) data[_k]='(sin responder)'; }
   try{
     var res=await fetch('https://api.web3forms.com/submit',{
       method:'POST',
@@ -873,7 +897,7 @@ async function send(){
         to:'mateocorredor145@gmail.com',
         subject:'Nuevo Brief — '+biz+' | REMAKE',
         from_name:'Brief Web REMAKE',
-        replyto:data.email||'sin-email@brief.com',
+        replyto:_reply,
         'Nombre':data.nombre,
         'Negocio':data.negocio,
         'Descripcion':data.descripcion,
